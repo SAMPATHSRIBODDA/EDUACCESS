@@ -1,0 +1,976 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>EduAccess Admin Panel</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="../../../styles/admin/clg-admin.css" />
+</head>
+
+<body class="font-md">
+  <a class="skip-link" href="#main-content">Skip to main content</a>
+
+  <div class="app-shell" id="appShell">
+    <aside class="sidebar" id="sidebar" aria-label="Primary navigation">
+      <div class="brand-row">
+        <div class="brand-mark" aria-hidden="true">EA</div>
+        <div class="brand-text">EduAccess</div>
+      </div>
+
+      <nav class="nav" aria-label="Sidebar">
+        <button class="nav-item active" data-page="dashboard" type="button"><span class="nav-icon"
+            aria-hidden="true"><svg viewBox="0 0 24 24">
+              <rect x="3" y="3" width="7" height="7" rx="1.5" />
+              <rect x="14" y="3" width="7" height="7" rx="1.5" />
+              <rect x="3" y="14" width="7" height="7" rx="1.5" />
+              <rect x="14" y="14" width="7" height="7" rx="1.5" />
+            </svg></span><span class="nav-label">Dashboard</span></button>
+        <button class="nav-item" data-page="students" type="button"><span class="nav-icon" aria-hidden="true"><svg
+              viewBox="0 0 24 24">
+              <path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2" />
+              <circle cx="9" cy="7" r="3" />
+              <path d="M22 21v-2a4 4 0 0 0-3-3.87" />
+              <path d="M16 3.13a3 3 0 0 1 0 5.75" />
+            </svg></span><span class="nav-label">Students</span></button>
+        <button class="nav-item" data-page="teachers" type="button"><span class="nav-icon" aria-hidden="true"><svg
+              viewBox="0 0 24 24">
+              <path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2" />
+              <circle cx="9" cy="7" r="3" />
+              <path d="M22 21v-2a4 4 0 0 0-3-3.87" />
+              <path d="M16 3.13a3 3 0 0 1 0 5.75" />
+            </svg></span><span class="nav-label">Teachers</span></button>
+        <button class="nav-item" data-page="departments" type="button"><span class="nav-icon" aria-hidden="true"><svg
+              viewBox="0 0 24 24">
+              <path d="M3 21h18" />
+              <path d="M5 21V8l7-4 7 4v13" />
+              <path d="M9 21v-5h6v5" />
+            </svg></span><span class="nav-label">Departments</span></button>
+        <button class="nav-item" data-page="courses" type="button"><span class="nav-icon" aria-hidden="true"><svg
+              viewBox="0 0 24 24">
+              <path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20" />
+              <path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z" />
+            </svg></span><span class="nav-label">Courses</span></button>
+        <button class="nav-item" data-page="academic" type="button"><span class="nav-icon" aria-hidden="true"><svg
+              viewBox="0 0 24 24">
+              <circle cx="12" cy="4" r="2" />
+              <path d="M6 8h12" />
+              <path d="m12 6 3 5" />
+              <path d="m12 6-3 5" />
+              <path d="m12 13-2 7" />
+              <path d="m12 13 2 7" />
+            </svg></span><span class="nav-label">Academic</span></button>
+        <button class="nav-item" data-page="examinations" type="button"><span class="nav-icon" aria-hidden="true"><svg
+              viewBox="0 0 24 24">
+              <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" />
+              <path d="M14 2v6h6" />
+              <path d="M8 13h8" />
+              <path d="M8 17h8" />
+              <path d="M8 9h3" />
+            </svg></span><span class="nav-label">Examinations</span></button>
+        <button class="nav-item" data-page="library" type="button"><span class="nav-icon" aria-hidden="true"><svg
+              viewBox="0 0 24 24">
+              <path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20" />
+              <path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z" />
+            </svg></span><span class="nav-label">Library</span></button>
+        <button class="nav-item" data-page="placements" type="button"><span class="nav-icon" aria-hidden="true"><svg
+              viewBox="0 0 24 24">
+              <path d="M3 3v18h18" />
+              <rect x="7" y="12" width="3" height="6" />
+              <rect x="12" y="9" width="3" height="9" />
+              <rect x="17" y="6" width="3" height="12" />
+            </svg></span><span class="nav-label">Placements</span></button>
+        <button class="nav-item" data-page="finance" type="button"><span class="nav-icon" aria-hidden="true"><svg
+              viewBox="0 0 24 24">
+              <rect x="2" y="6" width="20" height="12" rx="2" />
+              <path d="M2 10h20" />
+              <circle cx="16" cy="14" r="1" />
+            </svg></span><span class="nav-label">Finance</span></button>
+        <button class="nav-item" data-page="reports" type="button"><span class="nav-icon" aria-hidden="true"><svg
+              viewBox="0 0 24 24">
+              <path d="M3 3v18h18" />
+              <rect x="7" y="12" width="3" height="6" />
+              <rect x="12" y="9" width="3" height="9" />
+              <rect x="17" y="6" width="3" height="12" />
+            </svg></span><span class="nav-label">Reports</span></button>
+        <button class="nav-item" data-page="settings" type="button"><span class="nav-icon" aria-hidden="true"><svg
+              viewBox="0 0 24 24">
+              <circle cx="12" cy="12" r="3" />
+              <path
+                d="M19.4 15a1.7 1.7 0 0 0 .3 1.8l.1.1a2 2 0 1 1-2.8 2.8l-.1-.1a1.7 1.7 0 0 0-1.8-.3 1.7 1.7 0 0 0-1 1.5V21a2 2 0 1 1-4 0v-.2a1.7 1.7 0 0 0-1-1.5 1.7 1.7 0 0 0-1.8.3l-.1.1a2 2 0 0 1-2.8-2.8l.1-.1a1.7 1.7 0 0 0 .3-1.8 1.7 1.7 0 0 0-1.5-1H3a2 2 0 1 1 0-4h.2a1.7 1.7 0 0 0 1.5-1 1.7 1.7 0 0 0-.3-1.8l-.1-.1a2 2 0 1 1 2.8-2.8l.1.1a1.7 1.7 0 0 0 1.8.3h.1a1.7 1.7 0 0 0 1-1.5V3a2 2 0 1 1 4 0v.2a1.7 1.7 0 0 0 1 1.5h.1a1.7 1.7 0 0 0 1.8-.3l.1-.1a2 2 0 1 1 2.8 2.8l-.1.1a1.7 1.7 0 0 0-.3 1.8v.1a1.7 1.7 0 0 0 1.5 1H21a2 2 0 1 1 0 4h-.2a1.7 1.7 0 0 0-1.5 1z" />
+            </svg></span><span class="nav-label">Settings</span></button>
+      </nav>
+    </aside>
+
+    <div class="main-shell">
+      <header class="topbar" aria-label="Top navigation bar">
+        <div class="left-tools">
+          <button id="sidebarToggle" class="icon-btn" type="button" aria-label="Toggle sidebar" aria-controls="sidebar"
+            aria-expanded="true">MENU</button>
+          <div class="search-wrap" role="search">
+            <span class="search-icon" aria-hidden="true">⌕</span>
+            <input id="globalSearch" type="search" placeholder="Search students, courses, departments..."
+              aria-autocomplete="list" aria-controls="searchResults" aria-expanded="false" />
+            <div id="searchResults" class="search-results" role="listbox" aria-label="Search results" hidden></div>
+          </div>
+        </div>
+
+        <div class="right-tools">
+          <div class="icon-menu-wrap" id="notificationMenuWrap">
+            <button id="notificationBtn" class="icon-btn icon-pill" type="button" aria-haspopup="menu"
+              aria-controls="notificationMenu" aria-expanded="false" aria-label="Notifications, 6 unread">
+              <svg aria-hidden="true" viewBox="0 0 24 24">
+                <path d="M15 17H9l-1 2h8l-1-2z" />
+                <path d="M18 16H6l1.2-2.4A7.5 7.5 0 0 0 8 10.8V10a4 4 0 0 1 8 0v.8c0 .9.2 1.9.8 2.8L18 16z" />
+              </svg>
+              <span id="notificationBadge" class="badge" aria-hidden="true">0</span>
+            </button>
+            <div id="notificationMenu" class="menu topbar-feed-menu" role="menu" aria-label="Notifications" hidden>
+              <div class="topbar-feed-head">Latest Notifications</div>
+              <div id="notificationMenuList" class="topbar-feed-list"></div>
+              <button type="button" data-feed-action="announcements" class="topbar-feed-link">View all announcements</button>
+            </div>
+          </div>
+
+          <div class="icon-menu-wrap" id="messageMenuWrap">
+            <button id="messageBtn" class="icon-btn icon-pill" type="button" aria-haspopup="menu"
+              aria-controls="messageMenu" aria-expanded="false" aria-label="Messages, 3 unread">
+              <svg aria-hidden="true" viewBox="0 0 24 24">
+                <path d="M4 6h16v12H4z" />
+                <path d="m4 7 8 6 8-6" />
+              </svg>
+              <span id="messageBadge" class="badge" aria-hidden="true">0</span>
+            </button>
+            <div id="messageMenu" class="menu topbar-feed-menu" role="menu" aria-label="Messages" hidden>
+              <div class="topbar-feed-head">Recent Messages</div>
+              <div id="messageMenuList" class="topbar-feed-list"></div>
+              <button type="button" data-feed-action="activities" class="topbar-feed-link">View activity feed</button>
+            </div>
+          </div>
+
+          <div class="profile" id="profileMenuWrap">
+            <button id="profileButton" type="button" class="profile-btn" aria-haspopup="menu"
+              aria-controls="profileMenu" aria-expanded="false">
+              <span class="avatar">AD</span>
+              <span class="profile-meta">
+                <strong>Admin Priya</strong>
+                <small>College Admin</small>
+              </span>
+              <span class="caret" aria-hidden="true">▾</span>
+            </button>
+            <div class="menu" id="profileMenu" role="menu" aria-label="Profile menu" hidden>
+              <button role="menuitem" data-profile-action="profile" type="button">My Profile</button>
+              <button role="menuitem" data-profile-action="settings" type="button">Account Settings</button>
+              <button role="menuitem" data-profile-action="logout" type="button">Sign Out</button>
+            </div>
+          </div>
+        </div>
+      </header>
+
+      <main id="main-content" class="content" tabindex="-1">
+        <section class="toolbar-row" aria-label="Accessibility controls">
+          <h1 id="pageTitle">Dashboard</h1>
+          <div class="access-tools">
+            <button id="fontDecrease" class="pill-btn" type="button" aria-label="Decrease font size">A-</button>
+            <button id="fontIncrease" class="pill-btn" type="button" aria-label="Increase font size">A+</button>
+            <button id="contrastToggle" class="pill-btn" type="button" aria-pressed="false"
+              aria-label="Toggle high contrast mode">High Contrast</button>
+
+            <div class="quick-action-wrap" id="quickActionWrap">
+              <button id="quickActionBtn" class="quick-action-btn" type="button" aria-haspopup="menu"
+                aria-controls="quickActionMenu" aria-expanded="false">+ Quick Action</button>
+              <div id="quickActionMenu" class="menu quick-action-menu" role="menu" hidden>
+                <button role="menuitem" data-action="add-student" type="button">Add Student</button>
+                <button role="menuitem" data-action="add-teacher" type="button">Add Teacher</button>
+                <button role="menuitem" data-action="create-course" type="button">Create Course</button>
+                <button role="menuitem" data-action="post-announcement" type="button">Post Announcement</button>
+                <button role="menuitem" data-action="log-activity" type="button">Log Activity</button>
+                <button role="menuitem" data-action="add-event" type="button">Add Event</button>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <p id="actionStatus" class="action-status" aria-live="polite" hidden></p>
+        <p id="accessibilityStatus" class="sr-only" role="status" aria-live="polite"></p>
+
+        <section class="page-content active" data-page-content="dashboard">
+          <section class="overview-grid" aria-label="Overview cards">
+            <article class="stat-card">
+              <div class="card-icon" aria-hidden="true"><svg viewBox="0 0 24 24">
+                  <path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2" />
+                  <circle cx="9" cy="7" r="3" />
+                  <path d="M22 21v-2a4 4 0 0 0-3-3.87" />
+                  <path d="M16 3.13a3 3 0 0 1 0 5.75" />
+                </svg></div>
+              <h3>Total Students</h3>
+                <p id="metricTotalStudents">0</p>
+                <span class="growth positive" id="metricStudentsTrend">Live data</span>
+            </article>
+
+            <article class="stat-card">
+              <div class="card-icon" aria-hidden="true"><svg viewBox="0 0 24 24">
+                  <path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2" />
+                  <circle cx="9" cy="7" r="3" />
+                  <path d="M22 21v-2a4 4 0 0 0-3-3.87" />
+                  <path d="M16 3.13a3 3 0 0 1 0 5.75" />
+                </svg></div>
+              <h3>Total Teachers</h3>
+              <p id="metricTotalTeachers">0</p>
+              <span class="growth positive" id="metricTeachersTrend">Live data</span>
+            </article>
+
+            <article class="stat-card">
+              <div class="card-icon" aria-hidden="true"><svg viewBox="0 0 24 24">
+                  <path d="M3 21h18" />
+                  <path d="M5 21V8l7-4 7 4v13" />
+                  <path d="M9 21v-5h6v5" />
+                </svg></div>
+              <h3>Departments</h3>
+              <p id="metricTotalDepartments">0</p>
+              <span class="growth positive" id="metricDepartmentsTrend">Live data</span>
+            </article>
+
+            <article class="stat-card">
+              <div class="card-icon" aria-hidden="true"><svg viewBox="0 0 24 24">
+                  <path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20" />
+                  <path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z" />
+                </svg></div>
+              <h3>Pending Courses</h3>
+              <p id="metricPendingCourses">0</p>
+              <span class="growth positive" id="metricPendingTrend">Live data</span>
+            </article>
+
+            <article class="stat-card">
+              <div class="card-icon" aria-hidden="true"><svg viewBox="0 0 24 24">
+                  <rect x="2" y="6" width="20" height="12" rx="2" />
+                  <path d="M2 10h20" />
+                  <circle cx="16" cy="14" r="1" />
+                </svg></div>
+              <h3>Approved Courses</h3>
+              <p id="metricApprovedCourses">0</p>
+              <span class="growth positive" id="metricApprovedTrend">Live data</span>
+            </article>
+          </section>
+
+          <section class="dashboard-grid">
+            <article class="panel panel-large" aria-labelledby="enrollTitle">
+              <div class="panel-head">
+                <h2 id="enrollTitle">Real-Time Overview</h2>
+                <span id="dashboardActivityCount" class="badge-info">0 activities</span>
+              </div>
+              <div id="overviewSnapshotGrid" class="dashboard-snapshot-grid" aria-label="Live overview summary"></div>
+            </article>
+
+            <article class="panel" aria-labelledby="deptTitle">
+              <div class="panel-head">
+                <h2 id="deptTitle">Department Breakdown</h2>
+              </div>
+              <p id="deptSummary" class="panel-subtext">Live student count by department</p>
+              <div id="departmentBreakdownList" class="department-breakdown-list"></div>
+            </article>
+
+            <article class="panel" aria-labelledby="calendarTitle">
+              <div class="panel-head panel-head-between">
+                <h2 id="calendarTitle">Academic Calendar</h2>
+                <div class="calendar-nav">
+                  <button id="prevMonth" class="icon-btn small" type="button" aria-label="Previous month">&lt;</button>
+                  <button id="nextMonth" class="icon-btn small" type="button" aria-label="Next month">&gt;</button>
+                </div>
+              </div>
+              <div class="calendar-head" id="calendarMonth"></div>
+              <div id="calendarGrid" class="calendar-grid" aria-live="polite"></div>
+              <p id="selectedDateLabel" class="panel-subtext" aria-live="polite"></p>
+            </article>
+
+            <article class="panel" aria-labelledby="eventsTitle">
+              <div class="panel-head">
+                <h2 id="eventsTitle">Today's Events</h2>
+              </div>
+              <ul class="stack-list" id="eventsList"></ul>
+            </article>
+
+            <article class="panel" aria-labelledby="announceTitle">
+              <div class="panel-head">
+                <h2 id="announceTitle">Recent Announcements</h2>
+              </div>
+              <div class="stack-list" id="announcements"></div>
+            </article>
+
+            <article class="panel" aria-labelledby="activityTitle">
+              <div class="panel-head">
+                <h2 id="activityTitle">Recent Activities</h2>
+              </div>
+              <ul class="activity-feed" id="activityFeed"></ul>
+            </article>
+
+            <article class="panel" aria-labelledby="quickStatsTitle">
+              <div class="panel-head">
+                <h2 id="quickStatsTitle">Quick Statistics</h2>
+              </div>
+              <div class="quick-stats" id="quickStats"></div>
+              <p class="panel-subtext panel-subtext-spaced">Live tasks generated from the current college overview.</p>
+              <ul class="stack-list task-queue" id="dashboardTasks"></ul>
+            </article>
+          </section>
+        </section>
+
+        <section class="page-content" data-page-content="students">
+          <div class="page-header-section">
+            <span class="section-kicker">Student Directory</span>
+            <p>Manage student records, uploads, and status actions in one place.</p>
+          </div>
+          <div class="page-grid">
+            <article class="panel">
+              <div class="panel-head panel-head-between">
+                <h2>Student Directory</h2>
+                <div class="bulk-tools">
+                  <div class="section-search">
+                    <input id="studentSearchInput" type="search" placeholder="Search students" />
+                  </div>
+                  <button id="studentTemplateDownloadBtn" class="pill-btn" type="button">Download Student
+                    Template</button>
+                  <button id="studentBulkUploadBtn" class="pill-btn" type="button">Upload Students (Excel)</button>
+                  <input id="studentBulkFileInput" type="file" accept=".xlsx,.xls,.csv" hidden />
+                </div>
+              </div>
+              <p class="panel-subtext">Required columns: Name, Reg ID, Email, Phone No, Course, Year, Branch</p>
+              <div class="table-like" id="studentsTableWrap">
+                <div class="row head row-students">
+                  <span>Name</span>
+                  <span>Reg ID</span>
+                  <span>Email</span>
+                  <span>Phone No</span>
+                  <span>Course</span>
+                  <span>Year</span>
+                  <span>Branch</span>
+                  <span>Action</span>
+                </div>
+                <div id="studentsTableRows"></div>
+              </div>
+            </article>
+          </div>
+        </section>
+
+        <section class="page-content" data-page-content="teachers">
+          <div class="page-header-section">
+            <span class="section-kicker">Faculty Roster</span>
+            <p>Review teacher records, upload spreadsheets, and keep faculty data current.</p>
+          </div>
+          <div class="page-grid">
+            <article class="panel">
+              <div class="panel-head panel-head-between">
+                <h2>Faculty Roster</h2>
+                <div class="bulk-tools">
+                  <div class="section-search">
+                    <input id="teacherSearchInput" type="search" placeholder="Search teachers" />
+                  </div>
+                  <button id="teacherTemplateDownloadBtn" class="pill-btn" type="button">Download Teacher
+                    Template</button>
+                  <button id="teacherBulkUploadBtn" class="pill-btn" type="button">Upload Teachers (Excel)</button>
+                  <input id="teacherBulkFileInput" type="file" accept=".xlsx,.xls,.csv" hidden />
+                </div>
+              </div>
+              <p class="panel-subtext">Required columns: Name, Reg ID, Email, Phone No, Branch, Subject</p>
+              <div class="table-like" id="teachersTableWrap">
+                <div class="row head row-teachers">
+                  <span>Name</span>
+                  <span>Reg ID</span>
+                  <span>Email</span>
+                  <span>Phone No</span>
+                  <span>Branch</span>
+                  <span>Subject</span>
+                  <span>Action</span>
+                </div>
+                <div id="teachersTableRows"></div>
+              </div>
+            </article>
+          </div>
+        </section>
+
+        <section class="page-content" data-page-content="departments">
+          <div class="page-header-section">
+            <span class="section-kicker">Departments</span>
+            <p>See department strength and leadership at a glance.</p>
+          </div>
+          <div class="page-grid">
+            <article class="panel">
+              <div class="panel-head">
+                <h2>Departments</h2>
+              </div>
+              <div class="table-like" id="departmentsTableWrap">
+                <div class="row head"><span>Department</span><span>Students</span><span>Head</span></div>
+                <div id="departmentsTableRows"></div>
+              </div>
+            </article>
+          </div>
+        </section>
+
+        <section class="page-content" data-page-content="courses">
+          <div class="page-header-section">
+            <span class="section-kicker">Course Approvals</span>
+            <p>Review teacher-submitted courses and publish them with one click.</p>
+          </div>
+          <div class="page-grid">
+            <article class="panel">
+              <div class="panel-head panel-head-between">
+                <h2>Pending Course Approvals</h2>
+                <div class="bulk-tools">
+                  <div class="section-search">
+                    <input id="courseSearchInput" type="search" placeholder="Search courses" />
+                  </div>
+                  <button id="refreshCoursesBtn" class="pill-btn" type="button">Refresh</button>
+                </div>
+              </div>
+              <p class="panel-subtext">Teacher uploaded courses are listed here with fee and details. Approve to publish
+                for students.</p>
+              <div class="table-like" id="pendingCoursesTableWrap">
+                <div class="row head row-seven">
+                  <span>Course</span>
+                  <span>Category</span>
+                  <span>Difficulty</span>
+                  <span>Grade</span>
+                  <span>Fee</span>
+                  <span>Lectures</span>
+                  <span>Action</span>
+                </div>
+                <div id="pendingCoursesRows"></div>
+              </div>
+            </article>
+          </div>
+        </section>
+
+        <section class="page-content coming-soon" data-page-content="academic">
+          <div class="coming-soon-badge">
+            <h3>Coming Soon</h3>
+            <p>Academic management features will be available shortly</p>
+          </div>
+          <div class="page-grid two-col">
+            <article class="panel">
+              <div class="panel-head">
+                <h2>Academic Planning</h2>
+              </div>
+              <div class="stack-list">
+                <div class="item-card"><strong>Semester Starts</strong><small>Jun 12, 2026</small></div>
+                <div class="item-card"><strong>Add/Drop Window</strong><small>Jun 12 - Jun 21</small></div>
+                <div class="item-card"><strong>Internal Assessments</strong><small>Aug 05 - Aug 12</small></div>
+              </div>
+            </article>
+            <article class="panel">
+              <div class="panel-head">
+                <h2>Curriculum Health</h2>
+              </div>
+              <div class="quick-stats">
+                <article class="quick-stat">
+                  <div>Programs Revised</div>
+                  <div class="value">11</div>
+                </article>
+                <article class="quick-stat">
+                  <div>Outcome Mapping</div>
+                  <div class="value">87%</div>
+                </article>
+                <article class="quick-stat">
+                  <div>Audit Score</div>
+                  <div class="value">A</div>
+                </article>
+                <article class="quick-stat">
+                  <div>Compliance</div>
+                  <div class="value">96%</div>
+                </article>
+              </div>
+            </article>
+          </div>
+        </section>
+
+        <section class="page-content" data-page-content="examinations">
+          <div class="page-header-section">
+            <span class="section-kicker">Examinations</span>
+            <p>Manage exams, schedules, and operations</p>
+          </div>
+          <div class="page-grid two-col">
+            <article class="panel">
+              <div class="panel-head">
+                <h2>Exam Schedule</h2>
+                <span class="badge-info">3 upcoming</span>
+              </div>
+              <div class="exam-cards">
+                <div class="exam-card exam-mid-sem">
+                  <div class="exam-card-top">
+                    <span class="exam-type">Mid Semester</span>
+                    <span class="exam-status">May 14</span>
+                  </div>
+                  <div class="exam-card-title">Theory Examination</div>
+                  <div class="exam-card-meta">Offline • Mandatory</div>
+                </div>
+                <div class="exam-card exam-lab">
+                  <div class="exam-card-top">
+                    <span class="exam-type">Internals</span>
+                    <span class="exam-status">May 18</span>
+                  </div>
+                  <div class="exam-card-title">Lab Practicals</div>
+                  <div class="exam-card-meta">Practical • Hands-on</div>
+                </div>
+                <div class="exam-card exam-end-sem">
+                  <div class="exam-card-top">
+                    <span class="exam-type">End Semester</span>
+                    <span class="exam-status">Jun 24</span>
+                  </div>
+                  <div class="exam-card-title">Comprehensive</div>
+                  <div class="exam-card-meta">Offline • Graded</div>
+                </div>
+              </div>
+            </article>
+            <article class="panel">
+              <div class="panel-head">
+                <h2>Operations Status</h2>
+              </div>
+              <div class="operations-cards">
+                <div class="op-card">
+                  <div class="op-icon" style="background: linear-gradient(135deg, #60a5fa, #3b82f6);">
+                    <span>📋</span>
+                  </div>
+                  <div class="op-content">
+                    <div class="op-label">Seating Plans</div>
+                    <div class="op-value">92 rooms</div>
+                    <div class="op-progress"><div class="progress-bar" style="width: 92%"></div></div>
+                  </div>
+                </div>
+                <div class="op-card">
+                  <div class="op-icon" style="background: linear-gradient(135deg, #34d399, #10b981);">
+                    <span>📄</span>
+                  </div>
+                  <div class="op-content">
+                    <div class="op-label">Question Papers</div>
+                    <div class="op-value">74% uploaded</div>
+                    <div class="op-progress"><div class="progress-bar" style="width: 74%; background: linear-gradient(90deg, #34d399, #10b981);"></div></div>
+                  </div>
+                </div>
+                <div class="op-card">
+                  <div class="op-icon" style="background: linear-gradient(135deg, #fbbf24, #f59e0b);">
+                    <span>👥</span>
+                  </div>
+                  <div class="op-content">
+                    <div class="op-label">Invigilators</div>
+                    <div class="op-value">310 assigned</div>
+                    <div class="op-progress"><div class="progress-bar" style="width: 100%; background: linear-gradient(90deg, #fbbf24, #f59e0b);"></div></div>
+                  </div>
+                </div>
+              </div>
+            </article>
+          </div>
+        </section>
+
+        <section class="page-content coming-soon" data-page-content="library">
+          <div class="coming-soon-badge">
+            <h3>Coming Soon</h3>
+            <p>Library management features will be available shortly</p>
+          </div>
+          <div class="page-grid two-col">
+            <article class="panel">
+              <div class="panel-head">
+                <h2>Library Inventory</h2>
+              </div>
+              <div class="quick-stats">
+                <article class="quick-stat">
+                  <div>Total Books</div>
+                  <div class="value">48,320</div>
+                </article>
+                <article class="quick-stat">
+                  <div>Digital Journals</div>
+                  <div class="value">1,420</div>
+                </article>
+                <article class="quick-stat">
+                  <div>Issued Today</div>
+                  <div class="value">284</div>
+                </article>
+                <article class="quick-stat">
+                  <div>Overdue</div>
+                  <div class="value">67</div>
+                </article>
+              </div>
+            </article>
+            <article class="panel">
+              <div class="panel-head">
+                <h2>Library Alerts</h2>
+              </div>
+              <div class="stack-list">
+                <div class="item-card"><strong>Server Sync Completed</strong><small>Digital repository synced at
+                    08:15</small></div>
+                <div class="item-card"><strong>Procurement Request</strong><small>52 new titles awaiting
+                    approval</small></div>
+              </div>
+            </article>
+          </div>
+        </section>
+
+        <section class="page-content coming-soon" data-page-content="placements">
+          <div class="coming-soon-badge">
+            <h3>Coming Soon</h3>
+            <p>Placement management features will be available shortly</p>
+          </div>
+          <div class="page-grid two-col">
+            <article class="panel">
+              <div class="panel-head">
+                <h2>Placement Pipeline</h2>
+              </div>
+              <div class="table-like">
+                <div class="row head"><span>Company</span><span>Role</span><span>Openings</span></div>
+                <div class="row"><span>Infosoft</span><span>Analyst</span><span>36</span></div>
+                <div class="row"><span>Datacloud</span><span>Engineer</span><span>24</span></div>
+                <div class="row"><span>FinEdge</span><span>Associate</span><span>18</span></div>
+              </div>
+            </article>
+            <article class="panel">
+              <div class="panel-head">
+                <h2>Placement Metrics</h2>
+              </div>
+              <div class="quick-stats">
+                <article class="quick-stat">
+                  <div>Eligible Students</div>
+                  <div class="value">2,940</div>
+                </article>
+                <article class="quick-stat">
+                  <div>Offers Released</div>
+                  <div class="value">1,780</div>
+                </article>
+                <article class="quick-stat">
+                  <div>Placed Rate</div>
+                  <div class="value">60.5%</div>
+                </article>
+                <article class="quick-stat">
+                  <div>Avg CTC</div>
+                  <div class="value">$9.2K</div>
+                </article>
+              </div>
+            </article>
+          </div>
+        </section>
+
+        <section class="page-content" data-page-content="finance">
+          <div class="page-header-section">
+            <span class="section-kicker">Finance Management</span>
+            <p>Monitor collections, budget, and financial operations</p>
+          </div>
+          <div class="page-grid two-col">
+            <article class="panel">
+              <div class="panel-head">
+                <h2>Fee Collections</h2>
+                <span class="badge-info">3 categories</span>
+              </div>
+              <div class="finance-cards">
+                <div class="fc-card">
+                  <div class="fc-header">
+                    <div class="fc-category">
+                      <span class="fc-icon" style="background: linear-gradient(135deg, #3b82f6, #1d4ed8);">💰</span>
+                      <h3>Tuition Fees</h3>
+                    </div>
+                    <span class="fc-status">83%</span>
+                  </div>
+                  <div class="fc-values">
+                    <div class="fc-collected">
+                      <span>Collected</span>
+                      <strong>$1.20M</strong>
+                    </div>
+                    <div class="fc-pending">
+                      <span>Pending</span>
+                      <strong>$240K</strong>
+                    </div>
+                  </div>
+                  <div class="fc-progress"><div class="progress-bar" style="width: 83%; background: linear-gradient(90deg, #3b82f6, #1d4ed8);"></div></div>
+                </div>
+                <div class="fc-card">
+                  <div class="fc-header">
+                    <div class="fc-category">
+                      <span class="fc-icon" style="background: linear-gradient(135deg, #ec4899, #c2185b);">🏨</span>
+                      <h3>Hostel Fees</h3>
+                    </div>
+                    <span class="fc-status">86%</span>
+                  </div>
+                  <div class="fc-values">
+                    <div class="fc-collected">
+                      <span>Collected</span>
+                      <strong>$410K</strong>
+                    </div>
+                    <div class="fc-pending">
+                      <span>Pending</span>
+                      <strong>$66K</strong>
+                    </div>
+                  </div>
+                  <div class="fc-progress"><div class="progress-bar" style="width: 86%; background: linear-gradient(90deg, #ec4899, #c2185b);"></div></div>
+                </div>
+                <div class="fc-card">
+                  <div class="fc-header">
+                    <div class="fc-category">
+                      <span class="fc-icon" style="background: linear-gradient(135deg, #f59e0b, #d97706);">🚌</span>
+                      <h3>Transport Fees</h3>
+                    </div>
+                    <span class="fc-status">89%</span>
+                  </div>
+                  <div class="fc-values">
+                    <div class="fc-collected">
+                      <span>Collected</span>
+                      <strong>$190K</strong>
+                    </div>
+                    <div class="fc-pending">
+                      <span>Pending</span>
+                      <strong>$22K</strong>
+                    </div>
+                  </div>
+                  <div class="fc-progress"><div class="progress-bar" style="width: 89%; background: linear-gradient(90deg, #f59e0b, #d97706);"></div></div>
+                </div>
+              </div>
+            </article>
+            <article class="panel">
+              <div class="panel-head">
+                <h2>Finance Summary</h2>
+              </div>
+              <div class="summary-cards">
+                <div class="summary-card">
+                  <div class="summary-icon" style="background: linear-gradient(135deg, #10b981, #059669);">📊</div>
+                  <div class="summary-body">
+                    <div class="summary-label">Budget Utilization</div>
+                    <div class="summary-stat">72% this quarter</div>
+                  </div>
+                </div>
+                <div class="summary-card highlight">
+                  <div class="summary-icon" style="background: linear-gradient(135deg, #34d399, #10b981);">✅</div>
+                  <div class="summary-body">
+                    <div class="summary-label">Scholarships Disbursed</div>
+                    <div class="summary-stat">$180K this semester</div>
+                  </div>
+                </div>
+                <div class="summary-card alert">
+                  <div class="summary-icon" style="background: linear-gradient(135deg, #ef4444, #dc2626);">⏰</div>
+                  <div class="summary-body">
+                    <div class="summary-label">Internal Audit</div>
+                    <div class="summary-stat">Due in 5 days</div>
+                  </div>
+                </div>
+              </div>
+            </article>
+          </div>
+        </section>
+
+        <section class="page-content coming-soon" data-page-content="reports">
+          <div class="coming-soon-badge">
+            <h3>Coming Soon</h3>
+            <p>Reporting and analytics features will be available shortly</p>
+          </div>
+          <div class="page-grid two-col">
+            <article class="panel">
+              <div class="panel-head">
+                <h2>Generated Reports</h2>
+              </div>
+              <div class="stack-list">
+                <div class="item-card"><strong>Enrollment Trend Report</strong><small>Updated 07 Apr 2026</small></div>
+                <div class="item-card"><strong>Exam Outcome Analysis</strong><small>Updated 06 Apr 2026</small></div>
+                <div class="item-card"><strong>Faculty Performance Summary</strong><small>Updated 05 Apr 2026</small>
+                </div>
+              </div>
+            </article>
+            <article class="panel">
+              <div class="panel-head">
+                <h2>Reporting Health</h2>
+              </div>
+              <div class="quick-stats">
+                <article class="quick-stat">
+                  <div>Scheduled Jobs</div>
+                  <div class="value">18</div>
+                </article>
+                <article class="quick-stat">
+                  <div>Failures</div>
+                  <div class="value">1</div>
+                </article>
+                <article class="quick-stat">
+                  <div>Data Freshness</div>
+                  <div class="value">98%</div>
+                </article>
+                <article class="quick-stat">
+                  <div>Exports</div>
+                  <div class="value">124</div>
+                </article>
+              </div>
+            </article>
+          </div>
+        </section>
+
+        <section class="page-content" data-page-content="settings">
+          <div class="page-header-section">
+            <span class="section-kicker">Settings & Configuration</span>
+            <p>Manage system preferences and notifications</p>
+            <div id="settingsRuntime" class="settings-runtime"></div>
+          </div>
+          <div class="page-grid two-col">
+            <article class="panel">
+              <div class="panel-head">
+                <h2>System Settings</h2>
+              </div>
+              <div class="settings-grid">
+                <div class="toggle-item">
+                  <div class="toggle-info">
+                    <div class="toggle-label">Role-Based Access</div>
+                    <div class="toggle-desc">Control access based on user roles</div>
+                  </div>
+                  <label class="toggle-switch">
+                    <input type="checkbox" data-setting-key="roleBasedAccess" data-setting-label="Role-Based Access" checked />
+                    <span class="slider"></span>
+                  </label>
+                </div>
+                <div class="toggle-item">
+                  <div class="toggle-info">
+                    <div class="toggle-label">Two-Factor Auth</div>
+                    <div class="toggle-desc">Enhanced security for all users</div>
+                  </div>
+                  <label class="toggle-switch">
+                    <input type="checkbox" data-setting-key="twoFactorAuth" data-setting-label="Two-Factor Auth" checked />
+                    <span class="slider"></span>
+                  </label>
+                </div>
+                <div class="toggle-item">
+                  <div class="toggle-info">
+                    <div class="toggle-label">Auto Backup</div>
+                    <div class="toggle-desc">Daily database backups</div>
+                  </div>
+                  <label class="toggle-switch">
+                    <input type="checkbox" data-setting-key="autoBackup" data-setting-label="Auto Backup" />
+                    <span class="slider"></span>
+                  </label>
+                </div>
+              </div>
+            </article>
+            <article class="panel">
+              <div class="panel-head">
+                <h2>Notification Preferences</h2>
+              </div>
+              <div class="settings-grid">
+                <div class="toggle-item">
+                  <div class="toggle-info">
+                    <div class="toggle-label">Email Alerts</div>
+                    <div class="toggle-desc">Receive important system notifications</div>
+                  </div>
+                  <label class="toggle-switch">
+                    <input type="checkbox" data-setting-key="emailAlerts" data-setting-label="Email Alerts" checked />
+                    <span class="slider"></span>
+                  </label>
+                </div>
+                <div class="toggle-item">
+                  <div class="toggle-info">
+                    <div class="toggle-label">Exam Reminders</div>
+                    <div class="toggle-desc">Broadcast notifications to all users</div>
+                  </div>
+                  <label class="toggle-switch">
+                    <input type="checkbox" data-setting-key="examReminders" data-setting-label="Exam Reminders" checked />
+                    <span class="slider"></span>
+                  </label>
+                </div>
+                <div class="toggle-item">
+                  <div class="toggle-info">
+                    <div class="toggle-label">Finance Digest</div>
+                    <div class="toggle-desc">Weekly financial summary reports</div>
+                  </div>
+                  <label class="toggle-switch">
+                    <input type="checkbox" data-setting-key="financeDigest" data-setting-label="Finance Digest" />
+                    <span class="slider"></span>
+                  </label>
+                </div>
+              </div>
+            </article>
+          </div>
+        </section>
+      </main>
+    </div>
+  </div>
+
+  <!-- Edit Member Modal -->
+  <div id="editMemberModal" class="legacy-modal" style="display: none;">
+    <div class="modal-overlay"></div>
+    <div class="modal-content">
+      <div class="modal-header">
+        <h2 id="modalTitle">Edit Member</h2>
+        <button type="button" class="close-btn" onclick="document.getElementById('editMemberModal').style.display='none'">&times;</button>
+      </div>
+      <form id="editMemberForm">
+        <div class="modal-body">
+          <div class="form-grid">
+            <input type="hidden" id="editMemberId">
+            <div class="form-group full-width">
+              <label>Full Name</label>
+              <input type="text" id="editMemberName" required>
+            </div>
+            <div class="form-group">
+              <label>Reg ID / Emp ID</label>
+              <input type="text" id="editMemberRegId" required>
+            </div>
+            <div class="form-group">
+              <label>Email</label>
+              <input type="email" id="editMemberEmail" placeholder="name@example.com">
+            </div>
+            <div class="form-group">
+              <label>Phone Number</label>
+              <input type="text" id="editMemberPhone" required>
+            </div>
+            <div class="form-group">
+              <label>Department / Branch</label>
+              <input type="text" id="editMemberBranch" required>
+            </div>
+            <div class="form-group" id="courseFieldGroup">
+              <label>Course</label>
+              <input type="text" id="editMemberCourse">
+            </div>
+            <div class="form-group" id="yearFieldGroup">
+              <label>Year</label>
+              <input type="text" id="editMemberYear">
+            </div>
+            <div class="form-group" id="subjectFieldGroup" style="display: none;">
+              <label>Subject</label>
+              <input type="text" id="editMemberSubject">
+            </div>
+            <div class="form-group full-width">
+              <label>Account Status</label>
+              <select id="editMemberStatus">
+                <option value="active">Active</option>
+                <option value="suspended">Suspended</option>
+              </select>
+            </div>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="pill-btn secondary" onclick="document.getElementById('editMemberModal').style.display='none'">Cancel</button>
+          <button type="submit" class="pill-btn highlight">Save Changes</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Quick Action Modal -->
+  <div id="quickActionModal" class="legacy-modal" style="display: none;">
+    <div id="quickActionModalOverlay" class="modal-overlay"></div>
+    <div class="modal-content">
+      <div class="modal-header">
+        <h2 id="quickActionModalTitle">Quick Action</h2>
+        <button id="quickActionModalCloseBtn" type="button" class="close-btn" aria-label="Close quick action">&times;</button>
+      </div>
+      <form id="quickActionForm">
+        <div class="modal-body">
+          <div id="quickActionFormFields" class="form-grid"></div>
+        </div>
+        <div class="modal-footer">
+          <button id="quickActionModalCancelBtn" type="button" class="pill-btn secondary">Cancel</button>
+          <button id="quickActionModalSubmitBtn" type="submit" class="pill-btn highlight">Submit</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js" defer></script>
+  <script src="../../../scripts/admin/clg-admin.js" defer></script>
+</body>
+
+</html>
+   
+
+
+

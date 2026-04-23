@@ -1,0 +1,132 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>EduAccess | Super Admin Dashboard</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Outfit:wght@500;600;700;800&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="/src/styles/super-admin/super-admin.css" />
+  </head>
+  <body class="font-md auth-unlocked" data-theme="light">
+    <script>
+      (function () {
+        if (localStorage.getItem('superAdminAuthenticated') === 'true') return;
+        var next = encodeURIComponent(window.location.pathname + window.location.search + window.location.hash);
+        window.location.replace('/super-admin-login.html?next=' + next);
+      })();
+    </script>
+    <a class="skip-link" href="#mainContent">Skip to main content</a>
+
+    <div class="shell" id="shell">
+      <aside class="sidebar" id="sidebar" aria-label="Main navigation">
+        <div class="brand">
+          <div class="brand-mark">EA</div>
+          <div class="brand-text">
+            <strong>EduAccess</strong>
+            <small>Super Admin</small>
+          </div>
+        </div>
+
+        <nav class="sidebar-nav" aria-label="Sidebar links">
+          <button class="nav-item active" data-section="dashboard" type="button"><span class="nav-glyph" aria-hidden="true">◆</span><span class="nav-label">Dashboard</span></button>
+          <button class="nav-item" data-section="colleges" type="button"><span class="nav-glyph" aria-hidden="true">◆</span><span class="nav-label">Colleges</span></button>
+          <button class="nav-item" data-section="courses" type="button"><span class="nav-glyph" aria-hidden="true">◆</span><span class="nav-label">Courses</span></button>
+          <button class="nav-item" data-section="teachers" type="button"><span class="nav-glyph" aria-hidden="true">◆</span><span class="nav-label">Teachers</span></button>
+          <button class="nav-item" data-section="students" type="button"><span class="nav-glyph" aria-hidden="true">◆</span><span class="nav-label">Students</span></button>
+          <button class="nav-item" data-section="approvals" type="button"><span class="nav-glyph" aria-hidden="true">◆</span><span class="nav-label">Approvals</span></button>
+          <button class="nav-item danger" data-action="logout" type="button"><span class="nav-glyph" aria-hidden="true">×</span><span class="nav-label">Logout</span></button>
+        </nav>
+      </aside>
+
+      <div class="main">
+        <header class="topbar" aria-label="Top navigation bar">
+          <div class="left-tools">
+            <button id="toggleSidebar" class="icon-btn" type="button" aria-label="Toggle sidebar" aria-controls="sidebar" aria-expanded="true">MENU</button>
+            <label class="search-wrap" for="globalSearch">
+              <span class="sr-only">Global search</span>
+              <input id="globalSearch" type="search" placeholder="Search colleges, teachers, students, courses" aria-label="Search colleges, teachers, students, courses" />
+            </label>
+          </div>
+
+          <div class="right-tools">
+            <button id="refreshDataBtn" class="icon-btn" type="button" aria-label="Refresh data">REF</button>
+            <button id="logoutBtn" class="icon-btn" type="button" aria-label="Logout">OUT</button>
+            <div class="profile-menu-wrap" id="profileWrap">
+              <button id="profileBtn" class="profile-btn" type="button" aria-haspopup="menu" aria-expanded="false" aria-controls="profileMenu">
+                <span class="avatar">SA</span>
+                <span class="profile-meta"><strong>Super Admin</strong><small>Platform Owner</small></span>
+                <span>v</span>
+              </button>
+              <div id="profileMenu" class="menu" role="menu" hidden>
+                <button type="button" role="menuitem" data-profile-action="refresh">Refresh</button>
+                <button type="button" role="menuitem" data-profile-action="logout">Logout</button>
+              </div>
+            </div>
+          </div>
+        </header>
+
+        <main id="mainContent" class="content" tabindex="-1">
+          <section class="toolbar">
+            <h1 id="sectionTitle">Dashboard</h1>
+            <div class="toolbar-actions">
+              <button id="fontDown" class="pill-btn" type="button" aria-label="Decrease font size">A-</button>
+              <button id="fontUp" class="pill-btn" type="button" aria-label="Increase font size">A+</button>
+            </div>
+          </section>
+
+          <p id="statusLive" class="sr-only" role="status" aria-live="polite"></p>
+
+          <section class="section active" data-section-content="dashboard">
+            <section class="dashboard-hero">
+              <div class="hero-copy">
+                <p class="hero-kicker">Platform command center</p>
+                <h2>Super Admin Dashboard</h2>
+                <p class="hero-text">Monitor colleges, teachers, students, approvals, and course flow from one high-clarity control panel.</p>
+              </div>
+              <div class="hero-actions">
+                <div class="hero-pill">
+                  <strong>Live Sync</strong>
+                  <span>Real-time database overview</span>
+                </div>
+                <div class="hero-pill">
+                  <strong>Approvals</strong>
+                  <span>Pending college actions</span>
+                </div>
+                <div class="hero-pill hero-pill-accent">
+                  <strong>Quick Access</strong>
+                  <span>Search across every entity</span>
+                </div>
+              </div>
+            </section>
+
+            <section class="overview-cards" aria-label="Global overview cards">
+              <article class="card metric"><div class="metric-head"><span class="metric-icon">IN</span><span class="metric-tag">Network</span></div><h3>Total Colleges</h3><p id="mColleges">0</p><span id="gColleges" class="growth">+0%</span></article>
+              <article class="card metric"><div class="metric-head"><span class="metric-icon">US</span><span class="metric-tag">Accounts</span></div><h3>Total Users</h3><p id="mUsers">0</p><span id="gUsers" class="growth">+0%</span></article>
+              <article class="card metric"><div class="metric-head"><span class="metric-icon">CR</span><span class="metric-tag">Catalog</span></div><h3>Total Courses</h3><p id="mCourses">0</p><span id="gCourses" class="growth">+0%</span></article>
+              <article class="card metric"><div class="metric-head"><span class="metric-icon">AU</span><span class="metric-tag">Activity</span></div><h3>Active Users</h3><p id="mActive">0</p><span id="gActive" class="growth">+0%</span></article>
+              <article class="card metric"><div class="metric-head"><span class="metric-icon">RV</span><span class="metric-tag">Finance</span></div><h3>Total Revenue</h3><p id="mRevenue">$0</p><span id="gRevenue" class="growth">+0%</span></article>
+            </section>
+            <section class="grid two">
+              <article class="card"><div class="card-head split"><h2>College Snapshot</h2><span class="muted-text">Live database data</span></div><div id="collegeSnapshot" class="list-stack"></div></article>
+              <article class="card"><div class="card-head split"><h2>Approval Snapshot</h2><span class="muted-text">Pending actions</span></div><div id="approvalSnapshot" class="list-stack"></div></article>
+            </section>
+          </section>
+
+          <section class="section" data-section-content="colleges"><article class="card"><div class="card-head split"><h2>Colleges</h2><div class="inline-actions"><input id="collegeSearch" type="search" placeholder="Search college name or owner" /></div></div><div class="grid two"><div class="table-wrap"><table><thead><tr><th>Name</th><th>Owner</th><th>Students</th><th>Teachers</th><th>Courses</th><th>Status</th></tr></thead><tbody id="collegesBody"></tbody></table></div><div class="card soft-panel" id="collegeDetailPanel"><div class="card-head"><h3 id="collegeDetailTitle">College details</h3></div><div id="collegeDetailContent" class="detail-stack"></div></div></div></article></section>
+
+          <section class="section" data-section-content="courses"><article class="card"><div class="card-head split"><h2>Courses</h2><div class="inline-actions"><select id="courseCollegeFilter"><option value="all">All colleges</option></select><select id="courseTeacherFilter"><option value="all">All teachers</option></select><input id="courseSearch" type="search" placeholder="Search course title or category" /></div></div><div class="table-wrap"><table><thead><tr><th>Course</th><th>College</th><th>Teacher</th><th>Lectures</th><th>Modules</th><th>Students</th><th>Status</th><th>Actions</th></tr></thead><tbody id="coursesBody"></tbody></table></div></article></section>
+
+          <section class="section" data-section-content="teachers"><article class="card"><div class="card-head split"><h2>Teachers</h2><div class="inline-actions"><select id="teacherCollegeFilter"><option value="all">All colleges</option></select><input id="teacherSearch" type="search" placeholder="Search teacher name or email" /></div></div><div class="table-wrap"><table><thead><tr><th>Teacher</th><th>Email</th><th>College</th><th>Branch</th><th>Courses uploaded</th><th>Status</th><th>Actions</th></tr></thead><tbody id="teachersBody"></tbody></table></div></article></section>
+
+          <section class="section" data-section-content="students"><article class="card"><div class="card-head split"><h2>Students</h2><div class="inline-actions"><select id="studentCollegeFilter"><option value="all">All colleges</option></select><select id="studentStatusFilter"><option value="all">All statuses</option><option value="active">Active</option><option value="suspended">Suspended</option></select><select id="studentBranchFilter"><option value="all">All branches</option></select><input id="studentSearch" type="search" placeholder="Search student name or email" /></div></div><div class="table-wrap"><table><thead><tr><th>Student</th><th>Email</th><th>College</th><th>Branch</th><th>Course</th><th>Year</th><th>Status</th><th>Actions</th></tr></thead><tbody id="studentsBody"></tbody></table></div></article></section>
+
+          <section class="section" data-section-content="approvals"><section class="grid two"><article class="card"><div class="card-head split"><h2>College Approvals</h2><input id="approvalSearch" type="search" placeholder="Search pending applications" /></div><div class="table-wrap"><table><thead><tr><th>College</th><th>Owner</th><th>Email</th><th>Status</th><th>Actions</th></tr></thead><tbody id="approvalsBody"></tbody></table></div></article><article class="card"><div class="card-head"><h2>Pending Courses</h2></div><div class="table-wrap"><table><thead><tr><th>Course</th><th>College</th><th>Teacher</th><th>Status</th><th>Actions</th></tr></thead><tbody id="pendingCoursesBody"></tbody></table></div></article></section></section>
+        </main>
+      </div>
+    </div>
+
+    <script src="/src/scripts/super-admin/realtime-super-admin.js?v=20260421-ui-v2" defer></script>
+  </body>
+</html>

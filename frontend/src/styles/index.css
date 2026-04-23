@@ -1,0 +1,88 @@
+@import "tailwindcss";
+
+@layer base {
+  body {
+    @apply antialiased text-gray-800 bg-[#f8fafc] font-sans;
+  }
+  
+  /* Robust Keyboard Navigation Support */
+  :focus-visible {
+    @apply outline-none ring-4 ring-emerald-500/30 ring-offset-2 ring-offset-white transition-all duration-200;
+  }
+}
+
+@layer components {
+  .btn-primary {
+    @apply inline-flex items-center justify-center px-6 py-3 font-semibold text-white bg-emerald-500 rounded-xl transition-all hover:bg-emerald-600 active:scale-95 shadow-lg shadow-emerald-500/20 underline-offset-4 ring-offset-2;
+  }
+  
+  .btn-secondary {
+    @apply inline-flex items-center justify-center px-6 py-3 font-semibold text-gray-700 bg-white border border-gray-200 rounded-xl transition-all hover:bg-gray-50 active:scale-95 hover:border-gray-300;
+  }
+
+  .card-premium {
+    @apply bg-white border border-gray-100 rounded-[1.5rem] shadow-[0_8px_30px_rgb(0,0,0,0.04)] hover:shadow-[0_20px_50px_rgba(16,185,129,0.05)] transition-all duration-500;
+  }
+
+  .shadow-soft {
+    @apply shadow-[0_4px_20px_-2px_rgba(0,0,0,0.03),0_2px_10px_-2px_rgba(0,0,0,0.01)];
+  }
+
+  .shadow-premium {
+    @apply shadow-[0_25px_50px_-12px_rgba(0,0,0,0.08)];
+  }
+
+  .font-display {
+    font-family: 'Outfit', 'Inter', sans-serif;
+  }
+
+  /* Accessibility Overrides */
+  .font-size-small { font-size: 0.875rem !important; }
+  .font-size-medium { font-size: 1rem !important; }
+  .font-size-large { font-size: 1.25rem !important; }
+
+  .high-contrast {
+    background-color: #000 !important;
+    color: #ffff00 !important;
+  }
+
+  .high-contrast .card-premium,
+  .high-contrast nav,
+  .high-contrast footer,
+  .high-contrast button,
+  .high-contrast input {
+    background-color: #000 !important;
+    border: 2px solid #ffff00 !important;
+    color: #ffff00 !important;
+  }
+
+  .high-contrast span,
+  .high-contrast p,
+  .high-contrast h1,
+  .high-contrast h2,
+  .high-contrast h3 {
+    color: #ffff00 !important;
+  }
+
+  .high-contrast .btn-primary,
+  .high-contrast .btn-secondary {
+    background-color: #ffff00 !important;
+    color: #000 !important;
+    border: 3px solid #ffff00 !important;
+  }
+
+  .high-contrast svg {
+    stroke: #ffff00 !important;
+  }
+}
+
+/* Custom Scrollbar */
+::-webkit-scrollbar {
+  width: 8px;
+}
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+::-webkit-scrollbar-thumb {
+  @apply bg-gray-200 rounded-full hover:bg-gray-300;
+}
