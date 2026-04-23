@@ -34,9 +34,18 @@ dotenv.config({ override: true });
 
 const app = express();
 const httpServer = createServer(app);
+
+// Robust CORS for production
+app.use(cors({
+  origin: '*',
+  methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH', 'OPTIONS'],
+  allowedHeaders: ['Content-Type', 'Authorization']
+}));
+
 const io = new Server(httpServer, {
   cors: {
     origin: "*",
+    methods: ["GET", "POST"]
   },
 });
 
@@ -107,7 +116,6 @@ io.on("connection", (socket) => {
   });
 });
 
-app.use(cors());
 app.use(express.json({ limit: '50mb' }));
 app.use(express.urlencoded({ limit: '50mb', extended: true }));
 app.use("/uploads", express.static(path.join(process.cwd(), "uploads")));
