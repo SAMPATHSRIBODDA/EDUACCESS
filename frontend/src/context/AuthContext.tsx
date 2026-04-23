@@ -12,6 +12,7 @@ type User = {
   branch?: string;
   course?: string;
   year?: string;
+  collegeEmail?: string;
 };
 
 const normalizeAvatar = (avatar?: string) => {

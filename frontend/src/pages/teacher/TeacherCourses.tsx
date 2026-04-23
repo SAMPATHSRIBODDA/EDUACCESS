@@ -1,6 +1,6 @@
 // TeacherCourses.tsx
 import React, { useEffect, useState } from 'react';
-import { Users, ArrowRight, Plus, X, FlaskConical, CheckCircle2, Trash2, Upload, BookOpen } from 'lucide-react';
+import { Plus, X, FlaskConical, CheckCircle2, Trash2, Upload } from 'lucide-react';
 import { motion } from 'framer-motion';
 import { cn } from '../../utils/cn';
 import { api, resolveAssetUrl } from '../../services/api';
@@ -1073,7 +1073,7 @@ export const TeacherCourses: React.FC = () => {
                                                 </div>
 
                                                 <div className="grid grid-cols-1 gap-6 pl-4 md:pl-10 lg:pl-16 border-l-2 border-gray-50">
-                                                    {unit.lectures.map((lecture, lectureIndex) => (
+                                                    {unit.lectures.map((lecture, _lectureIndex) => (
                                                         <div key={lecture.id} className="group relative bg-white border border-gray-100 rounded-3xl overflow-hidden shadow-sm hover:shadow-md transition-all">
                                                             <div className="p-1 bg-gray-50/50 border-b border-gray-50 flex items-center justify-between px-6 py-4 gap-4">
                                                                 <div className="flex items-center gap-3 flex-1 min-w-0">

@@ -1,13 +1,10 @@
 // TeacherMessages.tsx
-import React, { useEffect, useState, useMemo } from 'react';
+import React, { useEffect, useState } from 'react';
 import { 
   Search, 
   Send, 
   Paperclip, 
   MoreHorizontal, 
-  Phone, 
-  Video, 
-  Image as ImageIcon,
   CheckCheck,
   Trash2
 } from 'lucide-react';
@@ -209,6 +206,11 @@ export const TeacherMessages: React.FC = () => {
             {/* Chat Area */}
             <div className="flex-1 flex flex-col bg-white border border-gray-100 rounded-[2rem] shadow-premium overflow-hidden">
                 {selectedContact ? (
+                    loading ? (
+                        <div className="flex-1 flex items-center justify-center">
+                            <div className="w-12 h-12 border-4 border-emerald-500 border-t-transparent rounded-full animate-spin"></div>
+                        </div>
+                    ) : (
                     <>
                         <header className="p-6 border-b border-gray-50 flex items-center justify-between bg-white shrink-0">
                             <div className="flex items-center gap-4">
@@ -265,6 +267,7 @@ export const TeacherMessages: React.FC = () => {
                             </button>
                         </footer>
                     </>
+                   )
                 ) : (
                     <div className="flex-1 flex flex-col items-center justify-center opacity-30">
                         <Send className="w-16 h-16 mb-4 text-gray-300" />

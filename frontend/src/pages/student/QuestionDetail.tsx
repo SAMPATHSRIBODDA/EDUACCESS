@@ -15,10 +15,12 @@ import {
   Trash2,
   Paperclip,
   FileText,
-  ExternalLink
+  ExternalLink,
+  Circle
 } from 'lucide-react';
+
 import { cn } from '../../utils/cn';
-import { api } from '../../services/api';
+import { api, resolveAssetUrl } from '../../services/api';
 import { useAuth } from '../../context/AuthContext';
 import { useSocket } from '../../context/SocketContext';
 import { Prism as SyntaxHighlighter } from 'react-syntax-highlighter';
@@ -133,11 +135,11 @@ export const QuestionDetail: React.FC = () => {
                 studentEmail: user.email,
                 voteType
             });
-            if (res.data.success) {
+            if (res.success) {
                 if (type === 'question' && question) {
-                    setQuestion({ ...question, upvotes: new Array(res.data.upvotes), downvotes: new Array(res.data.downvotes) });
+                    setQuestion({ ...question, upvotes: new Array(res.upvotes), downvotes: new Array(res.downvotes) });
                 } else {
-                    setAnswers(prev => prev.map(a => a.id === targetId ? { ...a, upvotes: new Array(res.data.upvotes), downvotes: new Array(res.data.downvotes) } : a));
+                    setAnswers(prev => prev.map(a => a.id === targetId ? { ...a, upvotes: new Array(res.upvotes), downvotes: new Array(res.downvotes) } : a));
                 }
             }
         } catch (err) {
@@ -322,7 +324,7 @@ export const QuestionDetail: React.FC = () => {
 
             {/* Answers List */}
             <div className="space-y-8 pb-20">
-                {answers.map((answer, index) => {
+                {answers.map((answer) => {
                     const hasUpvoted = answer.upvotes?.includes(user?.email || '');
                     return (
                         <div key={answer.id} className="card-premium p-10 rounded-[3rem] bg-white border border-gray-100 hover:shadow-premium-hover transition-all animate-in fade-in slide-in-from-bottom-4 delay-100">
@@ -388,7 +390,7 @@ export const QuestionDetail: React.FC = () => {
                                             </div>
                                         </div>
                                         <a 
-                                            href={api.resolveAssetUrl(answer.attachmentUrl)} 
+                                            href={resolveAssetUrl(answer.attachmentUrl)} 
                                             target="_blank" 
                                             rel="noopener noreferrer"
                                             className="flex items-center gap-2 px-6 py-3 bg-white text-emerald-600 rounded-xl font-black text-[10px] uppercase tracking-widest shadow-sm hover:shadow-md hover:-translate-y-0.5 transition-all"

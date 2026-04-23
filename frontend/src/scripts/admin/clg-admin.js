@@ -74,7 +74,7 @@ const departmentBreakdownList = document.getElementById("departmentBreakdownList
 const deptSummary = document.getElementById("deptSummary");
 const settingsRuntime = document.getElementById("settingsRuntime");
 const settingToggleInputs = document.querySelectorAll('input[data-setting-key]');
-const API_BASE = window.EDU_API_BASE_URL || "http://localhost:5000/api";
+const API_BASE = import.meta.env.VITE_API_BASE_URL || "http://localhost:5000/api";
 const ACTIVE_PAGE_STORAGE_KEY = "clgAdminActivePage";
 const SETTINGS_STORAGE_KEY = "clgAdminSettings";
 

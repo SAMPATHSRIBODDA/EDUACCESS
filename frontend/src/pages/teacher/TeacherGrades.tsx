@@ -2,7 +2,6 @@
 import React, { useEffect, useState, useMemo } from 'react';
 import { 
   TrendingUp, 
-  Users, 
   Award, 
   AlertCircle, 
   Search, 
@@ -185,7 +184,7 @@ export const TeacherGrades: React.FC = () => {
                 </tr>
               </thead>
               <tbody className="divide-y divide-gray-50">
-                {filteredStudents.map((s, idx) => (
+                {filteredStudents.map((s) => (
                   <tr key={s.id} className="group hover:bg-emerald-50/10 transition-all cursor-pointer">
                     <td className="py-5 px-8">
                       <div className="flex items-center gap-4">

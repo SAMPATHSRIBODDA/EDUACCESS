@@ -1,0 +1,8 @@
+{
+  "rewrites": [
+    { "source": "/super-admin-login", "destination": "/super-admin-login.html" },
+    { "source": "/super-admin-panel", "destination": "/super-admin-panel.html" },
+    { "source": "/clg-admin", "destination": "/src/pages/admin/clg-admin/clg-admin.html" },
+    { "source": "/(.*)", "destination": "/index.html" }
+  ]
+}

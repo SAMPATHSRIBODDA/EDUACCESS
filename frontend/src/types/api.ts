@@ -9,6 +9,7 @@ export interface UserRecord {
   email: string;
   role: "student" | "teacher" | "college" | "admin";
   avatar: string;
+  collegeEmail?: string;
 }
 
 export interface CourseRecord {
@@ -391,6 +392,7 @@ export interface CollegeMemberRecord {
   year?: string;
   subject?: string;
   status?: "active" | "suspended";
+  collegeEmail?: string;
 }
 
 export interface DepartmentStatRecord {

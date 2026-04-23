@@ -1,8 +1,7 @@
 // TeacherResources.tsx
 import React, { useEffect, useState, useMemo, useRef } from 'react';
-import { FileText, Download, Plus, Search, Trash2, X, CheckCircle2, Link as LinkIcon, Video, FileQuestion, Upload } from 'lucide-react';
-import { motion } from 'framer-motion';
-import { cn } from '../../utils/cn';
+import { FileText, Plus, Search, Trash2, X, CheckCircle2, Link as LinkIcon, Video, FileQuestion, Upload } from 'lucide-react';
+
 import { api } from '../../services/api';
 import type { ResourceRecord, CourseRecord, ResourceInput } from '../../types/api';
 

@@ -2,7 +2,6 @@
 import React, { useEffect, useState, useMemo } from 'react';
 import { FileText, Download, Search, Link as LinkIcon, Video, FileQuestion, ExternalLink } from 'lucide-react';
 import { motion } from 'framer-motion';
-import { cn } from '../../utils/cn';
 import { api } from '../../services/api';
 import type { ResourceRecord } from '../../types/api';
 

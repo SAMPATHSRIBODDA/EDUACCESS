@@ -13,6 +13,7 @@ import {
 } from 'lucide-react';
 import { motion } from 'framer-motion';
 import { useNavigate } from 'react-router-dom';
+import { useAuth } from '../../context/AuthContext';
 import { cn } from '../../utils/cn';
 import { api } from '../../services/api';
 import type { AssignmentRecord, QuizRecord } from '../../types/api';

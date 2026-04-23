@@ -18,7 +18,9 @@ export const SocketProvider: React.FC<{ children: React.ReactNode }> = ({ childr
   const [isConnected, setIsConnected] = useState(false);
 
   useEffect(() => {
-    const s = io('http://localhost:5000');
+    const apiBase = (import.meta.env.VITE_API_BASE_URL as string) || 'http://localhost:5000/api';
+    const socketUrl = apiBase.replace(/\/api\/?$/, '');
+    const s = io(socketUrl);
 
     s.on('connect', () => {
       setIsConnected(true);
