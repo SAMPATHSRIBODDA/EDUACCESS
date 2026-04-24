@@ -4,6 +4,7 @@ import { Plus, X, FlaskConical, CheckCircle2, Trash2, Upload } from 'lucide-reac
 import { motion } from 'framer-motion';
 import { cn } from '../../utils/cn';
 import { api, resolveAssetUrl } from '../../services/api';
+import { useAuth } from '../../context/AuthContext';
 import type { CodeEvaluationResponse, CourseCreateInput, CourseRecord } from '../../types/api';
 
 const themeClasses = {
@@ -226,6 +227,7 @@ function toCourseCard(course: CourseRecord, index: number): CourseCard {
 }
 
 export const TeacherCourses: React.FC = () => {
+    const { user } = useAuth();
     const [courseList, setCourseList] = useState<CourseCard[]>(fallbackCourseList);
     const [showCreateModal, setShowCreateModal] = useState(false);
     const [editingCourseId, setEditingCourseId] = useState<number | null>(null);
@@ -706,7 +708,8 @@ export const TeacherCourses: React.FC = () => {
                             language: test.language,
                         }))
                     };
-                })
+                }),
+                createdBy: user?.email || 'teacher@edu.com',
             }))
         };
 

@@ -3,6 +3,7 @@ import { Message } from "../models/Message.js";
 import { User } from "../models/User.js";
 import { Course } from "../models/Course.js";
 import { CourseEnrollment } from "../models/CourseEnrollment.js";
+import { CollegeMember } from "../models/CollegeMember.js";
 
 const router = Router();
 
@@ -42,8 +43,34 @@ router.get("/contacts", async (req, res) => {
       return res.status(400).json({ message: "Invalid role for contacts" });
     }
 
-    // Fetch user details for these emails
-    const contacts = await User.find({ email: { $in: contactEmails } }).select("name email avatar role");
+    // Fetch details for these emails from both User and CollegeMember collections
+    const [users, members] = await Promise.all([
+      User.find({ email: { $in: contactEmails } }).select("name email avatar role"),
+      CollegeMember.find({ email: { $in: contactEmails } }).select("name email avatar role")
+    ]);
+    
+    // Merge results, prioritizing User collection
+    const contactMap = new Map();
+    
+    members.forEach(m => {
+      contactMap.set(m.email, {
+        name: m.name,
+        email: m.email,
+        avatar: m.avatar || "",
+        role: m.role
+      });
+    });
+    
+    users.forEach(u => {
+      contactMap.set(u.email, {
+        name: u.name,
+        email: u.email,
+        avatar: u.avatar || "",
+        role: u.role
+      });
+    });
+    
+    const contacts = Array.from(contactMap.values());
 
     res.json({ data: contacts });
   } catch (error) {

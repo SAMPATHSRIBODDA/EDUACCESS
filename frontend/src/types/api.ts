@@ -99,6 +99,7 @@ export interface CourseCreateInput {
   price?: string;
   panels?: string[];
   units?: CourseUnitRecord[];
+  createdBy?: string;
 }
 
 export interface CodeEvaluationCaseResult {
