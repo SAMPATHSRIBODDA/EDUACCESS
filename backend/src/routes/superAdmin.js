@@ -9,6 +9,28 @@ import { Guide } from "../models/Guide.js";
 import { User } from "../models/User.js";
 
 const router = Router();
+const SUPER_ADMIN_EMAIL = "Eduaccess@gmail.com";
+const SUPER_ADMIN_PASSWORD = "Eduaccess2228";
+
+router.post("/login", (req, res) => {
+  const { email, password } = req.body;
+  if (!email || !password) {
+    return res.status(400).json({ message: "Email and password are required" });
+  }
+
+  if (email.toLowerCase() === SUPER_ADMIN_EMAIL.toLowerCase() && password === SUPER_ADMIN_PASSWORD) {
+    return res.json({
+      success: true,
+      data: {
+        email: SUPER_ADMIN_EMAIL,
+        role: "super-admin",
+        loginAt: new Date().toISOString(),
+      }
+    });
+  }
+
+  res.status(401).json({ message: "Invalid super-admin credentials" });
+});
 
 function toTitleCase(value) {
   if (!value) return "";
@@ -347,12 +369,19 @@ router.get("/overview", async (_req, res) => {
       return sum + (Number.isFinite(amount) ? amount : 0) * learners;
     }, 0);
 
-    const institutions = colleges.map((item, index) => ({
-      id: item.id,
-      name: item.name,
-      location: "India",
-      students: Math.max(1200, studentsCount * 120 + index * 350),
-      status: toTitleCase(item.status || "active"),
+    const institutions = await Promise.all(colleges.map(async (item) => {
+      const email = String(item.email || "").toLowerCase();
+      const studentCount = await User.countDocuments({ collegeEmail: email, role: "student" });
+      const teacherCount = await User.countDocuments({ collegeEmail: email, role: "teacher" });
+      
+      return {
+        id: item.id,
+        name: item.name,
+        location: "India",
+        students: studentCount,
+        teachers: teacherCount,
+        status: toTitleCase(item.status || "active"),
+      };
     }));
 
     const userRows = users.map((item) => ({
@@ -647,6 +676,22 @@ router.patch("/college-applications/:id/reject", async (req, res) => {
     res.json({ data: application });
   } catch (error) {
     res.status(500).json({ message: "Failed to reject college application" });
+  }
+});
+
+router.delete("/college-applications/:id", async (req, res) => {
+  try {
+    const applicationId = Number(req.params.id);
+    const applicationQuery = Number.isNaN(applicationId) ? { _id: req.params.id } : { id: applicationId };
+
+    const deleted = await CollegeApplication.findOneAndDelete(applicationQuery);
+    if (!deleted) {
+      return res.status(404).json({ message: "College application not found" });
+    }
+
+    res.json({ data: { deleted: true, id: deleted.id } });
+  } catch (error) {
+    res.status(500).json({ message: "Failed to delete college application" });
   }
 });
 

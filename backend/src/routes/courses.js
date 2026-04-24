@@ -7,6 +7,10 @@ import { parseDataUriMime, uploadDataUriToCloudinary } from "../config/cloudinar
 
 const router = Router();
 
+function normalizeCollegeEmail(value) {
+  return String(value || "").trim().toLowerCase();
+}
+
 function normalizePanelList(panels) {
   if (!Array.isArray(panels) || panels.length === 0) {
     return ["teacher"];
@@ -419,7 +423,11 @@ router.put("/:id", async (req, res) => {
       ];
     }
 
-    const updated = await Course.findOneAndUpdate({ id: courseId }, updates, {
+    const collegeEmail = normalizeCollegeEmail(req.query?.collegeEmail || req.body?.collegeEmail);
+    const filter = { id: courseId };
+    if (collegeEmail) filter.collegeEmail = collegeEmail;
+
+    const updated = await Course.findOneAndUpdate(filter, updates, {
       new: true,
       runValidators: true,
     }).select("-__v");
@@ -441,7 +449,11 @@ router.delete("/:id", async (req, res) => {
       return res.status(400).json({ message: "Invalid course id" });
     }
 
-    const deleted = await Course.findOneAndDelete({ id: courseId });
+    const collegeEmail = normalizeCollegeEmail(req.query?.collegeEmail);
+    const filter = { id: courseId };
+    if (collegeEmail) filter.collegeEmail = collegeEmail;
+
+    const deleted = await Course.findOneAndDelete(filter);
     if (!deleted) {
       return res.status(404).json({ message: "Course not found" });
     }
@@ -465,7 +477,11 @@ router.patch("/:id/status", async (req, res) => {
       return res.status(400).json({ message: "status must be pending, approved, or rejected" });
     }
 
-    const updated = await Course.findOneAndUpdate({ id: courseId }, { status }, { new: true, runValidators: true }).select("-__v");
+    const collegeEmail = normalizeCollegeEmail(req.query?.collegeEmail || req.body?.collegeEmail);
+    const filter = { id: courseId };
+    if (collegeEmail) filter.collegeEmail = collegeEmail;
+
+    const updated = await Course.findOneAndUpdate(filter, { status }, { new: true, runValidators: true }).select("-__v");
 
     if (!updated) {
       return res.status(404).json({ message: "Course not found" });

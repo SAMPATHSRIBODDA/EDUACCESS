@@ -58,9 +58,10 @@ async function buildQuizResponse(quiz) {
 
 router.get("/", async (req, res) => {
   try {
-    const { teacherEmail, status, course } = req.query;
+    const { teacherEmail, status, course, collegeEmail } = req.query;
     const query = {};
 
+    if (collegeEmail) query.collegeEmail = String(collegeEmail).toLowerCase();
     if (teacherEmail) query.teacherEmail = String(teacherEmail).toLowerCase();
     if (status) query.status = String(status);
     if (course) query.course = String(course);
@@ -334,6 +335,7 @@ router.post("/", async (req, res) => {
       timeLimit = 0,
       attempts = "0 Attempts",
       avgScore = "0% Avg",
+      collegeEmail = "",
     } = req.body || {};
 
     if (!title || !course) {
@@ -362,6 +364,7 @@ router.post("/", async (req, res) => {
       timeLimit: Number(timeLimit) || 0,
       attempts,
       avgScore,
+      collegeEmail: String(collegeEmail).toLowerCase(),
     });
 
     res.status(201).json({ data: await buildQuizResponse(quiz) });
@@ -378,7 +381,7 @@ router.put("/:id", async (req, res) => {
     }
 
     const updates = {};
-    const allowedFields = ["title", "course", "teacherEmail", "status", "attempts", "avgScore", "questions", "openDate", "closeDate", "timeLimit"];
+    const allowedFields = ["title", "course", "teacherEmail", "status", "attempts", "avgScore", "questions", "openDate", "closeDate", "timeLimit", "collegeEmail"];
 
     allowedFields.forEach((field) => {
       if (req.body?.[field] !== undefined) {

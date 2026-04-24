@@ -17,8 +17,9 @@ const getStudentInfo = async (email) => {
 // GET all questions
 router.get("/questions", async (req, res) => {
   try {
-    const { tag, search } = req.query;
+    const { tag, search, collegeEmail } = req.query;
     let query = {};
+    if (collegeEmail) query.collegeEmail = collegeEmail;
     if (tag) query.tags = tag;
     if (search) query.$or = [
       { title: { $regex: search, $options: "i" } },
@@ -49,7 +50,7 @@ router.get("/questions/:id", async (req, res) => {
 // POST new question
 router.post("/questions", async (req, res) => {
   try {
-    const { studentEmail, studentName, title, content, codeSnippet, tags } = req.body;
+    const { studentEmail, collegeEmail, studentName, title, content, codeSnippet, tags } = req.body;
     
     // Auto-fetch college from CollegeMember
     const member = await CollegeMember.findOne({ email: studentEmail });
@@ -62,6 +63,7 @@ router.post("/questions", async (req, res) => {
     const newQuestion = await CommunityQuestion.create({
       id: nextId,
       studentEmail,
+      collegeEmail,
       studentName,
       collegeName,
       title,
@@ -81,7 +83,7 @@ router.post("/questions", async (req, res) => {
 router.post("/answers", async (req, res) => {
   try {
     const { 
-      questionId, studentEmail, studentName, content, 
+      questionId, studentEmail, collegeEmail, studentName, content, 
       explanation, codeSnippet, isStepByStep,
       attachmentUrl, attachmentName 
     } = req.body;
@@ -94,6 +96,7 @@ router.post("/answers", async (req, res) => {
       id: (latest?.id || 0) + 1,
       questionId,
       studentEmail,
+      collegeEmail,
       studentName,
       collegeName,
       content,

@@ -5,9 +5,15 @@ const collegeSettingSchema = new mongoose.Schema(
     panel: {
       type: String,
       required: true,
-      unique: true,
       enum: ["college"],
       default: "college",
+      index: true,
+    },
+    collegeEmail: {
+      type: String,
+      required: true,
+      trim: true,
+      lowercase: true,
       index: true,
     },
     roleBasedAccess: { type: Boolean, default: true },

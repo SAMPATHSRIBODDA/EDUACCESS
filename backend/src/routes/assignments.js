@@ -258,9 +258,10 @@ function buildAttemptSummary(submissions) {
 
 router.get("/", async (req, res) => {
   try {
-    const { teacherEmail, status, course } = req.query;
+    const { teacherEmail, status, course, collegeEmail } = req.query;
     const query = {};
 
+    if (collegeEmail) query.collegeEmail = String(collegeEmail).toLowerCase();
     if (teacherEmail) query.teacherEmail = String(teacherEmail).toLowerCase();
     if (status) query.status = status;
     if (course) query.course = String(course).trim();
@@ -626,6 +627,7 @@ router.post("/", async (req, res) => {
       assignmentFileUrl = "",
       assignmentFileName = "",
       assignmentFileSize = "",
+      collegeEmail = "",
     } = req.body || {};
 
     if (!title || !course || !due) {
@@ -668,6 +670,7 @@ router.post("/", async (req, res) => {
       assignmentFileUrl: normalizeAttachmentField(assignmentFileUrl),
       assignmentFileName: normalizeAttachmentField(assignmentFileName),
       assignmentFileSize: normalizeAttachmentField(assignmentFileSize),
+      collegeEmail: String(collegeEmail).toLowerCase(),
     };
 
     if (assignmentType === "mcq") {
@@ -728,6 +731,7 @@ router.put("/:id", async (req, res) => {
       "assignmentFileUrl",
       "assignmentFileName",
       "assignmentFileSize",
+      "collegeEmail",
     ];
 
     allowedFields.forEach((field) => {

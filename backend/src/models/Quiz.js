@@ -37,6 +37,7 @@ const quizSchema = new mongoose.Schema(
     timeLimit: { type: Number, default: 0 },
     attempts: { type: String, default: "0 Attempts" },
     avgScore: { type: String, default: "0% Avg" },
+    collegeEmail: { type: String, default: "", trim: true, lowercase: true, index: true },
   },
   { timestamps: true }
 );

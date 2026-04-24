@@ -90,6 +90,7 @@ const assignmentSchema = new mongoose.Schema(
     assignmentFileName: { type: String, default: "", trim: true },
     assignmentFileSize: { type: String, default: "", trim: true },
     teacherEmail: { type: String, default: "teacher@edu.com", trim: true, lowercase: true, index: true },
+    collegeEmail: { type: String, default: "", trim: true, lowercase: true, index: true },
   },
   { timestamps: true }
 );

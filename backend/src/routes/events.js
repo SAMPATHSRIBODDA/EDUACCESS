@@ -71,7 +71,11 @@ router.put("/:id", async (req, res) => {
       updates.collegeEmail = normalizeCollegeEmail(req.body.collegeEmail);
     }
 
-    const event = await Event.findOneAndUpdate({ id: eventId }, updates, { new: true }).select("-__v");
+    const collegeEmail = normalizeCollegeEmail(req.query?.collegeEmail || req.body?.collegeEmail);
+    const filter = { id: eventId };
+    if (collegeEmail) filter.collegeEmail = collegeEmail;
+
+    const event = await Event.findOneAndUpdate(filter, updates, { new: true }).select("-__v");
     if (!event) {
       return res.status(404).json({ message: "Event not found" });
     }
@@ -89,7 +93,11 @@ router.delete("/:id", async (req, res) => {
       return res.status(400).json({ message: "Invalid event id" });
     }
 
-    const deleted = await Event.findOneAndDelete({ id: eventId });
+    const collegeEmail = normalizeCollegeEmail(req.query?.collegeEmail);
+    const filter = { id: eventId };
+    if (collegeEmail) filter.collegeEmail = collegeEmail;
+
+    const deleted = await Event.findOneAndDelete(filter);
     if (!deleted) {
       return res.status(404).json({ message: "Event not found" });
     }

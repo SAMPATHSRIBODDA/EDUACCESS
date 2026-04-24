@@ -146,16 +146,32 @@ app.use("/api/teacher-panel", teacherPanelRoutes);
 app.use("/api/college-panel", collegePanelRoutes);
 app.use("/api/college-activities", collegeActivitiesRoutes);
 app.use("/api/college-members", collegeMembersRoutes);
-app.use("/api", learningRoutes);
 app.use("/api/community", communityRoutes);
+app.use("/api", learningRoutes);
+
+// Global Error Handler
+app.use((err, req, res, next) => {
+  console.error(`[Error] ${req.method} ${req.url}:`, err);
+  const status = err.status || 500;
+  res.status(status).json({
+    message: err.message || "An unexpected error occurred",
+    ...(process.env.NODE_ENV === "development" ? { stack: err.stack } : {}),
+  });
+});
 
 const startServer = async () => {
   try {
     console.log("Connecting to database...");
     await connectToDatabase();
     console.log("Database connected.");
-    // await seedDatabase();
-    // await backfillCollegeScopes();
+    
+    // Cloudinary Config Check
+    if (!process.env.CLOUDINARY_CLOUD_NAME || !process.env.CLOUDINARY_API_KEY || !process.env.CLOUDINARY_API_SECRET) {
+      console.warn("\x1b[33m%s\x1b[0m", "WARNING: Cloudinary is not configured. File uploads will fall back to local storage (non-persistent on Render/Vercel).");
+    } else {
+      console.log("Cloudinary configured correctly.");
+    }
+
     console.log("Fresh startup (seeding disabled). Starting server...");
 
     httpServer.listen(PORT, () => {

@@ -71,7 +71,11 @@ router.put("/:id", async (req, res) => {
       updates.collegeEmail = normalizeCollegeEmail(req.body.collegeEmail);
     }
 
-    const announcement = await Announcement.findOneAndUpdate({ id: announcementId }, updates, { new: true }).select("-__v");
+    const collegeEmail = normalizeCollegeEmail(req.query?.collegeEmail || req.body?.collegeEmail);
+    const filter = { id: announcementId };
+    if (collegeEmail) filter.collegeEmail = collegeEmail;
+
+    const announcement = await Announcement.findOneAndUpdate(filter, updates, { new: true }).select("-__v");
     if (!announcement) {
       return res.status(404).json({ message: "Announcement not found" });
     }
@@ -89,7 +93,11 @@ router.delete("/:id", async (req, res) => {
       return res.status(400).json({ message: "Invalid announcement id" });
     }
 
-    const deleted = await Announcement.findOneAndDelete({ id: announcementId });
+    const collegeEmail = normalizeCollegeEmail(req.query?.collegeEmail);
+    const filter = { id: announcementId };
+    if (collegeEmail) filter.collegeEmail = collegeEmail;
+
+    const deleted = await Announcement.findOneAndDelete(filter);
     if (!deleted) {
       return res.status(404).json({ message: "Announcement not found" });
     }

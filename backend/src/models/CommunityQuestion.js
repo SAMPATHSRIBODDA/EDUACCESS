@@ -4,6 +4,7 @@ const communityQuestionSchema = new mongoose.Schema(
   {
     id: { type: Number, required: true, unique: true, index: true },
     studentEmail: { type: String, required: true, trim: true, lowercase: true, index: true },
+    collegeEmail: { type: String, required: true, trim: true, lowercase: true, index: true },
     studentName: { type: String, required: true, trim: true },
     collegeName: { type: String, default: "Independent Student", trim: true },
     title: { type: String, required: true, trim: true },

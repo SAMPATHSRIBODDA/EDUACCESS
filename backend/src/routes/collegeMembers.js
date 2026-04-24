@@ -41,12 +41,16 @@ router.get("/", async (req, res) => {
 router.get("/lookup", async (req, res) => {
   try {
     const email = String(req.query?.email || "").trim().toLowerCase();
+    const collegeEmail = normalizeCollegeEmail(req.query?.collegeEmail);
 
     if (!email) {
       return res.status(400).json({ message: "email query is required" });
     }
 
-    const member = await CollegeMember.findOne({ email }).select("-__v");
+    const filter = { email };
+    if (collegeEmail) filter.collegeEmail = collegeEmail;
+
+    const member = await CollegeMember.findOne(filter).select("-__v");
 
     if (!member) {
       return res.status(404).json({ message: "Member not found" });
@@ -119,7 +123,7 @@ router.post("/bulk", async (req, res) => {
 
       return {
         updateOne: {
-          filter: { role: record.role, regId: record.regId },
+          filter: { role: record.role, regId: record.regId, collegeEmail: record.collegeEmail },
           update: { $set: record, $setOnInsert: { id: currentId } },
           upsert: true,
         },
@@ -180,8 +184,12 @@ router.patch("/:id", async (req, res) => {
     delete updateData._id;
     delete updateData.role;
 
+    const collegeEmail = normalizeCollegeEmail(req.query?.collegeEmail || updateData.collegeEmail);
+    const filter = { id: Number(id) };
+    if (collegeEmail) filter.collegeEmail = collegeEmail;
+
     const updated = await CollegeMember.findOneAndUpdate(
-      { id: Number(id) },
+      filter,
       { $set: updateData },
       { new: true }
     ).select("-__v");
@@ -199,7 +207,11 @@ router.patch("/:id", async (req, res) => {
 router.delete("/:id", async (req, res) => {
   try {
     const { id } = req.params;
-    const deleted = await CollegeMember.findOneAndDelete({ id: Number(id) });
+    const collegeEmail = normalizeCollegeEmail(req.query?.collegeEmail);
+    const filter = { id: Number(id) };
+    if (collegeEmail) filter.collegeEmail = collegeEmail;
+
+    const deleted = await CollegeMember.findOneAndDelete(filter);
 
     if (!deleted) {
       return res.status(404).json({ message: "Member not found" });

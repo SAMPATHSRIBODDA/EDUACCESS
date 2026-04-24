@@ -5,6 +5,7 @@ import { CollegeMember } from "../models/CollegeMember.js";
 import { CollegeActivity } from "../models/CollegeActivity.js";
 import { Announcement } from "../models/Announcement.js";
 import { CollegeSetting } from "../models/CollegeSetting.js";
+import { CollegeApplication } from "../models/CollegeApplication.js";
 
 const router = Router();
 
@@ -22,12 +23,16 @@ const defaultSettings = {
   lastBackupAt: "",
 };
 
-router.get("/settings", async (_req, res) => {
+router.get("/settings", async (req, res) => {
   try {
-    const saved = await CollegeSetting.findOne({ panel: "college" }).select("-__v");
+    const collegeEmail = normalizeCollegeEmail(req.query?.collegeEmail);
+    const filter = { panel: "college" };
+    if (collegeEmail) filter.collegeEmail = collegeEmail;
+
+    const saved = await CollegeSetting.findOne(filter).select("-__v");
 
     if (!saved) {
-      return res.json({ data: defaultSettings });
+      return res.json({ data: { ...defaultSettings, collegeEmail } });
     }
 
     res.json({
@@ -49,6 +54,11 @@ router.get("/settings", async (_req, res) => {
 router.put("/settings", async (req, res) => {
   try {
     const payload = req.body || {};
+    const collegeEmail = normalizeCollegeEmail(payload.collegeEmail || req.query?.collegeEmail);
+
+    if (!collegeEmail) {
+      return res.status(400).json({ message: "collegeEmail is required to save settings" });
+    }
 
     const updates = {
       roleBasedAccess: Boolean(payload.roleBasedAccess),
@@ -61,8 +71,8 @@ router.put("/settings", async (req, res) => {
     };
 
     const saved = await CollegeSetting.findOneAndUpdate(
-      { panel: "college" },
-      { panel: "college", ...updates },
+      { panel: "college", collegeEmail },
+      { panel: "college", collegeEmail, ...updates },
       { new: true, upsert: true, setDefaultsOnInsert: true }
     ).select("-__v");
 
@@ -109,7 +119,7 @@ router.get("/overview", async (req, res) => {
       CollegeActivity.find(activityFilter).sort({ createdAt: -1 }).limit(10).select("-__v"),
       Announcement.find(announcementFilter).sort({ createdAt: -1, id: -1 }).limit(5).select("-__v"),
       Event.find(eventFilter).sort({ date: 1, id: 1 }).limit(5).select("-__v"),
-      CollegeMember.distinct("branch", memberFilter),
+      CollegeMember.distinct("branch", { ...memberFilter, branch: { $ne: "" } }),
       CollegeMember.aggregate([
         { $match: { ...memberFilter, role: "student" } },
         {
@@ -119,8 +129,17 @@ router.get("/overview", async (req, res) => {
           }
         },
         { $sort: { students: -1, _id: 1 } }
+      ]),
+      CollegeMember.aggregate([
+        { $match: { ...memberFilter, role: "teacher" } },
+        { $group: { _id: "$branch", teachers: { $push: "$name" } } }
       ])
     ]);
+
+    const teacherMap = new Map();
+    teacherAgg.forEach((item) => {
+      teacherMap.set(item._id, Array.isArray(item.teachers) && item.teachers.length > 0 ? item.teachers[0] : "TBD");
+    });
 
     const metrics = {
       totalStudents: studentsCount,
@@ -188,9 +207,12 @@ router.get("/overview", async (req, res) => {
       });
     }
 
+    const college = collegeEmail ? await CollegeApplication.findOne({ ownerEmail: collegeEmail }).select("collegeName ownerName ownerEmail city status") : null;
+
     res.json({
       data: {
         metrics,
+        college,
         activities: recentActivities,
         announcements: recentAnnouncements,
         events: recentEvents,
@@ -199,7 +221,8 @@ router.get("/overview", async (req, res) => {
         departmentsList: departments,
         departmentStats: departmentStats.map((item) => ({
           branch: item._id,
-          students: item.students
+          students: item.students,
+          head: teacherMap.get(item._id) || "TBD"
         }))
       }
     });
