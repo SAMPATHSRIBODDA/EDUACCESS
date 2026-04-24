@@ -6,6 +6,7 @@ import { CourseEnrollment } from "../models/CourseEnrollment.js";
 import { Event } from "../models/Event.js";
 import { User } from "../models/User.js";
 import { Quiz } from "../models/Quiz.js";
+import { CollegeMember } from "../models/CollegeMember.js";
 
 const router = Router();
 
@@ -66,12 +67,14 @@ router.get("/overview", async (req, res) => {
 router.get("/students", async (req, res) => {
   try {
     const teacherEmail = String(req.query?.teacherEmail || "teacher@edu.com").toLowerCase().trim() || "teacher@edu.com";
-
-    const teacher = await User.findOne({ email: teacherEmail });
-    const teacherBranch = teacher?.branch || "CSE";
+    
+    // Look for teacher in CollegeMember for authoritative branch info
+    const teacher = await CollegeMember.findOne({ email: teacherEmail, role: "teacher" });
+    const teacherBranch = teacher?.branch || "General";
 
     const teacherCourses = await Course.find({ createdBy: teacherEmail }).select("id title");
     const teacherCourseIds = teacherCourses.map((course) => Number(course.id)).filter((id) => Number.isFinite(id));
+    
     const enrollments = teacherCourseIds.length > 0
       ? await CourseEnrollment.find({ courseId: { $in: teacherCourseIds } }).select("studentEmail courseId paymentStatus enrolledAt")
       : [];
@@ -92,7 +95,8 @@ router.get("/students", async (req, res) => {
       enrolledByStudent.set(email, current);
     });
 
-    const students = await User.find({ role: "student" }).select("-__v");
+    // Find students in CollegeMember instead of User for more reliable branch info
+    const students = await CollegeMember.find({ role: "student" }).select("-__v");
 
     const enrichedStudents = students.map((student) => {
       const studentEmail = String(student.email || "").toLowerCase();
@@ -103,16 +107,19 @@ router.get("/students", async (req, res) => {
       const branch = student.branch || "General";
 
       return {
-        ...student.toObject(),
+        id: student.id,
+        name: student.name,
+        email: student.email,
         regId: student.regId || "N/A",
-        phoneNumber: student.phoneNumber || "N/A",
+        phoneNumber: student.phone || "N/A",
         course: activeCourse,
         year: student.year || "N/A",
         branch,
-        belongsToBranch: branch === teacherBranch,
+        belongsToBranch: branch.toUpperCase() === teacherBranch.toUpperCase() && branch !== "General",
         isOpted: enrolledCourses.length > 0,
         activeCourse,
         enrolledCourses,
+        avatar: student.avatar || `https://api.dicebear.com/7.x/initials/svg?seed=${encodeURIComponent(student.name)}`
       };
     });
 
