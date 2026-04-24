@@ -80,6 +80,8 @@ export const QuestionDetail: React.FC = () => {
                 questionId: parseInt(id),
                 studentEmail: user.email,
                 studentName: user.name,
+                collegeEmail: user.collegeEmail || '',
+                collegeName: user.course || 'Independent Student',
                 ...newAnswer
             });
             if (res.data.success) {

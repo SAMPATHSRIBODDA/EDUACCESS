@@ -83,6 +83,8 @@ export const Community: React.FC = () => {
       const res = await api.postCommunityQuestion({
         studentEmail: user.email,
         studentName: user.name,
+        collegeEmail: user.collegeEmail || '',
+        collegeName: user.course || 'Independent Student', // Using course/branch as college display name if needed, or user.collegeName if added
         title: newQuestion.title,
         content: newQuestion.content,
         codeSnippet: newQuestion.codeSnippet,
