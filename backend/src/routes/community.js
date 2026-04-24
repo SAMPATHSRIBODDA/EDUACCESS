@@ -50,11 +50,16 @@ router.get("/questions/:id", async (req, res) => {
 // POST new question
 router.post("/questions", async (req, res) => {
   try {
-    const { studentEmail, collegeEmail, studentName, title, content, codeSnippet, tags } = req.body;
+    let { studentEmail, collegeEmail, studentName, title, content, codeSnippet, tags } = req.body;
     
-    // Auto-fetch college from CollegeMember
-    const member = await CollegeMember.findOne({ email: studentEmail });
-    const collegeName = member?.collegeEmail?.split('@')[1]?.split('.')[0]?.toUpperCase() || "Independent";
+    // Auto-fetch college from CollegeMember if missing
+    if (!collegeEmail) {
+      const member = await CollegeMember.findOne({ email: studentEmail });
+      collegeEmail = member?.collegeEmail || "";
+    }
+
+    const memberForName = await CollegeMember.findOne({ email: studentEmail });
+    const collegeName = memberForName?.collegeEmail?.split('@')[1]?.split('.')[0]?.toUpperCase() || "Independent";
 
     const latest = await CommunityQuestion.findOne().sort({ createdAt: -1 });
     const nextId = (latest?.id || 0) + 1;
@@ -82,14 +87,19 @@ router.post("/questions", async (req, res) => {
 // POST answer
 router.post("/answers", async (req, res) => {
   try {
-    const { 
+    let { 
       questionId, studentEmail, collegeEmail, studentName, content, 
       explanation, codeSnippet, isStepByStep,
       attachmentUrl, attachmentName 
     } = req.body;
     
-    const member = await CollegeMember.findOne({ email: studentEmail });
-    const collegeName = member?.collegeEmail?.split('@')[1]?.split('.')[0]?.toUpperCase() || "Independent";
+    if (!collegeEmail) {
+      const member = await CollegeMember.findOne({ email: studentEmail });
+      collegeEmail = member?.collegeEmail || "";
+    }
+
+    const memberForName = await CollegeMember.findOne({ email: studentEmail });
+    const collegeName = memberForName?.collegeEmail?.split('@')[1]?.split('.')[0]?.toUpperCase() || "Independent";
 
     const latest = await CommunityAnswer.findOne().sort({ id: -1 });
     const newAnswer = await CommunityAnswer.create({
