@@ -238,6 +238,7 @@ export const TeacherQuizzes: React.FC = () => {
         openDate: form.openDate,
         closeDate: form.closeDate,
         timeLimit: Number(form.timeLimit) || 0,
+        collegeEmail: user?.collegeEmail || '',
       };
 
       if (editingQuizId) {

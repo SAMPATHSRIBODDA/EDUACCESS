@@ -639,6 +639,7 @@ export const TeacherAssignments: React.FC = () => {
                 assignmentFileUrl: form.assignmentFileUrl,
                 assignmentFileName: form.assignmentFileName,
                 assignmentFileSize: form.assignmentFileSize,
+                collegeEmail: user?.collegeEmail || '',
             };
 
             if (editingId) {

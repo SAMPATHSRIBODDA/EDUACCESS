@@ -13,6 +13,9 @@ const typeIcons = {
 };
 
 export const TeacherResources: React.FC = () => {
+  const { user } = useAuth();
+  const teacherEmail = String(user?.email || '').toLowerCase();
+
   const [resources, setResources] = useState<ResourceRecord[]>([]);
   const [courses, setCourses] = useState<CourseRecord[]>([]);
   const [searchQuery, setSearchQuery] = useState('');
@@ -37,7 +40,7 @@ export const TeacherResources: React.FC = () => {
   const loadData = async () => {
     try {
       const [resResponse, courseResponse] = await Promise.all([
-        api.getResources('teacher@edu.com'),
+        api.getResources(teacherEmail),
         api.getCourses('teacher')
       ]);
       setResources(resResponse.data);
@@ -96,7 +99,11 @@ export const TeacherResources: React.FC = () => {
 
     try {
       setSaving(true);
-      let finalForm = { ...form, teacherEmail: 'teacher@edu.com' };
+      let finalForm = { 
+        ...form, 
+        teacherEmail,
+        collegeEmail: user?.collegeEmail || ''
+      };
 
       // If a local file is selected, upload it first
       if (selectedFile && (form.type === 'document' || form.type === 'other')) {
