@@ -3,6 +3,7 @@ import React, { useEffect, useState, useMemo, useRef } from 'react';
 import { FileText, Plus, Search, Trash2, X, CheckCircle2, Link as LinkIcon, Video, FileQuestion, Upload } from 'lucide-react';
 
 import { api } from '../../services/api';
+import { useAuth } from '../../context/AuthContext';
 import type { ResourceRecord, CourseRecord, ResourceInput } from '../../types/api';
 
 const typeIcons = {

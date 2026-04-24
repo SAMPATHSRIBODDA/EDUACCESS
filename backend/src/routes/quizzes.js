@@ -347,9 +347,13 @@ router.post("/", async (req, res) => {
       return res.status(400).json({ message: "At least one valid MCQ question is required" });
     }
 
-    const selectedCourse = await Course.findOne({ title: String(course).trim(), status: "approved" }).select("id title");
+    const selectedCourse = await Course.findOne({ 
+      title: String(course).trim(), 
+      status: { $in: ["approved", "pending"] } 
+    }).select("id title collegeEmail");
+    
     if (!selectedCourse) {
-      return res.status(400).json({ message: "Selected course is not approved or does not exist" });
+      return res.status(400).json({ message: "Selected course does not exist or is not available" });
     }
 
     const quiz = await Quiz.create({
@@ -364,7 +368,7 @@ router.post("/", async (req, res) => {
       timeLimit: Number(timeLimit) || 0,
       attempts,
       avgScore,
-      collegeEmail: String(collegeEmail).toLowerCase(),
+      collegeEmail: String(collegeEmail || selectedCourse.collegeEmail || "").toLowerCase(),
     });
 
     res.status(201).json({ data: await buildQuizResponse(quiz) });

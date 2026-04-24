@@ -141,6 +141,7 @@ router.post("/google-login", async (req, res) => {
         branch: collegeMember.branch,
         course: collegeMember.course,
         year: collegeMember.year,
+        collegeEmail: collegeMember.collegeEmail,
       },
       token: googleToken,
     });
