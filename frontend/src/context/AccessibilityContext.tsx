@@ -27,8 +27,8 @@ export const AccessibilityProvider: React.FC<{ children: React.ReactNode }> = ({
   const [audioMode, setAudioMode] = useState(false);
   const [lastSpokenText, setLastSpokenText] = useState('');
 
-  const speak = useCallback((text: string) => {
-    if (!ttsEnabled) return;
+  const speak = useCallback((text: string, force = false) => {
+    if (!ttsEnabled && !force) return;
     const normalizedText = String(text || '').trim();
     if (!normalizedText) return;
     window.speechSynthesis.cancel();
@@ -53,15 +53,35 @@ export const AccessibilityProvider: React.FC<{ children: React.ReactNode }> = ({
   }, [lastSpokenText]);
 
   const readPage = useCallback(() => {
-    const selectors = ['h1', 'h2', 'h3', 'p', 'li'];
+    const selectors = [
+      'h1', 'h2', 'h3', 'h4', 'h5', 'h6', 
+      'p', 'li', 'article', 'section', 'main', 
+      '[role="main"]', '.course-card h3', 
+      '.hero-content h1', '.hero-content p',
+      '.announcement-title', '.event-name'
+    ];
     const elements = document.querySelectorAll(selectors.join(','));
     const textToRead = Array.from(elements)
-      .map(el => el.textContent)
-      .filter(Boolean)
+      .map(el => {
+         if (
+           el.closest('nav') || 
+           el.closest('footer') || 
+           el.closest('[aria-hidden="true"]') || 
+           el.closest('#accessibility-panel-root')
+         ) return '';
+         
+         const text = el.textContent?.trim() || '';
+         // Filter out short fragments or nav items that slipped through
+         if (text.length < 3) return '';
+         return text;
+      })
+      .filter(text => text.length > 0)
       .join('. ');
     
     if (textToRead) {
-      speak("Reading page content: " + textToRead);
+      speak("Reading page: " + textToRead, true);
+    } else {
+      speak("No readable content found on this section.", true);
     }
   }, [speak]);
 

@@ -152,7 +152,7 @@ window.toggleSuspend = async (id) => {
     if (!member) return;
 
     const newStatus = member.status === 'suspended' ? 'active' : 'suspended';
-    const response = await fetch(`${API_BASE}/college-members/${id}`, {
+    const response = await fetch(withCollegeScope(`${API_BASE}/college-members/${id}`), {
       method: "PATCH",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ status: newStatus }),
@@ -172,7 +172,7 @@ window.toggleSuspend = async (id) => {
 window.deleteMember = async (id) => {
   if (!confirm("Are you sure you want to delete this member permanently?")) return;
   try {
-    const response = await fetch(`${API_BASE}/college-members/${id}`, { method: "DELETE" });
+    const response = await fetch(withCollegeScope(`${API_BASE}/college-members/${id}`), { method: "DELETE" });
     if (response.ok) {
       studentsDirectory = studentsDirectory.filter((m) => String(m.id) !== String(id));
       teachersDirectory = teachersDirectory.filter((m) => String(m.id) !== String(id));
@@ -209,7 +209,7 @@ if (editMemberForm) {
     }
 
     try {
-      const response = await fetch(`${API_BASE}/college-members/${id}`, {
+      const response = await fetch(withCollegeScope(`${API_BASE}/college-members/${id}`), {
         method: "PATCH",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(payload),
@@ -789,6 +789,7 @@ function renderPendingCourses() {
       <span class="course-action-wrap">
         <button class="action-chip approve" data-course-action="approve" data-course-id="${course.id}" type="button">Approve</button>
         <button class="action-chip reject" data-course-action="reject" data-course-id="${course.id}" type="button">Reject</button>
+        <button class="action-chip delete" data-course-action="delete" data-course-id="${course.id}" type="button">Delete</button>
       </span>
     `;
     pendingCoursesRows.appendChild(row);
@@ -835,7 +836,7 @@ async function loadCourseApprovalData() {
 
 async function handleCourseStatusUpdate(courseId, status) {
   try {
-    const response = await fetch(`${API_BASE}/courses/${courseId}/status`, {
+    const response = await fetch(withCollegeScope(`${API_BASE}/courses/${courseId}/status`), {
       method: "PATCH",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ status }),
@@ -849,6 +850,24 @@ async function handleCourseStatusUpdate(courseId, status) {
     showActionStatus(`Course ${status} successfully.`);
   } catch {
     showActionStatus("Failed to update course status.");
+  }
+}
+
+async function handleCourseDelete(courseId) {
+  if (!confirm("Are you sure you want to delete this course request?")) return;
+  try {
+    const response = await fetch(withCollegeScope(`${API_BASE}/courses/${courseId}`), {
+      method: "DELETE",
+    });
+
+    if (!response.ok) {
+      throw new Error(`Failed to delete course: ${response.status}`);
+    }
+
+    await loadCourseApprovalData();
+    showActionStatus("Course request deleted successfully.");
+  } catch {
+    showActionStatus("Failed to delete course request.");
   }
 }
 
@@ -1893,6 +1912,16 @@ async function loadPanelData() {
       departmentStats: Array.isArray(overview.departmentStats) ? overview.departmentStats : dashboardOverview.departmentStats,
     };
 
+    const college = overview.college;
+    if (college) {
+      const profileName = document.getElementById("profileName");
+      const profileAvatar = document.getElementById("profileAvatar");
+      if (profileName) profileName.textContent = college.ownerName || "College Admin";
+      if (profileAvatar && college.ownerName) {
+        profileAvatar.textContent = college.ownerName.slice(0, 2).toUpperCase();
+      }
+    }
+
     renderDashboardPanels();
   } catch {
     // Keep default dashboard data if backend is not reachable.
@@ -2052,7 +2081,31 @@ function showActionStatus(message) {
 
 showActionStatus.timer = 0;
 
+function handleLogout() {
+  showActionStatus("Signing out...");
+  window.localStorage.removeItem("authUser");
+  window.localStorage.removeItem(ACTIVE_PAGE_STORAGE_KEY);
+  window.localStorage.removeItem(SETTINGS_STORAGE_KEY);
+  
+  const keysToRemove = [];
+  for (let i = 0; i < window.localStorage.length; i++) {
+    const key = window.localStorage.key(i);
+    if (key && (key.startsWith("clgAdminStudentsDirectory") || key.startsWith("clgAdminTeachersDirectory"))) {
+       keysToRemove.push(key);
+    }
+  }
+  keysToRemove.forEach(k => window.localStorage.removeItem(k));
+
+  window.setTimeout(() => {
+    window.location.assign("/");
+  }, 600);
+}
+
 function setActivePage(page) {
+  if (page === "logout") {
+    handleLogout();
+    return;
+  }
   const safePage = validPages.has(page) ? page : "dashboard";
   currentActivePage = safePage;
 
@@ -2079,6 +2132,10 @@ function setActivePage(page) {
 
   if (safePage === "courses") {
     void loadCourseApprovalData();
+  }
+
+  if (safePage === "departments") {
+    void loadDepartmentStats();
   }
 }
 
@@ -2178,13 +2235,16 @@ profileMenuItems.forEach((item) => {
     profileButton.setAttribute("aria-expanded", "false");
 
     if (action === "profile") {
+      const currentName = document.getElementById("profileName")?.textContent || "College Admin";
+      const currentEmail = activeCollegeEmail || "admin@eduaccess.com";
+      
       void openQuickActionForm({
         title: "My Profile",
         submitLabel: "Close",
         fields: [
-          { name: "name", label: "Admin Name", value: "Admin Priya", fullWidth: true },
+          { name: "name", label: "Admin Name", value: currentName, fullWidth: true },
           { name: "role", label: "Role", value: "College Admin" },
-          { name: "email", label: "Email", value: "admin@eduaccess.com", fullWidth: true },
+          { name: "email", label: "Email", value: currentEmail, fullWidth: true },
         ],
       });
       showActionStatus("Profile details opened.");
@@ -2198,10 +2258,7 @@ profileMenuItems.forEach((item) => {
     }
 
     if (action === "logout") {
-      showActionStatus("Signing out...");
-      window.setTimeout(() => {
-        window.location.assign("/");
-      }, 300);
+      handleLogout();
     }
   });
 });
@@ -2531,6 +2588,11 @@ if (pendingCoursesRows) {
 
     if (action === "reject") {
       void handleCourseStatusUpdate(courseId, "rejected");
+      return;
+    }
+
+    if (action === "delete") {
+      void handleCourseDelete(courseId);
     }
   });
 }

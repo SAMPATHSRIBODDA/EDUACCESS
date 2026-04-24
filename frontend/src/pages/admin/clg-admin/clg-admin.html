@@ -102,6 +102,7 @@
               <path
                 d="M19.4 15a1.7 1.7 0 0 0 .3 1.8l.1.1a2 2 0 1 1-2.8 2.8l-.1-.1a1.7 1.7 0 0 0-1.8-.3 1.7 1.7 0 0 0-1 1.5V21a2 2 0 1 1-4 0v-.2a1.7 1.7 0 0 0-1-1.5 1.7 1.7 0 0 0-1.8.3l-.1.1a2 2 0 0 1-2.8-2.8l.1-.1a1.7 1.7 0 0 0 .3-1.8 1.7 1.7 0 0 0-1.5-1H3a2 2 0 1 1 0-4h.2a1.7 1.7 0 0 0 1.5-1 1.7 1.7 0 0 0-.3-1.8l-.1-.1a2 2 0 1 1 2.8-2.8l.1.1a1.7 1.7 0 0 0 1.8.3h.1a1.7 1.7 0 0 0 1-1.5V3a2 2 0 1 1 4 0v.2a1.7 1.7 0 0 0 1 1.5h.1a1.7 1.7 0 0 0 1.8-.3l.1-.1a2 2 0 1 1 2.8 2.8l-.1.1a1.7 1.7 0 0 0-.3 1.8v.1a1.7 1.7 0 0 0 1.5 1H21a2 2 0 1 1 0 4h-.2a1.7 1.7 0 0 0-1.5 1z" />
             </svg></span><span class="nav-label">Settings</span></button>
+        <button class="nav-item danger" data-page="logout" type="button" style="margin-top: auto; color: #ef4444;"><span class="nav-icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path><polyline points="16 17 21 12 16 7"></polyline><line x1="21" y1="12" x2="9" y2="12"></line></svg></span><span class="nav-label">Logout</span></button>
       </nav>
     </aside>
 
@@ -154,17 +155,17 @@
           <div class="profile" id="profileMenuWrap">
             <button id="profileButton" type="button" class="profile-btn" aria-haspopup="menu"
               aria-controls="profileMenu" aria-expanded="false">
-              <span class="avatar">AD</span>
+              <span class="avatar" id="profileAvatar">AD</span>
               <span class="profile-meta">
-                <strong>Admin Priya</strong>
-                <small>College Admin</small>
+                <strong id="profileName">College Admin</strong>
+                <small id="profileRole">College Admin</small>
               </span>
               <span class="caret" aria-hidden="true">▾</span>
             </button>
             <div class="menu" id="profileMenu" role="menu" aria-label="Profile menu" hidden>
               <button role="menuitem" data-profile-action="profile" type="button">My Profile</button>
               <button role="menuitem" data-profile-action="settings" type="button">Account Settings</button>
-              <button role="menuitem" data-profile-action="logout" type="button">Sign Out</button>
+              <button role="menuitem" data-profile-action="logout" type="button">Logout</button>
             </div>
           </div>
         </div>

@@ -297,8 +297,9 @@ export const AccessibilityPanel: React.FC = () => {
 
     const has = (...phrases: string[]) => matchesIntent(value, phrases);
 
-    if (has('start reading', 'read page', 'listen to page', 'read this page')) {
+    if (has('start reading', 'read page', 'listen to page', 'read this page', 'listen', 'narrate')) {
       setLastAction('Reading page content');
+      setTtsEnabled(true);
       readPage();
       return;
     }
@@ -321,8 +322,7 @@ export const AccessibilityPanel: React.FC = () => {
       has('stop reading', 'stop the reading', 'stop narration', 'stop talking', 'be quiet', 'pause reading');
 
     if (stopReadingIntent) {
-      setLastAction('Stopped narration and disabled narrative mode');
-      setAudioMode(false);
+      setLastAction('Stopped narration');
       stopSpeaking();
       return;
     }
@@ -924,6 +924,7 @@ export const AccessibilityPanel: React.FC = () => {
 
   return (
     <div
+      id="accessibility-panel-root"
       className="fixed z-[60]"
       style={{ left: position.x, top: position.y, width: BUTTON_SIZE, height: BUTTON_SIZE, overflow: 'visible' }}
     >

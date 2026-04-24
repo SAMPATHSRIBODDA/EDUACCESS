@@ -1,6 +1,6 @@
-const API_BASE = import.meta.env.VITE_API_BASE_URL || "http://localhost:5000/api";
-const SUPER_ADMIN_EMAIL = "Eduaccess@gmail.com";
-const SUPER_ADMIN_PASSWORD = "Eduaccess2228";
+const API_BASE = (typeof window !== "undefined" && window.location.origin.includes("localhost")) 
+  ? "http://localhost:5000/api" 
+  : (import.meta.env?.VITE_API_BASE_URL || "http://localhost:5000/api");
 
 window.__superAdminPanelReady = false;
 
@@ -504,6 +504,7 @@ function renderColleges() {
           <td>
             <div class="table-actions">
               <button class="btn-view btn-icon" type="button" data-college-action="view" title="View details" aria-label="View details">${VIEW_ICON}</button>
+              <button class="btn-delete" type="button" data-college-action="delete">Delete</button>
             </div>
           </td>
         </tr>
@@ -514,12 +515,33 @@ function renderColleges() {
   body.querySelectorAll("tr[data-college-email]").forEach((row) => {
     const email = row.dataset.collegeEmail || "";
     row.querySelectorAll("button[data-college-action]").forEach((button) => {
-      button.addEventListener("click", () => {
+      button.addEventListener("click", async () => {
         const college = (state.dataset?.colleges || []).find((item) => normalizeEmail(item.collegeEmail || item.ownerEmail) === normalizeEmail(email));
         if (!college) return;
-        alert(
-          `${college.name}\n\nOwner: ${college.ownerName}\nEmail: ${college.ownerEmail}\nAddress: ${[college.city, college.state, college.country].filter(Boolean).join(", ")}\nStudents: ${college.studentCount || 0}\nTeachers: ${college.teacherCount || 0}\nCourses: ${college.courseCount || 0}\nStatus: ${college.status}`
-        );
+        
+        const action = button.dataset.collegeAction;
+        if (action === "view") {
+          alert(
+            `${college.name}\n\nOwner: ${college.ownerName}\nEmail: ${college.ownerEmail}\nAddress: ${[college.city, college.state, college.country].filter(Boolean).join(", ")}\nStudents: ${college.studentCount || 0}\nTeachers: ${college.teacherCount || 0}\nCourses: ${college.courseCount || 0}\nStatus: ${college.status}`
+          );
+          return;
+        }
+
+        if (action === "delete") {
+          if (!confirm(`Are you sure you want to delete ${college.name}? This will remove all associated data.`)) return;
+          try {
+            // In this system, colleges are Users with role 'college'
+            // We find the user ID to delete them
+            const user = state.dataset?.users?.find(u => normalizeEmail(u.email) === normalizeEmail(email));
+            if (!user) throw new Error("Could not find user record for this college.");
+            
+            await jsonRequest(`/super-admin/users/${encodeURIComponent(String(user.id))}`, { method: "DELETE" });
+            await refreshDataset();
+            announce(`College ${college.name} deleted.`);
+          } catch (error) {
+            announce(error.message || "Failed to delete college.");
+          }
+        }
       });
     });
   });
@@ -849,6 +871,7 @@ function renderApprovals() {
             <div class="table-actions">
               <button class="btn-approve" type="button" data-approval-action="approve">Approve</button>
               <button class="btn-reject" type="button" data-approval-action="reject">Reject</button>
+              <button class="btn-delete" type="button" data-approval-action="delete">Delete</button>
             </div>
           </td>
         </tr>
@@ -862,6 +885,20 @@ function renderApprovals() {
         const id = row.dataset.applicationId;
         const action = button.dataset.approvalAction;
         if (!id || !action) return;
+
+        if (action === "delete") {
+          if (!confirm("Are you sure you want to delete this college request?")) return;
+          try {
+            await jsonRequest(`/super-admin/college-applications/${encodeURIComponent(String(id))}`, {
+              method: "DELETE",
+            });
+            await refreshDataset();
+            announce("College application deleted.");
+          } catch (error) {
+            announce(error.message || "Failed to delete application");
+          }
+          return;
+        }
 
         try {
           await jsonRequest(`/super-admin/college-applications/${encodeURIComponent(String(id))}/${action}`, {
@@ -1031,17 +1068,35 @@ function handleLogout() {
   window.location.assign("/");
 }
 
-function handleLoginSubmit(event) {
+async function handleLoginSubmit(event) {
   event.preventDefault();
   const email = normalizeText(superAdminEmail?.value);
   const password = normalizeText(superAdminPassword?.value);
 
-  if (normalizeEmail(email) === normalizeEmail(SUPER_ADMIN_EMAIL) && password === SUPER_ADMIN_PASSWORD) {
-    unlockSuperAdmin();
+  if (!email || !password) {
+    authError.textContent = "Please enter both email and password.";
     return;
   }
 
-  authError.textContent = "Invalid super admin credentials.";
+  try {
+    authError.textContent = "Authenticating...";
+    const response = await fetch(`${API_BASE}/super-admin/login`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ email, password }),
+    });
+
+    const payload = await response.json();
+
+    if (response.ok && payload.success) {
+      unlockSuperAdmin();
+    } else {
+      authError.textContent = payload.message || "Invalid super admin credentials.";
+    }
+  } catch (error) {
+    console.error("Login Error:", error);
+    authError.textContent = "Server connection failed.";
+  }
 }
 
 function unlockSuperAdmin() {
@@ -1052,17 +1107,6 @@ function unlockSuperAdmin() {
 }
 
 function tryAutoLoginFromQuery() {
-  const params = new URLSearchParams(window.location.search);
-  const email = normalizeEmail(params.get("email"));
-  const password = normalizeText(params.get("password"));
-
-  if (email && password && email === normalizeEmail(SUPER_ADMIN_EMAIL) && password === SUPER_ADMIN_PASSWORD) {
-    localStorage.setItem("superAdminAuthenticated", "true");
-    const cleanUrl = `${window.location.pathname}${params.get("section") ? `?section=${encodeURIComponent(params.get("section"))}` : ""}${window.location.hash || ""}`;
-    window.history.replaceState({}, document.title, cleanUrl);
-    return true;
-  }
-
   return false;
 }
 

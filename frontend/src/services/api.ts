@@ -98,8 +98,11 @@ async function mutate<T>(path: string, method: "POST" | "PUT" | "PATCH" | "DELET
 export const api = {
   getUsers: () => request<ApiListResponse<UserRecord>>("/users"),
   getGuides: () => request("/guides"),
-  getCourses: (panel?: string) =>
-    request<ApiListResponse<CourseRecord>>(panel ? `/courses?panel=${encodeURIComponent(panel)}` : "/courses"),
+  getCourses: (panel?: string, collegeEmail?: string) => {
+    let url = panel ? `/courses?panel=${encodeURIComponent(panel)}` : "/courses";
+    if (collegeEmail) url += (url.includes("?") ? "&" : "?") + `collegeEmail=${encodeURIComponent(collegeEmail)}`;
+    return request<ApiListResponse<CourseRecord>>(url);
+  },
   getCourseDetail: (courseId: number, studentEmail: string) =>
     request<{ data: CourseDetailResponse }>(`/course/${encodeURIComponent(String(courseId))}?studentEmail=${encodeURIComponent(studentEmail)}`),
   getLectureDetail: (lectureId: string, studentEmail: string) =>
@@ -151,17 +154,21 @@ export const api = {
     razorpayPaymentId: string;
     razorpaySignature: string;
   }) => mutate<{ data: CourseEnrollmentRecord; message?: string }>("/payments/razorpay/verify", "POST", payload),
-  getEvents: (panel?: string) =>
-    request<ApiListResponse<EventRecord>>(panel ? `/events?panel=${encodeURIComponent(panel)}` : "/events"),
+  getEvents: (panel?: string, collegeEmail?: string) => {
+    let url = panel ? `/events?panel=${encodeURIComponent(panel)}` : "/events";
+    if (collegeEmail) url += (url.includes("?") ? "&" : "?") + `collegeEmail=${encodeURIComponent(collegeEmail)}`;
+    return request<ApiListResponse<EventRecord>>(url);
+  },
   createEvent: (payload: { time: string; name: string; location: string; date?: string; panel?: string }) =>
     mutate<{ data: EventRecord }>("/events", "POST", payload),
   updateEvent: (id: number, payload: Partial<{ time: string; name: string; location: string; date: string; panel: string }>) =>
     mutate<{ data: EventRecord }>(`/events/${encodeURIComponent(String(id))}`, "PUT", payload),
   deleteEvent: (id: number) => mutate<{ data: { deleted: true; id: number } }>(`/events/${encodeURIComponent(String(id))}`, "DELETE"),
-  getAnnouncements: (panel?: string) =>
-    request<ApiListResponse<AnnouncementRecord>>(
-      panel ? `/announcements?panel=${encodeURIComponent(panel)}` : "/announcements"
-    ),
+  getAnnouncements: (panel?: string, collegeEmail?: string) => {
+    let url = panel ? `/announcements?panel=${encodeURIComponent(panel)}` : "/announcements";
+    if (collegeEmail) url += (url.includes("?") ? "&" : "?") + `collegeEmail=${encodeURIComponent(collegeEmail)}`;
+    return request<ApiListResponse<AnnouncementRecord>>(url);
+  },
   createAnnouncement: (payload: { title: string; description: string; date: string; tag?: string; panel?: string }) =>
     mutate<{ data: AnnouncementRecord }>("/announcements", "POST", payload),
   updateAnnouncement: (id: number, payload: Partial<{ title: string; description: string; date: string; tag: string; panel: string }>) =>
@@ -293,8 +300,13 @@ export const api = {
     request<{ data: MessageRecord[] }>(`/messages/history/${encodeURIComponent(otherEmail)}?myEmail=${encodeURIComponent(myEmail)}`),
 
   // Community API
-  getCommunityQuestions: (tag?: string, search?: string) => 
-    request<{ success: boolean; data: any[] }>(`/community/questions?${tag ? 'tag='+tag : ''}&${search ? 'search='+search : ''}`),
+  getCommunityQuestions: (tag?: string, search?: string, collegeEmail?: string) => {
+    const params = new URLSearchParams();
+    if (tag) params.append("tag", tag);
+    if (search) params.append("search", search);
+    if (collegeEmail) params.append("collegeEmail", collegeEmail);
+    return request<{ success: boolean; data: any[] }>(`/community/questions?${params.toString()}`);
+  },
   getCommunityQuestionDetail: (id: string) => 
     request<{ success: boolean; data: any }>(`/community/questions/${encodeURIComponent(id)}`),
   postCommunityQuestion: (payload: any) => 
