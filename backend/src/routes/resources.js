@@ -48,7 +48,10 @@ async function uploadFileBufferWithFallback({ buffer, fileName, mimeType, folder
 
       fs.writeFileSync(filePath, buffer);
 
-      return { success: true, fileUrl: `/uploads/${safeName}`, source: "local" };
+      const backendUrl = process.env.BACKEND_URL || "";
+      const finalUrl = backendUrl ? `${backendUrl.replace(/\/$/, "")}/uploads/${safeName}` : `/uploads/${safeName}`;
+
+      return { success: true, fileUrl: finalUrl, source: "local" };
     } catch (localError) {
       throw new Error(`Upload failed: ${localError?.message || "Unknown error"}`);
     }
@@ -147,11 +150,14 @@ router.post("/", async (req, res) => {
       return res.status(400).json({ message: "title and course are required" });
     }
 
-    // Check if course is valid (either "All" or an approved course)
+    // Check if course is valid (either "All" or an approved/pending course)
     if (course !== "All") {
-      const selectedCourse = await Course.findOne({ title: String(course).trim(), status: "approved" });
+      const selectedCourse = await Course.findOne({ 
+        title: String(course).trim(), 
+        status: { $in: ["approved", "pending"] } 
+      });
       if (!selectedCourse) {
-        return res.status(400).json({ message: "Selected course is not approved or does not exist" });
+        return res.status(400).json({ message: "Selected course does not exist or is not available" });
       }
     }
 

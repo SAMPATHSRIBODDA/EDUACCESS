@@ -265,7 +265,10 @@ async function uploadFileWithFallback({ dataUri, fileName, folder = "course-uplo
       const buffer = Buffer.from(base64Data, "base64");
       fs.writeFileSync(filePath, buffer);
 
-      return { success: true, fileUrl: `/uploads/${safeName}`, source: "local" };
+      const backendUrl = process.env.BACKEND_URL || "";
+      const finalUrl = backendUrl ? `${backendUrl.replace(/\/$/, "")}/uploads/${safeName}` : `/uploads/${safeName}`;
+
+      return { success: true, fileUrl: finalUrl, source: "local" };
     } catch (localError) {
       throw new Error(`Upload failed: ${localError?.message || "Unknown error"}`);
     }
