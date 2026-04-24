@@ -231,16 +231,22 @@ router.get("/metadata", async (req, res) => {
 async function uploadFileWithFallback({ dataUri, fileName, folder = "course-uploads" }) {
   try {
     const mimeType = parseDataUriMime(dataUri);
-    const resourceType = mimeType.startsWith("image/") ? "image" : "raw";
+    const resourceType = mimeType.startsWith("image/") ? "image" : "auto";
+    
+    console.log(`[Cloudinary] Starting upload: ${fileName} (Type: ${resourceType}, Folder: ${folder})`);
+    
     const upload = await uploadDataUriToCloudinary({
       dataUri,
       fileName,
       folder,
       resourceType,
     });
+    
+    console.log(`[Cloudinary] Success: ${upload.secure_url}`);
     return { success: true, fileUrl: upload.secure_url, source: "cloudinary" };
   } catch (cloudError) {
-    console.warn("Cloudinary upload failed, using local fallback:", cloudError?.message);
+    console.error("[Cloudinary] Upload Failed. Full Error:", cloudError);
+    console.warn("[Cloudinary] Falling back to local storage due to error:", cloudError?.message);
     try {
       const uploadsDir = path.join(process.cwd(), "uploads");
       if (!fs.existsSync(uploadsDir)) {

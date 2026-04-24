@@ -20,16 +20,22 @@ async function nextResourceId() {
 
 async function uploadFileBufferWithFallback({ buffer, fileName, mimeType, folder = "resources" }) {
   try {
-    const resourceType = mimeType.startsWith("image/") ? "image" : "raw";
+    const resourceType = mimeType.startsWith("image/") ? "image" : "auto";
+    
+    console.log(`[Cloudinary/Resources] Starting buffer upload: ${fileName} (Type: ${resourceType}, Folder: ${folder})`);
+    
     const uploadResult = await uploadBufferToCloudinary({
       buffer,
       fileName,
       folder,
       resourceType,
     });
+    
+    console.log(`[Cloudinary/Resources] Success: ${uploadResult.secure_url}`);
     return { success: true, fileUrl: uploadResult.secure_url, source: "cloudinary" };
   } catch (cloudError) {
-    console.warn("Cloudinary upload failed, using local fallback:", cloudError?.message);
+    console.error("[Cloudinary/Resources] Buffer Upload Failed. Full Error:", cloudError);
+    console.warn("[Cloudinary/Resources] Falling back to local storage due to error:", cloudError?.message);
     try {
       const uploadsDir = path.join(process.cwd(), "uploads");
       if (!fs.existsSync(uploadsDir)) {
