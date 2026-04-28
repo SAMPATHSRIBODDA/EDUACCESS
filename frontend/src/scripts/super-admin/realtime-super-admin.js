@@ -530,12 +530,14 @@ function renderColleges() {
         if (action === "delete") {
           if (!confirm(`Are you sure you want to delete ${college.name}? This will remove all associated data.`)) return;
           try {
-            // In this system, colleges are Users with role 'college'
-            // We find the user ID to delete them
+            if (college.id) {
+              await jsonRequest(`/super-admin/college-applications/${encodeURIComponent(String(college.id))}`, { method: "DELETE" }).catch(e => console.log(e));
+            }
             const user = state.dataset?.users?.find(u => normalizeEmail(u.email) === normalizeEmail(email));
-            if (!user) throw new Error("Could not find user record for this college.");
+            if (user) {
+              await jsonRequest(`/super-admin/users/${encodeURIComponent(String(user.id))}`, { method: "DELETE" }).catch(e => console.log(e));
+            }
             
-            await jsonRequest(`/super-admin/users/${encodeURIComponent(String(user.id))}`, { method: "DELETE" });
             await refreshDataset();
             announce(`College ${college.name} deleted.`);
           } catch (error) {

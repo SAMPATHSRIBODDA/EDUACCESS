@@ -327,6 +327,7 @@ async function buildSuperAdminDataset() {
   return {
     primaryCollege,
     metrics,
+    users,
     colleges: collegeRows,
     teachers: normalizedTeachers,
     students: normalizedStudents,
