@@ -376,7 +376,7 @@ router.post("/", async (req, res) => {
       panels: normalizePanelList(panels),
       units: fallbackUnits,
       status: "pending",
-      createdBy: req.body?.createdBy || req.body?.collegeEmail || "teacher@edu.com",
+      createdBy: String(req.body?.createdBy || req.body?.collegeEmail || "teacher@edu.com").toLowerCase().trim(),
     });
 
     res.status(201).json({ data: created });

@@ -53,33 +53,44 @@ export const AccessibilityProvider: React.FC<{ children: React.ReactNode }> = ({
   }, [lastSpokenText]);
 
   const readPage = useCallback(() => {
-    const selectors = [
-      'h1', 'h2', 'h3', 'h4', 'h5', 'h6', 
-      'p', 'li', 'article', 'section', 'main', 
-      '[role="main"]', '.course-card h3', 
-      '.hero-content h1', '.hero-content p',
-      '.announcement-title', '.event-name'
-    ];
-    const elements = document.querySelectorAll(selectors.join(','));
-    const textToRead = Array.from(elements)
-      .map(el => {
-         if (
-           el.closest('nav') || 
-           el.closest('footer') || 
-           el.closest('[aria-hidden="true"]') || 
-           el.closest('#accessibility-panel-root')
-         ) return '';
-         
-         const text = el.textContent?.trim() || '';
-         // Filter out short fragments or nav items that slipped through
-         if (text.length < 3) return '';
-         return text;
-      })
-      .filter(text => text.length > 0)
-      .join('. ');
+    let textToRead = '';
+    const mainContent = document.querySelector('main') || document.querySelector('[role="main"]') || document.body;
+    
+    if (mainContent) {
+      const clone = mainContent.cloneNode(true) as HTMLElement;
+      
+      const toRemove = clone.querySelectorAll('nav, footer, [aria-hidden="true"], #accessibility-panel-root, script, style, noscript');
+      toRemove.forEach(el => el.remove());
+      
+      textToRead = clone.innerText || clone.textContent || '';
+    }
+
+    const iframes = document.querySelectorAll('iframe');
+    let iframeMessages = 0;
+    iframes.forEach(iframe => {
+      try {
+        const iframeDoc = iframe.contentDocument || iframe.contentWindow?.document;
+        if (iframeDoc && iframeDoc.body) {
+          const iframeText = iframeDoc.body.innerText || iframeDoc.body.textContent || '';
+          if (iframeText.trim()) {
+            textToRead += ' . ' + iframeText;
+          }
+        } else {
+          iframeMessages++;
+        }
+      } catch (e) {
+        iframeMessages++;
+      }
+    });
+
+    if (iframeMessages > 0) {
+      textToRead += ` . Note: There ${iframeMessages > 1 ? 'are ' + iframeMessages + ' documents' : 'is a document'} or presentation visible on screen.`;
+    }
+
+    textToRead = textToRead.replace(/\s+/g, ' ').trim();
     
     if (textToRead) {
-      speak("Reading page: " + textToRead, true);
+      speak("Reading page: " + textToRead.substring(0, 5000), true);
     } else {
       speak("No readable content found on this section.", true);
     }
