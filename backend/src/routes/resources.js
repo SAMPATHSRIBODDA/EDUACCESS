@@ -20,7 +20,7 @@ async function nextResourceId() {
 
 async function uploadFileBufferWithFallback({ buffer, fileName, mimeType, folder = "resources" }) {
   try {
-    const resourceType = mimeType.startsWith("image/") ? "image" : "auto";
+    const resourceType = mimeType.startsWith("image/") ? "image" : mimeType.startsWith("video/") ? "video" : "raw";
     
     console.log(`[Cloudinary/Resources] Starting buffer upload: ${fileName} (Type: ${resourceType}, Folder: ${folder})`);
     
