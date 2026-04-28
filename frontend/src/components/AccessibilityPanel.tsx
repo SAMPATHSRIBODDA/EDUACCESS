@@ -297,6 +297,22 @@ export const AccessibilityPanel: React.FC = () => {
 
     const has = (...phrases: string[]) => matchesIntent(value, phrases);
 
+    const stopReadingIntent =
+      value === 'stop' ||
+      /stop\s+.*read/.test(value) ||
+      has('stop reading', 'stop the reading', 'stop narration', 'stop talking', 'be quiet', 'pause reading');
+
+    const isSpeaking = window.speechSynthesis.speaking || window.speechSynthesis.pending;
+
+    // Prevent the microphone from picking up the TTS output or interrupting it
+    if (isSpeaking) {
+      if (stopReadingIntent) {
+        setLastAction('Stopped narration');
+        stopSpeaking();
+      }
+      return;
+    }
+
     if (has('start reading', 'read page', 'listen to page', 'read this page', 'listen', 'narrate')) {
       setLastAction('Reading page content');
       setTtsEnabled(true);
@@ -315,11 +331,6 @@ export const AccessibilityPanel: React.FC = () => {
       }
       return;
     }
-
-    const stopReadingIntent =
-      value === 'stop' ||
-      /stop\s+.*read/.test(value) ||
-      has('stop reading', 'stop the reading', 'stop narration', 'stop talking', 'be quiet', 'pause reading');
 
     if (stopReadingIntent) {
       setLastAction('Stopped narration');
@@ -894,7 +905,9 @@ export const AccessibilityPanel: React.FC = () => {
       recognition.start();
       setIsListening(true);
       setLastAction('Voice assistant is listening');
-      speak('Voice assistant is listening.');
+      if (!window.speechSynthesis.speaking && !window.speechSynthesis.pending) {
+        speak('Voice assistant is listening.');
+      }
     } catch {
       setMicStatus('blocked');
       stopListening();
