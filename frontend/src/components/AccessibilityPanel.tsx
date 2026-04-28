@@ -920,7 +920,6 @@ export const AccessibilityPanel: React.FC = () => {
     const newState = !audioMode;
     setAudioMode(newState);
     if (newState) {
-      setTtsEnabled(true);
       setLastAction('Narrative mode enabled');
       readPage();
     } else {
