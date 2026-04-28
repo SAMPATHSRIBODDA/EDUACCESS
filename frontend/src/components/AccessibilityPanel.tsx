@@ -910,9 +910,7 @@ export const AccessibilityPanel: React.FC = () => {
       setTtsEnabled(true);
       setLastAction('Narrative mode enabled');
       readPage();
-      await startListening();
     } else {
-      stopListening();
       stopSpeaking();
     }
   };
