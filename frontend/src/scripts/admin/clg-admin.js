@@ -81,7 +81,14 @@ const SETTINGS_STORAGE_KEY = "clgAdminSettings";
 function getActiveCollegeEmail() {
   try {
     const raw = window.localStorage.getItem("authUser");
-    if (!raw) return "";
+    const authTimestamp = parseInt(window.localStorage.getItem("authUserTimestamp") || "0", 10);
+    const sessionDuration = 3600000; // 1 hour
+
+    if (!raw || (Date.now() - authTimestamp > sessionDuration)) {
+      handleLogout();
+      return "";
+    }
+
     const user = JSON.parse(raw);
     if (String(user?.role || "").toLowerCase() !== "college") return "";
     return String(user?.email || "").trim().toLowerCase();
@@ -2084,6 +2091,7 @@ showActionStatus.timer = 0;
 function handleLogout() {
   showActionStatus("Signing out...");
   window.localStorage.removeItem("authUser");
+  window.localStorage.removeItem("authUserTimestamp");
   window.localStorage.removeItem(ACTIVE_PAGE_STORAGE_KEY);
   window.localStorage.removeItem(SETTINGS_STORAGE_KEY);
   

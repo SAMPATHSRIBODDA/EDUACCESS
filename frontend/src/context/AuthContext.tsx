@@ -75,6 +75,15 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
     if (storedUser && storedToken) {
       try {
+        const authTimestamp = parseInt(localStorage.getItem('authUserTimestamp') || '0', 10);
+        const sessionDuration = 86400000; // 24 hours for normal users
+
+        if (Date.now() - authTimestamp > sessionDuration) {
+          logout();
+          setLoading(false);
+          return;
+        }
+
         const parsedUser = JSON.parse(storedUser) as User;
         const gmailAvatar = decodePictureFromGoogleToken(storedToken);
         const normalizedUser = {
@@ -106,6 +115,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     setToken(authToken);
     localStorage.setItem('authUser', JSON.stringify(normalizedUser));
     localStorage.setItem('authToken', authToken);
+    localStorage.setItem('authUserTimestamp', Date.now().toString());
   };
 
   const updateUser = (updates: Partial<User>) => {
@@ -126,6 +136,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     setToken(null);
     localStorage.removeItem('authUser');
     localStorage.removeItem('authToken');
+    localStorage.removeItem('authUserTimestamp');
   };
 
   const checkAuth = () => {

@@ -246,6 +246,7 @@
 
         function goToDashboard() {
           localStorage.setItem('superAdminAuthenticated', 'true');
+          localStorage.setItem('superAdminAuthTimestamp', Date.now().toString());
           window.location.assign(getNextPath());
         }
 

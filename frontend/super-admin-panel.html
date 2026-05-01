@@ -12,7 +12,18 @@
   <body class="font-md auth-unlocked" data-theme="light">
     <script>
       (function () {
-        if (localStorage.getItem('superAdminAuthenticated') === 'true') return;
+        var isAuthenticated = localStorage.getItem('superAdminAuthenticated') === 'true';
+        var authTimestamp = parseInt(localStorage.getItem('superAdminAuthTimestamp') || '0', 10);
+        var sessionDuration = 3600000; // 1 hour in ms
+
+        if (isAuthenticated && (Date.now() - authTimestamp < sessionDuration)) {
+          return;
+        }
+
+        // Session expired or not authenticated
+        localStorage.removeItem('superAdminAuthenticated');
+        localStorage.removeItem('superAdminAuthTimestamp');
+        
         var next = encodeURIComponent(window.location.pathname + window.location.search + window.location.hash);
         window.location.replace('/super-admin-login.html?next=' + next);
       })();

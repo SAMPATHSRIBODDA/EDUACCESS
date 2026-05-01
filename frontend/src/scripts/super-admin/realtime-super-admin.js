@@ -1088,6 +1088,7 @@ async function refreshDataset() {
 function handleLogout() {
   console.log("Super Admin Logging out...");
   localStorage.removeItem("superAdminAuthenticated");
+  localStorage.removeItem("superAdminAuthTimestamp");
   window.location.assign("/");
 }
 
@@ -1125,6 +1126,7 @@ async function handleLoginSubmit(event) {
 function unlockSuperAdmin() {
   state.authenticated = true;
   localStorage.setItem("superAdminAuthenticated", "true");
+  localStorage.setItem("superAdminAuthTimestamp", Date.now().toString());
   authError.textContent = "";
   window.location.assign("/super-admin-panel.html");
 }
@@ -1150,9 +1152,16 @@ function boot() {
 
   if (authScreen) {
     const stored = localStorage.getItem("superAdminAuthenticated") === "true";
-    if (stored || queryAutoLogin) {
+    const authTimestamp = parseInt(localStorage.getItem("superAdminAuthTimestamp") || "0", 10);
+    const sessionDuration = 3600000; // 1 hour
+
+    const isSessionValid = stored && (Date.now() - authTimestamp < sessionDuration);
+
+    if (isSessionValid || queryAutoLogin) {
       unlockSuperAdmin();
     } else {
+      localStorage.removeItem("superAdminAuthenticated");
+      localStorage.removeItem("superAdminAuthTimestamp");
       showLogin();
       loginForm?.addEventListener("submit", handleLoginSubmit);
       loginForm?.addEventListener("keydown", (event) => {
