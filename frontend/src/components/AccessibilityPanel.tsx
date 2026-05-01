@@ -927,7 +927,7 @@ export const AccessibilityPanel: React.FC = () => {
     }
   };
   const openLeft = position.x > PANEL_WIDTH / 2;
-  const openAbove = position.y > window.innerHeight / 2;
+  const panelOpenAbove = position.y > window.innerHeight / 2;
 
   if (user?.role !== 'student' && user?.role !== 'teacher') {
     return null;
@@ -945,7 +945,7 @@ export const AccessibilityPanel: React.FC = () => {
             initial={{ opacity: 0, scale: 0.9, y: 20 }}
             animate={{ opacity: 1, scale: 1, y: 0 }}
             exit={{ opacity: 0, scale: 0.9, y: 20 }}
-            className={`absolute w-72 rounded-3xl shadow-premium border overflow-hidden ${openLeft ? 'right-0' : 'left-0'} ${openAbove ? 'bottom-20' : 'top-20'}`}
+            className={`absolute w-72 rounded-3xl shadow-premium border overflow-hidden ${openLeft ? 'right-0' : 'left-0'} ${panelOpenAbove ? 'bottom-20' : 'top-20'}`}
             style={{ backgroundColor: 'var(--bg-card)', borderColor: 'var(--border-color)' }}
           >
             {/* Header */}

@@ -25,9 +25,7 @@
     color: var(--text-primary);
     font-family: 'Inter', sans-serif;
   }
-}
-  
-  /* Robust Keyboard Navigation Support */
+
   :focus-visible {
     @apply outline-none ring-4 ring-emerald-500/30 ring-offset-2 ring-offset-white transition-all duration-200;
   }
