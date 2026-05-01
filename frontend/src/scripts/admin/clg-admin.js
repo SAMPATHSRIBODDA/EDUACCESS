@@ -91,9 +91,22 @@ function getActiveCollegeEmail() {
 
     const user = JSON.parse(raw);
     if (String(user?.role || "").toLowerCase() !== "college") return "";
+    syncHeader(user);
     return String(user?.email || "").trim().toLowerCase();
   } catch {
     return "";
+  }
+}
+
+function syncHeader(user) {
+  const profileName = document.getElementById("profileName");
+  const profileRole = document.getElementById("profileRole");
+  const profileAvatar = document.getElementById("profileAvatar");
+
+  if (profileName) profileName.textContent = user.name || "College Admin";
+  if (profileRole) profileRole.textContent = user.branch || "College Admin";
+  if (profileAvatar && user.name) {
+    profileAvatar.textContent = user.name.split(" ").map(n => n[0]).join("").toUpperCase().slice(0, 2);
   }
 }
 
@@ -2669,6 +2682,16 @@ window.addEventListener("resize", () => {
 async function bootstrap() {
   const initialPage = resolveInitialPage();
   loadDirectoriesFromStorage();
+  
+  // Sync user data before loading panel
+  const raw = window.localStorage.getItem("authUser");
+  if (raw) {
+    try {
+      const user = JSON.parse(raw);
+      syncHeader(user);
+    } catch (e) {}
+  }
+
   setActivePage(initialPage);
   await loadAdminSettings();
 

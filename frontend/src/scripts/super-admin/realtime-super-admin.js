@@ -415,30 +415,23 @@ function resolveCollegeLabel(email) {
 }
 
 function renderMetrics() {
-  const metrics = [
-    { label: "Total Colleges", value: state.dataset?.metrics?.colleges || 0, note: "Approved colleges" },
-    { label: "Teachers", value: state.dataset?.metrics?.teachers || 0, note: "Live faculty roster" },
-    { label: "Students", value: state.dataset?.metrics?.students || 0, note: "Live student roster" },
-    { label: "Courses", value: state.dataset?.metrics?.courses || 0, note: "Database courses" },
-    { label: "Pending Colleges", value: state.dataset?.metrics?.pendingColleges || 0, note: "Awaiting approval" },
-    { label: "Pending Courses", value: state.dataset?.metrics?.pendingCourses || 0, note: "Awaiting review" },
-  ];
+  const metrics = state.dataset?.metrics || {};
+  
+  const mColleges = document.getElementById("mColleges");
+  const mUsers = document.getElementById("mUsers");
+  const mCourses = document.getElementById("mCourses");
+  const mActive = document.getElementById("mActive");
+  const mRevenue = document.getElementById("mRevenue");
 
-  const metricsWrap = document.getElementById("dashboardMetrics");
-  if (!metricsWrap) return;
+  if (mColleges) mColleges.textContent = metrics.colleges || 0;
+  if (mUsers) mUsers.textContent = (metrics.students || 0) + (metrics.teachers || 0);
+  if (mCourses) mCourses.textContent = metrics.courses || 0;
+  if (mActive) mActive.textContent = (metrics.students || 0) + (metrics.teachers || 0); // Assuming active = total for now
+  if (mRevenue) mRevenue.textContent = metrics.revenue || "$0";
 
-  metricsWrap.innerHTML = metrics
-    .map(
-      (metric) => `
-        <article class="card metric">
-          <div class="metric-head"><span class="metric-icon">EA</span><span class="metric-tag">Live</span></div>
-          <h3>${escapeHtml(metric.label)}</h3>
-          <p>${escapeHtml(String(metric.value))}</p>
-          <span class="growth">${escapeHtml(metric.note)}</span>
-        </article>
-      `
-    )
-    .join("");
+  // Update growth tags if available in dataset
+  const gColleges = document.getElementById("gColleges");
+  if (gColleges && metrics.collegeGrowth) gColleges.textContent = metrics.collegeGrowth;
 }
 
 function renderDashboardSnapshots() {

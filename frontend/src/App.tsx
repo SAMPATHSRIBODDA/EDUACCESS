@@ -28,6 +28,7 @@ import { TeacherResources } from './pages/teacher/TeacherResources'
 import { TeacherAttendance } from './pages/teacher/TeacherAttendance'
 import { TeacherReports } from './pages/teacher/TeacherReports'
 import { TeacherSettings } from './pages/teacher/TeacherSettings'
+import { TeacherNotifications } from './pages/teacher/TeacherNotifications'
 
 // College Panel Imports
 
@@ -73,6 +74,7 @@ export default function App() {
               <Route path="attendance" element={<TeacherAttendance />} />
               <Route path="reports" element={<TeacherReports />} />
               <Route path="settings" element={<TeacherSettings />} />
+              <Route path="notifications" element={<TeacherNotifications />} />
             </Route>
 
           </Routes>
