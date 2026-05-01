@@ -24,6 +24,7 @@ const resourceSchema = new mongoose.Schema(
       default: "active",
       index: true,
     },
+    collegeEmail: { type: String, default: "", trim: true, lowercase: true, index: true },
   },
   { timestamps: true }
 );

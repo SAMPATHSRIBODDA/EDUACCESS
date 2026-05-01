@@ -6,6 +6,8 @@ import { CollegeActivity } from "../models/CollegeActivity.js";
 import { Announcement } from "../models/Announcement.js";
 import { CollegeSetting } from "../models/CollegeSetting.js";
 import { CollegeApplication } from "../models/CollegeApplication.js";
+import { Quiz } from "../models/Quiz.js";
+import { Assignment } from "../models/Assignment.js";
 
 const router = Router();
 
@@ -220,15 +222,47 @@ router.get("/overview", async (req, res) => {
         quickStats,
         tasks,
         departmentsList: departments,
-        departmentStats: departmentStats.map((item) => ({
-          branch: item._id,
-          students: item.students,
-          head: teacherMap.get(item._id) || "TBD"
-        }))
+        departmentStats: departments.map((branch) => {
+          const stats = departmentStats.find(s => s._id === branch);
+          return {
+            branch,
+            students: stats ? stats.students : 0,
+            head: teacherMap.get(branch) || "TBD"
+          };
+        }).sort((a, b) => b.students - a.students || a.branch.localeCompare(b.branch))
       }
     });
   } catch (error) {
     res.status(500).json({ message: "Failed to fetch college panel overview" });
+  }
+});
+
+router.get("/examinations", async (req, res) => {
+  try {
+    const collegeEmail = normalizeCollegeEmail(req.query?.collegeEmail);
+    const filter = collegeEmail ? { collegeEmail } : {};
+
+    const [quizzes, assignments] = await Promise.all([
+      Quiz.find(filter).sort({ createdAt: -1 }).limit(20).select("-__v"),
+      Assignment.find(filter).sort({ createdAt: -1 }).limit(20).select("-__v"),
+    ]);
+
+    const stats = {
+      totalQuizzes: await Quiz.countDocuments(filter),
+      totalAssignments: await Assignment.countDocuments(filter),
+      activeQuizzes: await Quiz.countDocuments({ ...filter, status: "active" }),
+      pendingAssignments: await Assignment.countDocuments({ ...filter, status: "Pending" }),
+    };
+
+    res.json({
+      data: {
+        stats,
+        quizzes,
+        assignments,
+      },
+    });
+  } catch (error) {
+    res.status(500).json({ message: "Failed to fetch examination stats" });
   }
 });
 

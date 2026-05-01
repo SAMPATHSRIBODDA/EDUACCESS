@@ -110,8 +110,10 @@ router.post("/upload", upload.single("file"), async (req, res) => {
 
 router.get("/", async (req, res) => {
   try {
-    const { teacherEmail, course, status } = req.query;
+    const { teacherEmail, course, status, collegeEmail } = req.query;
     const query = {};
+
+    if (collegeEmail) query.collegeEmail = String(collegeEmail).toLowerCase();
 
     if (teacherEmail) query.teacherEmail = String(teacherEmail).toLowerCase();
     if (status) query.status = String(status);
@@ -143,6 +145,7 @@ router.post("/", async (req, res) => {
       fileSize = "",
       course,
       teacherEmail = "teacher@edu.com",
+      collegeEmail = "",
       status = "active",
     } = req.body || {};
 
@@ -172,6 +175,7 @@ router.post("/", async (req, res) => {
       fileSize: String(fileSize).trim(),
       course: String(course).trim(),
       teacherEmail: String(teacherEmail).toLowerCase(),
+      collegeEmail: String(collegeEmail || "").toLowerCase().trim(),
       status,
     });
 

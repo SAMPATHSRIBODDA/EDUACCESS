@@ -41,7 +41,7 @@ export default function App() {
       <AuthProvider>
       <SocketProvider>
         <AccessibilityProvider>
-        <div className="min-h-screen bg-[#f8fafc]">
+        <div className="min-h-screen bg-[var(--bg-primary)]">
           <Routes>
             <Route path="/" element={<><Navbar /><Landing /></>} />
             <Route path="/dashboard" element={<ProtectedRoute requiredRole="student"><><Navbar /><Dashboard /></></ProtectedRoute>} />

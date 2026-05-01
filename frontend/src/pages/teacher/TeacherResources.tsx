@@ -41,7 +41,7 @@ export const TeacherResources: React.FC = () => {
   const loadData = async () => {
     try {
       const [resResponse, courseResponse] = await Promise.all([
-        api.getResources(teacherEmail),
+        api.getResources(teacherEmail, undefined, user?.collegeEmail),
         api.getCourses('teacher')
       ]);
       setResources(resResponse.data);

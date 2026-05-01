@@ -100,6 +100,7 @@ export interface CourseCreateInput {
   panels?: string[];
   units?: CourseUnitRecord[];
   createdBy?: string;
+  collegeEmail?: string;
 }
 
 export interface CodeEvaluationCaseResult {

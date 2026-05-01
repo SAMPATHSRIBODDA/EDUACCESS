@@ -34,12 +34,12 @@ export const Dashboard: React.FC = () => {
         setDashboardLoading(true);
 
         const [courseRes, assignmentRes, quizRes, resourceRes, announcementRes, eventRes, enrollmentRes, metaRes] = await Promise.all([
-          api.getCourses('student'),
-          api.getAssignments(undefined, user?.course),
-          api.getQuizzes(undefined),
-          api.getResources(undefined, user?.course),
-          api.getAnnouncements('student'),
-          api.getEvents('student'),
+          api.getCourses('student', user?.collegeEmail),
+          api.getAssignments(undefined, user?.course, user?.collegeEmail),
+          api.getQuizzes(undefined, undefined, user?.collegeEmail),
+          api.getResources(undefined, user?.course, user?.collegeEmail),
+          api.getAnnouncements('student', user?.collegeEmail),
+          api.getEvents('student', user?.collegeEmail),
           user?.email ? api.getEnrollments(user.email) : Promise.resolve({ data: [], total: 0 }),
           api.getCourseMetadata(),
         ]);

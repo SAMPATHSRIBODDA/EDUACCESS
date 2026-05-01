@@ -330,24 +330,6 @@ function buildShellMarkup() {
                 </table>
               </div>
             </article>
-
-            <article class="card">
-              <div class="card-head"><h2>Pending Courses</h2></div>
-              <div class="table-wrap">
-                <table>
-                  <thead>
-                    <tr>
-                      <th>Course</th>
-                      <th>College</th>
-                      <th>Teacher</th>
-                      <th>Status</th>
-                      <th>Actions</th>
-                    </tr>
-                  </thead>
-                  <tbody id="pendingCoursesBody"></tbody>
-                </table>
-              </div>
-            </article>
           </section>
         </section>
       </main>
@@ -464,8 +446,8 @@ function renderDashboardSnapshots() {
       <p>Pending college applications</p>
     </div>
     <div class="list-item-card">
-      <strong>${state.dataset?.approvals?.courses?.length || 0}</strong>
-      <p>Pending course approvals</p>
+      <strong>${state.dataset?.colleges?.length || 0}</strong>
+      <p>Total approved colleges</p>
     </div>
     <div class="list-item-card">
       <strong>${courseCount}</strong>
@@ -613,8 +595,6 @@ function renderCourses() {
           <td>
             <div class="table-actions">
               <button class="btn-view btn-icon" type="button" data-course-action="view" title="View details" aria-label="View details">${VIEW_ICON}</button>
-              <button class="btn-approve" type="button" data-course-action="approve">Approve</button>
-              <button class="btn-reject" type="button" data-course-action="reject">Reject</button>
               <button class="btn-delete" type="button" data-course-action="delete">Delete</button>
             </div>
           </td>
@@ -623,25 +603,6 @@ function renderCourses() {
     )
     .join("") || `<tr><td colspan="8"><span class="muted-text">No courses found.</span></td></tr>`;
 
-  pendingBody.innerHTML = (state.dataset?.approvals?.courses || [])
-    .map(
-      (course) => `
-        <tr data-course-id="${escapeHtml(String(course.id))}">
-          <td>${escapeHtml(course.title)}</td>
-          <td>${escapeHtml(course.collegeName)}</td>
-          <td>${escapeHtml(course.teacherName)}</td>
-          <td><span class="status pending">${escapeHtml(String(course.status || "pending"))}</span></td>
-          <td>
-            <div class="table-actions">
-              <button class="btn-approve" type="button" data-course-action="approve">Approve</button>
-              <button class="btn-reject" type="button" data-course-action="reject">Reject</button>
-              <button class="btn-delete" type="button" data-course-action="delete">Delete</button>
-            </div>
-          </td>
-        </tr>
-      `
-    )
-    .join("") || `<tr><td colspan="5"><span class="muted-text">No pending courses.</span></td></tr>`;
 
   body.querySelectorAll("tr[data-course-id]").forEach((row) => {
     row.querySelectorAll("button[data-course-action]").forEach((button) => {
@@ -662,12 +623,6 @@ function renderCourses() {
         try {
           if (action === "delete") {
             await jsonRequest(`/courses/${encodeURIComponent(String(id))}`, { method: "DELETE" });
-          } else {
-            await jsonRequest(`/courses/${encodeURIComponent(String(id))}/status`, {
-              method: "PATCH",
-              headers: { "Content-Type": "application/json" },
-              body: JSON.stringify({ status: action === "approve" ? "approved" : "rejected" }),
-            });
           }
           await refreshDataset();
           announce(`Course ${action}d successfully.`);
@@ -678,30 +633,6 @@ function renderCourses() {
     });
   });
 
-  pendingBody.querySelectorAll("tr[data-course-id]").forEach((row) => {
-    row.querySelectorAll("button[data-course-action]").forEach((button) => {
-      button.addEventListener("click", async () => {
-        const id = row.dataset.courseId;
-        const action = button.dataset.courseAction;
-        if (!id || !action) return;
-        try {
-          if (action === "delete") {
-            await jsonRequest(`/courses/${encodeURIComponent(String(id))}`, { method: "DELETE" });
-          } else {
-            await jsonRequest(`/courses/${encodeURIComponent(String(id))}/status`, {
-              method: "PATCH",
-              headers: { "Content-Type": "application/json" },
-              body: JSON.stringify({ status: action === "approve" ? "approved" : "rejected" }),
-            });
-          }
-          await refreshDataset();
-          announce(`Pending course ${action}d.`);
-        } catch (error) {
-          announce(error.message || "Failed to update course");
-        }
-      });
-    });
-  });
 }
 
 function renderTeachers() {

@@ -709,8 +709,9 @@ export const TeacherCourses: React.FC = () => {
                         }))
                     };
                 }),
-                createdBy: user?.email || 'teacher@edu.com',
-            }))
+            })),
+            createdBy: user?.email || 'teacher@edu.com',
+            collegeEmail: (user as any)?.collegeEmail || '',
         };
 
         try {
@@ -744,7 +745,7 @@ export const TeacherCourses: React.FC = () => {
         <div className="space-y-12 animate-in fade-in duration-500">
             <header className="flex flex-col md:flex-row md:items-center justify-between gap-6 mt-6">
                 <div>
-                    <h1 className="text-3xl font-black text-gray-900 tracking-tight font-display mb-1 uppercase tracking-tight">My Courses</h1>
+                    <h1 className="text-3xl font-black text-gray-900 dark:text-white tracking-tight font-display mb-1 uppercase tracking-tight">My Courses</h1>
                     <p className="text-[10px] text-gray-400 font-black uppercase tracking-widest">Managing {courseList.length} active curriculum modules</p>
                 </div>
                 <button
@@ -775,7 +776,7 @@ export const TeacherCourses: React.FC = () => {
                                 transition={{ delay: idx * 0.1 }}
                                 className={cn("card-premium p-8 group cursor-pointer transition-all", theme.cardHover)}
                             >
-                                <div className={cn("w-14 h-14 rounded-3xl flex items-center justify-center text-3xl mb-8 shadow-sm border border-gray-50 bg-gray-50 group-hover:bg-white transition-all group-hover:scale-110 overflow-hidden", theme.iconHover)}>
+                                <div className={cn("w-14 h-14 rounded-3xl flex items-center justify-center text-3xl mb-8 shadow-sm border border-gray-50 bg-gray-50 dark:bg-slate-800 dark:border-slate-700 group-hover:bg-white dark:group-hover:bg-slate-700 transition-all group-hover:scale-110 overflow-hidden", theme.iconHover)}>
                                     {course.image ? (
                                         <img src={course.image} alt={course.title} className="w-full h-full object-cover" />
                                     ) : course.icon && (course.icon.startsWith('/') || course.icon.startsWith('http')) ? (
@@ -784,14 +785,14 @@ export const TeacherCourses: React.FC = () => {
                                         <span>{course.icon}</span>
                                     )}
                                 </div>
-                                <h4 className="text-lg font-black text-gray-900 mb-1 group-hover:text-emerald-500 transition-colors">{course.title}</h4>
+                                <h4 className="text-lg font-black text-gray-900 dark:text-white mb-1 group-hover:text-emerald-500 transition-colors">{course.title}</h4>
                                 <div className="flex items-center gap-2 mb-8">
                                     <p className="text-[10px] font-black uppercase tracking-widest text-gray-400">{course.grade} • {course.students} Students</p>
                                     {course.status && (
                                         <span className={cn("text-[8px] font-black uppercase tracking-widest px-2.5 py-1 rounded-lg whitespace-nowrap", 
-                                            course.status === 'approved' ? 'bg-emerald-100 text-emerald-700' :
-                                            course.status === 'pending' ? 'bg-amber-100 text-amber-700' :
-                                            'bg-rose-100 text-rose-700'
+                                            course.status === 'approved' ? 'bg-emerald-100 text-emerald-700 dark:bg-emerald-500/20 dark:text-emerald-400' :
+                                            course.status === 'pending' ? 'bg-amber-100 text-amber-700 dark:bg-amber-500/20 dark:text-amber-400' :
+                                            'bg-rose-100 text-rose-700 dark:bg-rose-500/20 dark:text-rose-400'
                                         )}>
                                             {course.status === 'approved' ? '✓ Approved' : 
                                              course.status === 'pending' ? '⏳ Pending' : 

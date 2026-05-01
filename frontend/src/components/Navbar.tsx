@@ -104,7 +104,7 @@ export const Navbar: React.FC = () => {
   })();
 
   return (
-    <nav className="sticky top-0 z-50 bg-white/80 backdrop-blur-md border-b border-gray-100">
+    <nav className="sticky top-0 z-50 backdrop-blur-md border-b" style={{ backgroundColor: 'var(--bg-card)', borderColor: 'var(--border-color)', opacity: 0.8 }}>
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between items-center h-20">
           {/* Logo */}
@@ -112,7 +112,7 @@ export const Navbar: React.FC = () => {
             <div className="w-9 h-9 bg-emerald-500 rounded-xl flex items-center justify-center text-white font-bold text-lg group-hover:rotate-12 transition-transform shadow-lg shadow-emerald-500/20">
               EA
             </div>
-            <span className="text-xl font-black text-gray-900 tracking-tight">
+            <span className="text-xl font-black tracking-tight" style={{ color: 'var(--text-primary)' }}>
               Edu<span className="text-emerald-500">Access</span>
             </span>
           </Link>
@@ -123,56 +123,63 @@ export const Navbar: React.FC = () => {
               <NavLink 
                 to="/dashboard" 
                 className={({ isActive }) => 
-                  `font-semibold transition-all pb-1 text-sm ${isActive ? 'text-emerald-500 border-b-2 border-emerald-500' : 'text-gray-500 hover:text-gray-900 font-medium'}`
+                  `font-semibold transition-all pb-1 text-sm ${isActive ? 'text-emerald-500 border-b-2 border-emerald-500' : 'font-medium hover:text-emerald-500'}`
                 }
+                style={{ color: location.pathname === '/dashboard' ? '' : 'var(--text-secondary)' }}
               >
                 Home
               </NavLink>
               <NavLink 
                 to="/courses" 
                 className={({ isActive }) => 
-                  `font-semibold transition-all pb-1 text-sm ${isActive ? 'text-emerald-500 border-b-2 border-emerald-500' : 'text-gray-500 hover:text-gray-900 font-medium'}`
+                  `font-semibold transition-all pb-1 text-sm ${isActive ? 'text-emerald-500 border-b-2 border-emerald-500' : 'font-medium hover:text-emerald-500'}`
                 }
+                style={{ color: location.pathname === '/courses' ? '' : 'var(--text-secondary)' }}
               >
                 Courses
               </NavLink>
               <NavLink 
                 to="/assignments" 
                 className={({ isActive }) => 
-                  `font-semibold transition-all pb-1 text-sm ${isActive ? 'text-emerald-500 border-b-2 border-emerald-500' : 'text-gray-500 hover:text-gray-900 font-medium'}`
+                  `font-semibold transition-all pb-1 text-sm ${isActive ? 'text-emerald-500 border-b-2 border-emerald-500' : 'font-medium hover:text-emerald-500'}`
                 }
+                style={{ color: location.pathname === '/assignments' ? '' : 'var(--text-secondary)' }}
               >
                 Assignments
               </NavLink>
               <NavLink 
                 to="/quizzes" 
                 className={({ isActive }) => 
-                  `font-semibold transition-all pb-1 text-sm ${isActive ? 'text-emerald-500 border-b-2 border-emerald-500' : 'text-gray-500 hover:text-gray-900 font-medium'}`
+                  `font-semibold transition-all pb-1 text-sm ${isActive ? 'text-emerald-500 border-b-2 border-emerald-500' : 'font-medium hover:text-emerald-500'}`
                 }
+                style={{ color: location.pathname === '/quizzes' ? '' : 'var(--text-secondary)' }}
               >
                 Quizzes
               </NavLink>
               <NavLink 
                 to="/resources" 
                 className={({ isActive }) => 
-                  `font-semibold transition-all pb-1 text-sm ${isActive ? 'text-emerald-500 border-b-2 border-emerald-500' : 'text-gray-500 hover:text-gray-900 font-medium'}`
+                  `font-semibold transition-all pb-1 text-sm ${isActive ? 'text-emerald-500 border-b-2 border-emerald-500' : 'font-medium hover:text-emerald-500'}`
                 }
+                style={{ color: location.pathname === '/resources' ? '' : 'var(--text-secondary)' }}
               >
                 Resources
               </NavLink>
               <NavLink 
                 to="/community" 
                 className={({ isActive }) => 
-                  `font-semibold transition-all pb-1 text-sm ${isActive ? 'text-emerald-500 border-b-2 border-emerald-500' : 'text-gray-500 hover:text-gray-900 font-medium'}`
+                  `font-semibold transition-all pb-1 text-sm ${isActive ? 'text-emerald-500 border-b-2 border-emerald-500' : 'font-medium hover:text-emerald-500'}`
                 }
+                style={{ color: location.pathname === '/community' ? '' : 'var(--text-secondary)' }}
               >
                 Community
               </NavLink>
               <NavLink 
                 to="/messages" 
                 className={({ isActive }) => 
-                  `font-semibold transition-all pb-1 text-sm ${isActive ? 'text-emerald-500 border-b-2 border-emerald-500' : 'text-gray-500 hover:text-gray-900 font-medium'}`
+                  `font-semibold transition-all pb-1 text-sm ${isActive ? 'text-emerald-500 border-b-2 border-emerald-500' : 'font-medium hover:text-emerald-500'}`
                 }
+                style={{ color: location.pathname === '/messages' ? '' : 'var(--text-secondary)' }}
               >
                 Messages
               </NavLink>
@@ -184,7 +191,7 @@ export const Navbar: React.FC = () => {
             {!isLanding ? (
               <>
                 <div className="hidden lg:block relative group">
-                  <div className="flex items-center bg-gray-50 border border-gray-100 rounded-full px-4 py-2 w-72 focus-within:ring-2 focus-within:ring-emerald-500/20 transition-all">
+                  <div className="flex items-center border rounded-full px-4 py-2 w-72 focus-within:ring-2 focus-within:ring-emerald-500/20 transition-all" style={{ backgroundColor: 'var(--bg-primary)', borderColor: 'var(--border-color)' }}>
                     <Search className="w-4 h-4 text-gray-400 mr-2" />
                     <input 
                       type="text" 
@@ -248,8 +255,8 @@ export const Navbar: React.FC = () => {
                       className="w-10 h-10 rounded-full border-2 border-white shadow-soft group-hover:border-emerald-500/20 transition-all"
                     />
                     <div className="hidden lg:block text-left">
-                      <p className="text-sm font-bold text-gray-900">{user?.name || 'Student'}</p>
-                      <p className="text-[11px] text-gray-500 font-semibold leading-tight truncate max-w-[180px]">{user?.email || 'No email'}</p>
+                      <p className="text-sm font-bold" style={{ color: 'var(--text-primary)' }}>{user?.name || 'Student'}</p>
+                      <p className="text-[11px] font-semibold leading-tight truncate max-w-[180px]" style={{ color: 'var(--text-secondary)' }}>{user?.email || 'No email'}</p>
                       <div className="flex items-center text-[10px] text-gray-400 font-bold uppercase tracking-widest">
                         {user?.role || 'student'} <ChevronDown className={`ml-1 w-3 h-3 transition-transform ${showProfileMenu ? 'rotate-180' : ''}`} />
                       </div>
@@ -262,7 +269,8 @@ export const Navbar: React.FC = () => {
                         initial={{ opacity: 0, y: 10 }}
                         animate={{ opacity: 1, y: 0 }}
                         exit={{ opacity: 0, y: 10 }}
-                        className="absolute right-0 mt-2 w-56 bg-white border border-gray-100 rounded-2xl shadow-premium p-2 z-50"
+                        className="absolute right-0 mt-2 w-56 border rounded-2xl shadow-premium p-2 z-50"
+                        style={{ backgroundColor: 'var(--bg-card)', borderColor: 'var(--border-color)' }}
                       >
                         <button
                           type="button"

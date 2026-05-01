@@ -181,11 +181,12 @@ export const api = {
   deleteCollegeActivity: (id: number) =>
     mutate<{ data: { deleted: true; id: number } }>(`/college-activities/${encodeURIComponent(String(id))}`, "DELETE"),
   getStats: (panel: string) => request<{ data: PanelStatRecord[]; panel: string }>(`/stats/${encodeURIComponent(panel)}`),
-  getAssignments: (teacherEmail?: string, course?: string) => {
+  getAssignments: (teacherEmail?: string, course?: string, collegeEmail?: string) => {
     let url = "/assignments";
     const params = new URLSearchParams();
     if (teacherEmail) params.append("teacherEmail", teacherEmail);
     if (course) params.append("course", course);
+    if (collegeEmail) params.append("collegeEmail", collegeEmail);
     if (params.toString()) url += `?${params.toString()}`;
     return request<ApiListResponse<AssignmentRecord>>(url);
   },
@@ -222,8 +223,15 @@ export const api = {
   lookupCollegeMemberByEmail: (email: string) =>
     request<{ data: CollegeMemberRecord }>(`/college-members/lookup?email=${encodeURIComponent(email)}`),
   getDepartmentStats: () => request<{ data: Array<{ branch: string; students: number; head: string }>; total: number }>("/college-members/department-stats"),
-  getQuizzes: (teacherEmail?: string) =>
-    request<ApiListResponse<QuizRecord>>(teacherEmail ? `/quizzes?teacherEmail=${encodeURIComponent(teacherEmail)}` : "/quizzes"),
+  getQuizzes: (teacherEmail?: string, course?: string, collegeEmail?: string) => {
+    let url = "/quizzes";
+    const params = new URLSearchParams();
+    if (teacherEmail) params.append("teacherEmail", teacherEmail);
+    if (course) params.append("course", course);
+    if (collegeEmail) params.append("collegeEmail", collegeEmail);
+    if (params.toString()) url += `?${params.toString()}`;
+    return request<ApiListResponse<QuizRecord>>(url);
+  },
   getStudentQuizAttempts: (studentEmail: string) =>
     request<{ data: QuizAttemptRecord[]; summary: QuizAttemptSummaryRecord[] }>(`/quizzes/attempts/student?studentEmail=${encodeURIComponent(studentEmail)}`),
   submitQuizAttempt: (
@@ -261,11 +269,12 @@ export const api = {
   },
   getTeacherOverview: (teacherEmail?: string) =>
     request<{ data: TeacherOverviewRecord }>(teacherEmail ? `/teacher-panel/overview?teacherEmail=${encodeURIComponent(teacherEmail)}` : "/teacher-panel/overview"),
-  getResources: (teacherEmail?: string, course?: string) => {
+  getResources: (teacherEmail?: string, course?: string, collegeEmail?: string) => {
     let url = "/resources";
     const params = new URLSearchParams();
     if (teacherEmail) params.append("teacherEmail", teacherEmail);
     if (course) params.append("course", course);
+    if (collegeEmail) params.append("collegeEmail", collegeEmail);
     if (params.toString()) url += `?${params.toString()}`;
     return request<ApiListResponse<ResourceRecord>>(url);
   },

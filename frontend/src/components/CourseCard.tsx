@@ -61,7 +61,7 @@ export const CourseCard: React.FC<CourseCardProps> = ({
           </span>
         </div>
         
-        <h3 className="font-display font-bold text-gray-900 mb-2 line-clamp-2 hover:text-emerald-600 transition-colors">
+        <h3 className="font-display font-bold mb-2 line-clamp-2 hover:text-emerald-600 transition-colors" style={{ color: 'var(--text-primary)' }}>
           {title}
         </h3>
 
@@ -70,8 +70,8 @@ export const CourseCard: React.FC<CourseCardProps> = ({
         </p>
 
         <div className="mb-4">
-          <p className="text-[10px] font-black uppercase tracking-widest text-gray-400">Teacher</p>
-          <p className="text-xs font-bold text-gray-700 mt-1 truncate">{teacherName || 'Teacher'}</p>
+          <p className="text-[10px] font-black uppercase tracking-widest" style={{ color: 'var(--text-secondary)' }}>Teacher</p>
+          <p className="text-xs font-bold mt-1 truncate" style={{ color: 'var(--text-primary)' }}>{teacherName || 'Teacher'}</p>
         </div>
 
         {typeof progress === 'number' && (
@@ -80,7 +80,7 @@ export const CourseCard: React.FC<CourseCardProps> = ({
               <span>Progress</span>
               <span>{Math.max(0, Math.min(100, Math.round(progress)))}%</span>
             </div>
-            <div className="h-2 mt-2 bg-gray-100 rounded-full overflow-hidden">
+            <div className="h-2 mt-2 rounded-full overflow-hidden" style={{ backgroundColor: 'var(--bg-primary)' }}>
               <div className="h-full bg-emerald-500" style={{ width: `${Math.max(0, Math.min(100, Math.round(progress)))}%` }} />
             </div>
           </div>
@@ -100,7 +100,7 @@ export const CourseCard: React.FC<CourseCardProps> = ({
           </div>
         </div>
         
-        <div className="flex items-center justify-between pt-4 border-t border-gray-50">
+        <div className="flex items-center justify-between pt-4 border-t" style={{ borderTopColor: 'var(--border-color)' }}>
           <span className="text-lg font-bold text-emerald-600 font-display">{price}</span>
           <div className="flex items-center gap-2">
             {!isEnrolled && onEnroll && (
@@ -130,7 +130,8 @@ export const CourseCard: React.FC<CourseCardProps> = ({
                 e.stopPropagation();
                 navigate(id ? `/courses/${id}` : '/courses');
               }}
-              className="text-sm font-bold text-gray-900 flex items-center gap-1 group-hover/btn:text-emerald-500 transition-colors group/btn"
+              className="text-sm font-bold flex items-center gap-1 group-hover/btn:text-emerald-500 transition-colors group/btn"
+              style={{ color: 'var(--text-primary)' }}
             >
               View
               <Clock className="w-4 h-4 opacity-0 group-hover:opacity-100 transition-all -translate-x-2 group-hover:translate-x-0" />

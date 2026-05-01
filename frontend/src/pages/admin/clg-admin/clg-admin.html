@@ -416,74 +416,92 @@
         <section class="page-content" data-page-content="examinations">
           <div class="page-header-section">
             <span class="section-kicker">Examinations</span>
-            <p>Manage exams, schedules, and operations</p>
+            <p>Manage exams, schedules, and institutional assessments</p>
           </div>
           <div class="page-grid two-col">
             <article class="panel">
               <div class="panel-head">
+                <h2>Assessment Overview</h2>
+                <span class="badge-info" id="examBadge">Live stats</span>
+              </div>
+              <div class="operations-cards">
+                <div class="op-card">
+                  <div class="op-icon" style="background: linear-gradient(135deg, #60a5fa, #3b82f6);">
+                    <span>📝</span>
+                  </div>
+                  <div class="op-content">
+                    <div class="op-label">Total Quizzes</div>
+                    <div class="op-value" id="statTotalQuizzes">0</div>
+                    <div class="op-progress"><div class="progress-bar" id="barQuizzes" style="width: 0%"></div></div>
+                  </div>
+                </div>
+                <div class="op-card">
+                  <div class="op-icon" style="background: linear-gradient(135deg, #34d399, #10b981);">
+                    <span>📚</span>
+                  </div>
+                  <div class="op-content">
+                    <div class="op-label">Total Assignments</div>
+                    <div class="op-value" id="statTotalAssignments">0</div>
+                    <div class="op-progress"><div class="progress-bar" id="barAssignments" style="width: 0%; background: linear-gradient(90deg, #34d399, #10b981);"></div></div>
+                  </div>
+                </div>
+                <div class="op-card">
+                  <div class="op-icon" style="background: linear-gradient(135deg, #fbbf24, #f59e0b);">
+                    <span>⏳</span>
+                  </div>
+                  <div class="op-content">
+                    <div class="op-label">Pending Reviews</div>
+                    <div class="op-value" id="statPendingReviews">0</div>
+                    <div class="op-progress"><div class="progress-bar" id="barPending" style="width: 0%; background: linear-gradient(90deg, #fbbf24, #f59e0b);"></div></div>
+                  </div>
+                </div>
+              </div>
+            </article>
+
+            <article class="panel">
+              <div class="panel-head">
                 <h2>Exam Schedule</h2>
-                <span class="badge-info">3 upcoming</span>
+                <span class="badge-info">Upcoming Sessions</span>
               </div>
               <div class="exam-cards">
                 <div class="exam-card exam-mid-sem">
                   <div class="exam-card-top">
                     <span class="exam-type">Mid Semester</span>
-                    <span class="exam-status">May 14</span>
+                    <span class="exam-status">Scheduled</span>
                   </div>
                   <div class="exam-card-title">Theory Examination</div>
-                  <div class="exam-card-meta">Offline • Mandatory</div>
+                  <div class="exam-card-meta">Institutional • Mandatory</div>
                 </div>
                 <div class="exam-card exam-lab">
                   <div class="exam-card-top">
                     <span class="exam-type">Internals</span>
-                    <span class="exam-status">May 18</span>
+                    <span class="exam-status">Active</span>
                   </div>
                   <div class="exam-card-title">Lab Practicals</div>
                   <div class="exam-card-meta">Practical • Hands-on</div>
                 </div>
-                <div class="exam-card exam-end-sem">
-                  <div class="exam-card-top">
-                    <span class="exam-type">End Semester</span>
-                    <span class="exam-status">Jun 24</span>
-                  </div>
-                  <div class="exam-card-title">Comprehensive</div>
-                  <div class="exam-card-meta">Offline • Graded</div>
-                </div>
               </div>
             </article>
+          </div>
+
+          <div class="page-grid">
             <article class="panel">
               <div class="panel-head">
-                <h2>Operations Status</h2>
+                <h2>Institutional Assessments</h2>
               </div>
-              <div class="operations-cards">
-                <div class="op-card">
-                  <div class="op-icon" style="background: linear-gradient(135deg, #60a5fa, #3b82f6);">
-                    <span>📋</span>
-                  </div>
-                  <div class="op-content">
-                    <div class="op-label">Seating Plans</div>
-                    <div class="op-value">92 rooms</div>
-                    <div class="op-progress"><div class="progress-bar" style="width: 92%"></div></div>
+              <div class="grid two">
+                <div class="table-wrap-clg">
+                  <h3>Recent Quizzes</h3>
+                  <div class="table-like">
+                    <div class="row head"><span>Quiz Title</span><span>Course</span><span>Status</span></div>
+                    <div id="quizRows"></div>
                   </div>
                 </div>
-                <div class="op-card">
-                  <div class="op-icon" style="background: linear-gradient(135deg, #34d399, #10b981);">
-                    <span>📄</span>
-                  </div>
-                  <div class="op-content">
-                    <div class="op-label">Question Papers</div>
-                    <div class="op-value">74% uploaded</div>
-                    <div class="op-progress"><div class="progress-bar" style="width: 74%; background: linear-gradient(90deg, #34d399, #10b981);"></div></div>
-                  </div>
-                </div>
-                <div class="op-card">
-                  <div class="op-icon" style="background: linear-gradient(135deg, #fbbf24, #f59e0b);">
-                    <span>👥</span>
-                  </div>
-                  <div class="op-content">
-                    <div class="op-label">Invigilators</div>
-                    <div class="op-value">310 assigned</div>
-                    <div class="op-progress"><div class="progress-bar" style="width: 100%; background: linear-gradient(90deg, #fbbf24, #f59e0b);"></div></div>
+                <div class="table-wrap-clg">
+                  <h3>Recent Assignments</h3>
+                  <div class="table-like">
+                    <div class="row head"><span>Assignment</span><span>Course</span><span>Status</span></div>
+                    <div id="assignmentRows"></div>
                   </div>
                 </div>
               </div>

@@ -133,7 +133,7 @@ export const Courses: React.FC = () => {
     try {
       setLoading(true);
       const [response, enrollmentRes] = await Promise.all([
-        api.getCourses('student'),
+        api.getCourses('student', user?.collegeEmail),
         user?.email ? api.getEnrollments(user.email) : Promise.resolve({ data: [], total: 0 }),
       ]);
       const courseCards = response.data.map((course, index) => toCourseCard(course, index));

@@ -74,6 +74,16 @@ const departmentBreakdownList = document.getElementById("departmentBreakdownList
 const deptSummary = document.getElementById("deptSummary");
 const settingsRuntime = document.getElementById("settingsRuntime");
 const settingToggleInputs = document.querySelectorAll('input[data-setting-key]');
+
+const quizRows = document.getElementById("quizRows");
+const assignmentRows = document.getElementById("assignmentRows");
+const statTotalQuizzes = document.getElementById("statTotalQuizzes");
+const statTotalAssignments = document.getElementById("statTotalAssignments");
+const statPendingReviews = document.getElementById("statPendingReviews");
+const barQuizzes = document.getElementById("barQuizzes");
+const barAssignments = document.getElementById("barAssignments");
+const barPending = document.getElementById("barPending");
+
 const API_BASE = import.meta.env.VITE_API_BASE_URL || "http://localhost:5000/api";
 const ACTIVE_PAGE_STORAGE_KEY = "clgAdminActivePage";
 const SETTINGS_STORAGE_KEY = "clgAdminSettings";
@@ -404,6 +414,12 @@ const pageLabels = {
   settings: "Settings",
 };
 
+let examinationData = {
+  stats: { totalQuizzes: 0, totalAssignments: 0, activeQuizzes: 0, pendingAssignments: 0 },
+  quizzes: [],
+  assignments: [],
+};
+
 const validPages = new Set(Object.keys(pageLabels));
 
 function resolveInitialPage() {
@@ -658,21 +674,24 @@ function renderDepartmentsFromStats() {
 
   departmentsTableRows.innerHTML = "";
 
-  if (!departmentStats.length) {
+  const liveStats = Array.isArray(departmentStats) ? departmentStats : [];
+
+  if (liveStats.length === 0) {
     const emptyRow = document.createElement("div");
     emptyRow.className = "row";
-    emptyRow.innerHTML = `<span>No department data</span><span>-</span><span>-</span>`;
+    emptyRow.innerHTML = `<span class="empty-cell">No department data found for this institution.</span><span>-</span><span>-</span>`;
     departmentsTableRows.appendChild(emptyRow);
     return;
   }
 
-  departmentStats.forEach((item) => {
+  liveStats.forEach((item) => {
     const row = document.createElement("div");
     row.className = "row";
+    const branchName = normalizeDepartmentName(item.branch || item.department || "General");
     row.innerHTML = `
-      <span data-label="Department">${escapeHtml(normalizeDepartmentName(item.branch))}</span>
-      <span data-label="Students">${escapeHtml(String(item.students || 0))}</span>
-      <span data-label="Head">${escapeHtml(item.head || "TBD")}</span>
+      <span data-label="Department" class="dept-name-cell"><strong>${escapeHtml(branchName)}</strong></span>
+      <span data-label="Students">${escapeHtml(formatDashboardNumber(item.students))}</span>
+      <span data-label="Head" class="dept-head-cell">${escapeHtml(item.head || "TBD")}</span>
     `;
     departmentsTableRows.appendChild(row);
   });
@@ -846,6 +865,58 @@ async function loadCourseApprovalData() {
     pendingCourses = [];
     renderPendingCourses();
     showActionStatus("Failed to load course approvals.");
+  }
+}
+
+async function loadExaminationData() {
+  try {
+    const response = await fetch(withCollegeScope(`${API_BASE}/college-panel/examinations`));
+    if (!response.ok) throw new Error("Failed to load examinations");
+    const payload = await response.json();
+    examinationData = payload.data || examinationData;
+    renderExaminationData();
+  } catch {
+    showActionStatus("Failed to load examination statistics.");
+  }
+}
+
+function renderExaminationData() {
+  const { stats, quizzes, assignments } = examinationData;
+
+  if (statTotalQuizzes) statTotalQuizzes.textContent = stats.totalQuizzes;
+  if (statTotalAssignments) statTotalAssignments.textContent = stats.totalAssignments;
+  if (statPendingReviews) statPendingReviews.textContent = stats.pendingAssignments;
+
+  if (barQuizzes) barQuizzes.style.width = stats.totalQuizzes > 0 ? "100%" : "0%";
+  if (barAssignments) barAssignments.style.width = stats.totalAssignments > 0 ? "100%" : "0%";
+  if (barPending) {
+    const total = stats.totalQuizzes + stats.totalAssignments;
+    const pendingShare = total > 0 ? Math.min(100, (stats.pendingAssignments / total) * 100) : 0;
+    barPending.style.width = `${pendingShare}%`;
+  }
+
+  if (quizRows) {
+    quizRows.innerHTML = (quizzes && quizzes.length)
+      ? quizzes.map(q => `
+        <div class="row">
+          <span>${escapeHtml(q.title)}</span>
+          <span>${escapeHtml(q.course)}</span>
+          <span class="status-chip ${q.status === 'active' ? 'active' : 'draft'}">${escapeHtml(q.status)}</span>
+        </div>
+      `).join("")
+      : '<div class="row"><span>No quizzes found</span><span>-</span><span>-</span></div>';
+  }
+
+  if (assignmentRows) {
+    assignmentRows.innerHTML = (assignments && assignments.length)
+      ? assignments.map(a => `
+        <div class="row">
+          <span>${escapeHtml(a.title)}</span>
+          <span>${escapeHtml(a.course)}</span>
+          <span class="status-chip ${String(a.status || 'Pending').toLowerCase().replace(' ', '-')}">${escapeHtml(a.status || 'Pending')}</span>
+        </div>
+      `).join("")
+      : '<div class="row"><span>No assignments found</span><span>-</span><span>-</span></div>';
   }
 }
 
@@ -1279,8 +1350,15 @@ async function loadDepartmentStats() {
 
     const payload = await response.json();
     departmentStats = Array.isArray(payload?.data) ? payload.data : [];
+    
+    // Also update the total departments count in the global overview if possible
+    if (metricTotalDepartments && payload.total !== undefined) {
+      metricTotalDepartments.textContent = formatDashboardNumber(payload.total);
+    }
+
     renderDepartmentsFromStats();
-  } catch {
+  } catch (error) {
+    console.error("Load Department Stats Error:", error);
     departmentStats = [];
     renderDepartmentsFromStats();
   }
@@ -2153,6 +2231,10 @@ function setActivePage(page) {
   if (safePage === "departments") {
     void loadDepartmentStats();
   }
+
+  if (safePage === "examinations") {
+    void loadExaminationData();
+  }
 }
 
 sidebarToggle.addEventListener("click", () => {
@@ -2694,6 +2776,7 @@ async function bootstrap() {
   await loadDirectories();
   await loadDepartmentStats();
   await loadCourseApprovalData();
+  await loadExaminationData();
   renderCalendar();
   renderDashboardPanels();
 

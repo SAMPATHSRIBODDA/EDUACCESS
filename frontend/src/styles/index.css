@@ -1,9 +1,31 @@
 @import "tailwindcss";
 
+:root {
+  --bg-primary: #f8fafc;
+  --bg-card: #ffffff;
+  --text-primary: #1e293b;
+  --text-secondary: #64748b;
+  --border-color: #f1f5f9;
+  --accent-color: #10b981;
+}
+
+.dark {
+  --bg-primary: #0f172a;
+  --bg-card: #1e293b;
+  --text-primary: #f8fafc;
+  --text-secondary: #94a3b8;
+  --border-color: #334155;
+  --accent-color: #34d399;
+}
+
 @layer base {
   body {
-    @apply antialiased text-gray-800 bg-[#f8fafc] font-sans;
+    @apply antialiased transition-colors duration-300;
+    background-color: var(--bg-primary);
+    color: var(--text-primary);
+    font-family: 'Inter', sans-serif;
   }
+}
   
   /* Robust Keyboard Navigation Support */
   :focus-visible {
@@ -17,11 +39,21 @@
   }
   
   .btn-secondary {
-    @apply inline-flex items-center justify-center px-6 py-3 font-semibold text-gray-700 bg-white border border-gray-200 rounded-xl transition-all hover:bg-gray-50 active:scale-95 hover:border-gray-300;
+    @apply inline-flex items-center justify-center px-6 py-3 font-semibold rounded-xl transition-all active:scale-95;
+    background-color: var(--bg-card);
+    color: var(--text-primary);
+    border: 1px solid var(--border-color);
   }
 
   .card-premium {
-    @apply bg-white border border-gray-100 rounded-[1.5rem] shadow-[0_8px_30px_rgb(0,0,0,0.04)] hover:shadow-[0_20px_50px_rgba(16,185,129,0.05)] transition-all duration-500;
+    @apply rounded-[1.5rem] transition-all duration-500;
+    background-color: var(--bg-card);
+    border: 1px solid var(--border-color);
+    box-shadow: 0 8px 30px rgba(0, 0, 0, 0.04);
+  }
+
+  .dark .card-premium {
+    box-shadow: 0 8px 30px rgba(0, 0, 0, 0.2);
   }
 
   .shadow-soft {

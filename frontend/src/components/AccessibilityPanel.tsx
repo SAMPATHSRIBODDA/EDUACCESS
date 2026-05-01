@@ -926,7 +926,8 @@ export const AccessibilityPanel: React.FC = () => {
       stopSpeaking();
     }
   };
-    const openLeft = position.x > PANEL_WIDTH / 2;
+  const openLeft = position.x > PANEL_WIDTH / 2;
+  const openAbove = position.y > window.innerHeight / 2;
 
   if (user?.role !== 'student' && user?.role !== 'teacher') {
     return null;
@@ -944,7 +945,8 @@ export const AccessibilityPanel: React.FC = () => {
             initial={{ opacity: 0, scale: 0.9, y: 20 }}
             animate={{ opacity: 1, scale: 1, y: 0 }}
             exit={{ opacity: 0, scale: 0.9, y: 20 }}
-            className={`absolute w-72 bg-white rounded-3xl shadow-premium border border-emerald-50 overflow-hidden ${openLeft ? 'right-0' : 'left-0'} ${openAbove ? 'bottom-20' : 'top-20'}`}
+            className={`absolute w-72 rounded-3xl shadow-premium border overflow-hidden ${openLeft ? 'right-0' : 'left-0'} ${openAbove ? 'bottom-20' : 'top-20'}`}
+            style={{ backgroundColor: 'var(--bg-card)', borderColor: 'var(--border-color)' }}
           >
             {/* Header */}
             <div
@@ -976,7 +978,8 @@ export const AccessibilityPanel: React.FC = () => {
                 </div>
                 <button 
                   onClick={() => setTtsEnabled(!ttsEnabled)}
-                  className={`flex items-center gap-3 w-full p-3 rounded-2xl border transition-all ${ttsEnabled ? 'bg-emerald-50 border-emerald-100 text-emerald-600' : 'bg-white border-gray-100 text-gray-500 hover:bg-gray-50'}`}
+                  className={`flex items-center gap-3 w-full p-3 rounded-2xl border transition-all ${ttsEnabled ? 'bg-emerald-50 border-emerald-100 text-emerald-600' : 'border-[var(--border-color)] text-[var(--text-primary)] hover:bg-emerald-50/10'}`}
+                  style={{ backgroundColor: ttsEnabled ? '' : 'var(--bg-card)' }}
                 >
                   <Volume2 className="w-5 h-5" />
                   <span className="text-sm font-bold">{ttsEnabled ? 'TTS is Active' : 'Enable TTS'}</span>
@@ -995,7 +998,8 @@ export const AccessibilityPanel: React.FC = () => {
                     <button 
                       key={s.id}
                       onClick={() => setFontSize(s.id as any)}
-                      className={`h-12 rounded-xl font-black transition-all border ${fontSize === s.id ? 'bg-emerald-500 text-white border-emerald-400 shadow-lg shadow-emerald-500/20' : 'bg-white border-gray-100 text-gray-400 hover:bg-gray-50'}`}
+                      className={`h-12 rounded-xl font-black transition-all border ${fontSize === s.id ? 'bg-emerald-500 text-white border-emerald-400 shadow-lg shadow-emerald-500/20' : 'border-[var(--border-color)] text-[var(--text-secondary)] hover:bg-emerald-50/10'}`}
+                      style={{ backgroundColor: fontSize === s.id ? '' : 'var(--bg-card)' }}
                     >
                       <span className={s.size}>{s.label}</span>
                     </button>
@@ -1003,19 +1007,31 @@ export const AccessibilityPanel: React.FC = () => {
                 </div>
               </div>
 
-              {/* High Contrast */}
+              {/* Theme Selection */}
               <div>
-                <span className="text-xs font-black text-gray-400 uppercase tracking-widest block mb-3">Visual Contrast</span>
-                <button 
-                  onClick={() => setTheme(theme === 'high-contrast' ? 'light' : 'high-contrast')}
-                  className={`flex items-center justify-between w-full p-4 rounded-2xl border transition-all ${theme === 'high-contrast' ? 'bg-emerald-950 border-emerald-800 text-yellow-400' : 'bg-white border-gray-100 text-gray-600 hover:bg-gray-50'}`}
-                >
-                  <div className="flex items-center gap-3">
-                    {theme === 'high-contrast' ? <Sun className="w-5 h-5" /> : <Moon className="w-5 h-5" />}
-                    <span className="text-sm font-bold">{theme === 'high-contrast' ? 'Standard Mode' : 'High Contrast'}</span>
-                  </div>
-                  {theme === 'high-contrast' && <Check className="w-4 h-4" />}
-                </button>
+                <span className="text-xs font-black text-gray-400 uppercase tracking-widest block mb-3">Display Mode</span>
+                <div className="grid grid-cols-3 gap-2">
+                  {[
+                    { id: 'light', icon: Sun, label: 'Light' },
+                    { id: 'dark', icon: Moon, label: 'Dark' },
+                    { id: 'high-contrast', icon: Headphones, label: 'Contrast' }
+                  ].map((t) => {
+                    const Icon = t.icon;
+                    const isActive = theme === t.id;
+                    const isContrast = t.id === 'high-contrast';
+                    return (
+                      <button 
+                        key={t.id}
+                        onClick={() => setTheme(t.id as any)}
+                        className={`flex flex-col items-center justify-center gap-1 h-16 rounded-xl transition-all border ${isActive ? (isContrast ? 'bg-emerald-950 text-yellow-400 border-emerald-800' : 'bg-emerald-500 text-white border-emerald-400 shadow-lg shadow-emerald-500/20') : 'border-[var(--border-color)] text-[var(--text-secondary)] hover:bg-emerald-50/10'}`}
+                        style={{ backgroundColor: isActive ? '' : 'var(--bg-card)' }}
+                      >
+                        <Icon className="w-4 h-4" />
+                        <span className="text-[10px] font-black uppercase tracking-tighter">{t.label}</span>
+                      </button>
+                    );
+                  })}
+                </div>
               </div>
 
               {/* Audio Mode */}
@@ -1039,7 +1055,8 @@ export const AccessibilityPanel: React.FC = () => {
                       void startListening();
                     }
                   }}
-                  className={`mt-2 flex items-center gap-3 w-full p-3 rounded-2xl border transition-all ${isListening ? 'bg-emerald-500 text-white border-emerald-400' : 'bg-white border-gray-100 text-gray-600 hover:bg-gray-50'}`}
+                  className={`mt-2 flex items-center gap-3 w-full p-3 rounded-2xl border transition-all ${isListening ? 'bg-emerald-500 text-white border-emerald-400' : 'border-[var(--border-color)] text-[var(--text-primary)] hover:bg-emerald-50/10'}`}
+                  style={{ backgroundColor: isListening ? '' : 'var(--bg-card)' }}
                 >
                   <Mic className="w-4 h-4" />
                   <span className="text-xs font-bold uppercase tracking-wider">
@@ -1081,7 +1098,12 @@ export const AccessibilityPanel: React.FC = () => {
           }
           setIsOpen(!isOpen);
         }}
-        className={`w-16 h-16 rounded-full shadow-premium flex items-center justify-center transition-all ${isOpen ? 'bg-white text-emerald-500 rotate-90 border border-emerald-50' : 'bg-emerald-500 text-white hover:bg-emerald-600'}`}
+        className={`w-16 h-16 rounded-full shadow-premium flex items-center justify-center transition-all ${isOpen ? 'rotate-90 border' : 'bg-emerald-500 text-white hover:bg-emerald-600'}`}
+        style={{ 
+          backgroundColor: isOpen ? 'var(--bg-card)' : '', 
+          borderColor: isOpen ? 'var(--border-color)' : '',
+          color: isOpen ? 'var(--accent-color)' : ''
+        }}
       >
         {isOpen ? <X className="w-8 h-8" /> : (
           <div className="relative">

@@ -103,8 +103,12 @@ export const AccessibilityProvider: React.FC<{ children: React.ReactNode }> = ({
 
     if (theme === 'high-contrast') {
       root.classList.add('high-contrast');
-    } else {
+      root.classList.remove('dark');
+    } else if (theme === 'dark') {
+      root.classList.add('dark');
       root.classList.remove('high-contrast');
+    } else {
+      root.classList.remove('high-contrast', 'dark');
     }
   }, [fontSize, theme]);
 

@@ -38,9 +38,9 @@ export const Sidebar: React.FC<SidebarProps> = ({
   return (
     <div className="flex flex-col gap-6 h-full">
       {/* Progress Card */}
-      <div className="card-premium p-6 bg-white overflow-hidden relative">
+      <div className="card-premium p-6 overflow-hidden relative">
         <div className="flex justify-between items-center mb-6">
-          <h3 className="font-display font-black text-gray-900 uppercase tracking-tight text-sm">Your Learning Journey</h3>
+          <h3 className="font-display font-black uppercase tracking-tight text-sm" style={{ color: 'var(--text-primary)' }}>Your Learning Journey</h3>
           <Link to="/profile" className="text-emerald-500 font-black text-[10px] hover:underline uppercase tracking-widest flex items-center">
             Details <ExternalLink className="w-3 h-3 ml-1" />
           </Link>
@@ -61,8 +61,8 @@ export const Sidebar: React.FC<SidebarProps> = ({
               />
             </svg>
             <div className="absolute inset-0 flex flex-col items-center justify-center">
-              <span className="text-xl font-black text-gray-900 font-display leading-none">{safeProgress}%</span>
-              <span className="text-[8px] uppercase font-black text-gray-400 tracking-[0.2em] mt-1">Done</span>
+              <span className="text-xl font-black font-display leading-none" style={{ color: 'var(--text-primary)' }}>{safeProgress}%</span>
+              <span className="text-[8px] uppercase font-black tracking-[0.2em] mt-1" style={{ color: 'var(--text-secondary)' }}>Done</span>
             </div>
           </div>
           
@@ -72,8 +72,8 @@ export const Sidebar: React.FC<SidebarProps> = ({
                 <BookOpen className="w-5 h-5" />
               </div>
               <div className="text-left">
-                <p className="text-lg font-black text-gray-900 leading-none">{enrolledCourses}</p>
-                <p className="text-[10px] text-gray-400 uppercase tracking-widest font-bold">Enrolled</p>
+                <p className="text-lg font-black leading-none" style={{ color: 'var(--text-primary)' }}>{enrolledCourses}</p>
+                <p className="text-[10px] uppercase tracking-widest font-bold" style={{ color: 'var(--text-secondary)' }}>Enrolled</p>
               </div>
             </div>
             <div className="flex items-center gap-3">
@@ -81,8 +81,8 @@ export const Sidebar: React.FC<SidebarProps> = ({
                 <Award className="w-5 h-5" />
               </div>
               <div className="text-left">
-                <p className="text-lg font-black text-gray-900 leading-none">{completedAssignments}</p>
-                <p className="text-[10px] text-gray-400 uppercase tracking-widest font-bold">Completed</p>
+                <p className="text-lg font-black leading-none" style={{ color: 'var(--text-primary)' }}>{completedAssignments}</p>
+                <p className="text-[10px] uppercase tracking-widest font-bold" style={{ color: 'var(--text-secondary)' }}>Completed</p>
               </div>
             </div>
           </div>
@@ -127,10 +127,10 @@ export const Sidebar: React.FC<SidebarProps> = ({
         {announcements.length > 0 ? (
           <div className="space-y-3">
             {announcements.map((announcement) => (
-              <Link key={announcement.id} to="/notifications" className="block rounded-2xl border border-gray-100 bg-gray-50/70 p-4 hover:border-emerald-200 hover:bg-emerald-50 transition-all">
+              <Link key={announcement.id} to="/notifications" className="block rounded-2xl border border-[var(--border-color)] bg-[var(--bg-primary)] p-4 hover:border-emerald-200 hover:bg-emerald-50/10 transition-all">
                 <p className="text-xs font-black uppercase tracking-widest text-gray-400">Announcement</p>
-                <p className="text-sm font-black text-gray-900 mt-2 line-clamp-2">{announcement.title}</p>
-                <p className="text-xs text-gray-600 mt-2 line-clamp-2">{announcement.description}</p>
+                <p className="text-sm font-black mt-2 line-clamp-2" style={{ color: 'var(--text-primary)' }}>{announcement.title}</p>
+                <p className="text-xs mt-2 line-clamp-2" style={{ color: 'var(--text-secondary)' }}>{announcement.description}</p>
               </Link>
             ))}
           </div>

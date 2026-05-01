@@ -139,37 +139,43 @@ router.post("/bulk", async (req, res) => {
   }
 });
 
-router.get("/department-stats", async (_req, res) => {
+router.get("/department-stats", async (req, res) => {
   try {
-    const collegeEmail = normalizeCollegeEmail(_req.query?.collegeEmail);
-    const studentMatch = collegeEmail ? { role: "student", collegeEmail } : { role: "student" };
-    const teacherMatch = collegeEmail ? { role: "teacher", collegeEmail } : { role: "teacher" };
+    const collegeEmail = normalizeCollegeEmail(req.query?.collegeEmail);
+    const filter = collegeEmail ? { collegeEmail } : {};
+
+    // Get all unique branches from both students and teachers
+    const branches = await CollegeMember.distinct("branch", filter);
 
     const [studentAgg, teacherAgg] = await Promise.all([
       CollegeMember.aggregate([
-        { $match: studentMatch },
+        { $match: { ...filter, role: "student" } },
         { $group: { _id: "$branch", students: { $sum: 1 } } },
-        { $sort: { students: -1, _id: 1 } },
       ]),
       CollegeMember.aggregate([
-        { $match: teacherMatch },
-        { $group: { _id: "$branch", teachers: { $push: "$name" } } },
+        { $match: { ...filter, role: "teacher" } },
+        { $group: { _id: "$branch", head: { $first: "$name" } } },
       ]),
     ]);
 
-    const teacherMap = new Map();
-    teacherAgg.forEach((item) => {
-      teacherMap.set(item._id, Array.isArray(item.teachers) && item.teachers.length > 0 ? item.teachers[0] : "TBD");
-    });
+    const studentMap = new Map();
+    studentAgg.forEach((item) => studentMap.set(item._id, item.students));
 
-    const departments = studentAgg.map((item) => ({
-      branch: item._id,
-      students: item.students,
-      head: teacherMap.get(item._id) || "TBD",
-    }));
+    const teacherMap = new Map();
+    teacherAgg.forEach((item) => teacherMap.set(item._id, item.head));
+
+    const departments = branches
+      .filter(Boolean)
+      .map((branch) => ({
+        branch,
+        students: studentMap.get(branch) || 0,
+        head: teacherMap.get(branch) || "TBD",
+      }))
+      .sort((a, b) => b.students - a.students || a.branch.localeCompare(b.branch));
 
     res.json({ data: departments, total: departments.length });
-  } catch {
+  } catch (error) {
+    console.error("Department stats error:", error);
     res.status(500).json({ message: "Failed to fetch department stats" });
   }
 });

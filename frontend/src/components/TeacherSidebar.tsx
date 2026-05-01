@@ -74,10 +74,14 @@ export const TeacherSidebar: React.FC<SidebarProps> = ({ isCollapsed, setIsColla
         }}
         transition={{ type: 'spring', damping: 25, stiffness: 200 }}
         className={cn(
-          "h-screen bg-white border-r border-gray-100 flex flex-col z-[70]",
+          "h-screen flex flex-col z-[70]",
           "fixed lg:sticky top-0 left-0",
           mobileOpen ? "shadow-2xl" : ""
         )}
+        style={{ 
+          backgroundColor: 'var(--bg-card)', 
+          borderRight: '1px solid var(--border-color)' 
+        }}
       >
         {/* Header / Logo */}
         <div className="p-6 flex items-center justify-between mb-6">
@@ -88,7 +92,7 @@ export const TeacherSidebar: React.FC<SidebarProps> = ({ isCollapsed, setIsColla
               className="flex items-center gap-2"
             >
               <div className="w-10 h-10 bg-emerald-500 rounded-xl flex items-center justify-center text-white font-black text-xl shadow-lg shadow-emerald-500/20">EA</div>
-              <span className="font-display font-black text-xl text-gray-900 tracking-tight">EduAccess</span>
+              <span className="font-display font-black text-xl tracking-tight" style={{ color: 'var(--text-primary)' }}>EduAccess</span>
             </motion.div>
           )}
           {isCollapsed && !mobileOpen && (
@@ -115,25 +119,19 @@ export const TeacherSidebar: React.FC<SidebarProps> = ({ isCollapsed, setIsColla
                 "flex items-center gap-4 px-4 py-3.5 rounded-2xl transition-all duration-300 group relative",
                 isActive
                   ? "bg-emerald-500 text-white shadow-lg shadow-emerald-500/15"
-                  : "text-gray-400 hover:bg-emerald-50 hover:text-emerald-500"
+                  : "hover:bg-emerald-50/10"
               )}
+              style={{ color: isActive ? '#ffffff' : 'var(--text-secondary)' }}
             >
               <item.icon className={cn("w-5 h-5 shrink-0 transition-transform group-hover:scale-110", (isCollapsed && !mobileOpen) && "mx-auto")} />
               {(!isCollapsed || mobileOpen) && (
-                <>
-                  <span className="font-bold text-sm tracking-tight">{item.label}</span>
-                  {item.comingSoon && (
-                    <span className="ml-auto rounded-full bg-amber-100 px-2 py-0.5 text-[10px] font-extrabold uppercase tracking-wide text-amber-700">
-                      Coming Soon
-                    </span>
-                  )}
-                </>
+                <span className="font-bold text-sm tracking-tight">{item.label}</span>
               )}
 
               {/* Tooltip for collapsed mode */}
               {isCollapsed && !mobileOpen && (
-                <div className="fixed left-24 bg-gray-900 text-white text-[10px] font-black uppercase tracking-widest px-3 py-2 rounded-lg opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all whitespace-nowrap z-50">
-                  {item.label}{item.comingSoon ? ' · Coming Soon' : ''}
+                <div className="fixed left-24 text-white text-[10px] font-black uppercase tracking-widest px-3 py-2 rounded-lg opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all whitespace-nowrap z-50" style={{ backgroundColor: 'var(--bg-card)', color: 'var(--text-primary)', border: '1px solid var(--border-color)' }}>
+                  {item.label}
                 </div>
               )}
             </NavLink>
@@ -141,10 +139,10 @@ export const TeacherSidebar: React.FC<SidebarProps> = ({ isCollapsed, setIsColla
         </nav>
 
         {/* Footer / Collapse Toggle */}
-        <div className="p-4 border-t border-gray-50">
+        <div className="p-4 border-t" style={{ borderColor: 'var(--border-color)' }}>
           <button
             onClick={() => setIsCollapsed(!isCollapsed)}
-            className="w-full hidden lg:flex items-center gap-4 px-4 py-3 rounded-2xl text-gray-400 hover:bg-gray-50 transition-all group"
+            className="w-full hidden lg:flex items-center gap-4 px-4 py-3 rounded-2xl text-gray-400 hover:bg-emerald-50/10 transition-all group"
           >
             {isCollapsed ? <ChevronRight className="w-5 h-5 mx-auto" /> : (
               <>
