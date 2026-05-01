@@ -110,7 +110,8 @@ router.get("/overview", async (req, res) => {
       recentAnnouncements,
       recentEvents,
       departments,
-      departmentStats
+      departmentStats,
+      teacherAgg
     ] = await Promise.all([
       CollegeMember.countDocuments({ ...memberFilter, role: "student" }),
       CollegeMember.countDocuments({ ...memberFilter, role: "teacher" }),

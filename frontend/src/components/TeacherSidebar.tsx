@@ -38,8 +38,6 @@ const navItems = [
   { icon: GraduationCap, label: 'Grades', path: '/teacher/grades' },
   { icon: MessageSquare, label: 'Messages', path: '/teacher/messages' },
   { icon: FolderSearch, label: 'Resources', path: '/teacher/resources' },
-  { icon: CalendarCheck, label: 'Attendance', path: '/teacher/attendance', comingSoon: true },
-  { icon: BarChart3, label: 'Reports', path: '/teacher/reports', comingSoon: true },
   { icon: Settings, label: 'Settings', path: '/teacher/settings' },
 ];
 

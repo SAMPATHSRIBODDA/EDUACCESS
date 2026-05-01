@@ -25,8 +25,6 @@ import { TeacherQuizzes } from './pages/teacher/TeacherQuizzes'
 import { TeacherGrades } from './pages/teacher/TeacherGrades'
 import { TeacherMessages } from './pages/teacher/TeacherMessages'
 import { TeacherResources } from './pages/teacher/TeacherResources'
-import { TeacherAttendance } from './pages/teacher/TeacherAttendance'
-import { TeacherReports } from './pages/teacher/TeacherReports'
 import { TeacherSettings } from './pages/teacher/TeacherSettings'
 import { TeacherNotifications } from './pages/teacher/TeacherNotifications'
 
@@ -71,8 +69,6 @@ export default function App() {
               <Route path="grades" element={<TeacherGrades />} />
               <Route path="messages" element={<TeacherMessages />} />
               <Route path="resources" element={<TeacherResources />} />
-              <Route path="attendance" element={<TeacherAttendance />} />
-              <Route path="reports" element={<TeacherReports />} />
               <Route path="settings" element={<TeacherSettings />} />
               <Route path="notifications" element={<TeacherNotifications />} />
             </Route>

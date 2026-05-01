@@ -400,12 +400,8 @@ const pageLabels = {
   teachers: "Teachers",
   departments: "Departments",
   courses: "Courses",
-  academic: "Academic",
   examinations: "Examinations",
-  library: "Library",
-  placements: "Placements",
   finance: "Finance",
-  reports: "Reports",
   settings: "Settings",
 };
 
