@@ -401,7 +401,6 @@ const pageLabels = {
   departments: "Departments",
   courses: "Courses",
   examinations: "Examinations",
-  finance: "Finance",
   settings: "Settings",
 };
 
