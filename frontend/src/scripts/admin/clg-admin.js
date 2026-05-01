@@ -58,6 +58,8 @@ const teachersTableRows = document.getElementById("teachersTableRows");
 const departmentsTableRows = document.getElementById("departmentsTableRows");
 const refreshCoursesBtn = document.getElementById("refreshCoursesBtn");
 const pendingCoursesRows = document.getElementById("pendingCoursesRows");
+const allCoursesRows = document.getElementById("allCoursesRows");
+const allCourseSearchInput = document.getElementById("allCourseSearchInput");
 const metricTotalStudents = document.getElementById("metricTotalStudents");
 const metricStudentsTrend = document.getElementById("metricStudentsTrend");
 const metricTotalTeachers = document.getElementById("metricTotalTeachers");
@@ -280,48 +282,10 @@ let dashboardOverview = {
   departmentStats: [],
 };
 
-let events = [
-  { time: "09:30", name: "Orientation Session", location: "Auditorium" },
-  { time: "11:00", name: "Department Council", location: "Block B" },
-  { time: "14:15", name: "Exam Committee Meet", location: "Admin Hall" },
-  { time: "16:00", name: "Placement Drive Brief", location: "Career Center" },
-];
-
-let announcements = [
-  { title: "Mid-Semester Exams", description: "Exam schedule uploaded for all departments.", date: "07 Apr 2026" },
-  { title: "NAAC Review Visit", description: "Accreditation team visit planned next week.", date: "06 Apr 2026" },
-  { title: "Library Portal Update", description: "Digital issue-return module maintenance tonight.", date: "05 Apr 2026" },
-];
-
-let activities = [
-  {
-    type: "Student admission",
-    message: "38 new students admitted in Computer Science this week",
-    time: "10 min ago",
-  },
-  {
-    type: "Grade updates",
-    message: "Mid-semester grade sheets published for BBA and BCom",
-    time: "45 min ago",
-  },
-  {
-    type: "Payments",
-    message: "248 tuition payments reconciled in finance portal",
-    time: "1 hr ago",
-  },
-  {
-    type: "New faculty",
-    message: "2 faculty members onboarded in Science department",
-    time: "2 hrs ago",
-  },
-];
-
-let quickStats = [
-  { label: "Attendance Rate", value: "92%", note: "Up 2.1% this month" },
-  { label: "Exam Pass Rate", value: "88%", note: "Stable vs previous term" },
-  { label: "Placed Students", value: "1,245", note: "+84 offers this quarter" },
-  { label: "Research Grants", value: "$420K", note: "3 grants approved this month" },
-];
+let events = [];
+let announcements = [];
+let activities = [];
+let quickStats = [];
 
 const DEFAULT_ADMIN_SETTINGS = {
   roleBasedAccess: true,
@@ -401,6 +365,7 @@ let teachersDirectory = [
 ];
 
 let pendingCourses = [];
+let allCourses = [];
 let departmentStats = [];
 let currentActivePage = "dashboard";
 
@@ -848,24 +813,80 @@ if (courseSearchInput) {
   });
 }
 
+if (allCourseSearchInput) {
+  allCourseSearchInput.addEventListener("input", () => {
+    renderAllCourses();
+  });
+}
+
 async function loadCourseApprovalData() {
   try {
-    const pendingRes = await fetch(withCollegeScope(`${API_BASE}/courses?status=pending`));
+    const [pendingRes, allRes] = await Promise.all([
+      fetch(withCollegeScope(`${API_BASE}/courses?status=pending`)),
+      fetch(withCollegeScope(`${API_BASE}/courses`))
+    ]);
 
-    if (!pendingRes.ok) {
+    if (!pendingRes.ok || !allRes.ok) {
       throw new Error("Failed to load courses");
     }
 
     const pendingPayload = await pendingRes.json();
+    const allPayload = await allRes.json();
 
     pendingCourses = Array.isArray(pendingPayload?.data) ? pendingPayload.data : [];
+    allCourses = Array.isArray(allPayload?.data) ? allPayload.data : [];
 
     renderPendingCourses();
+    renderAllCourses();
   } catch {
     pendingCourses = [];
+    allCourses = [];
     renderPendingCourses();
-    showActionStatus("Failed to load course approvals.");
+    renderAllCourses();
+    showActionStatus("Failed to load course data.");
   }
+}
+
+function renderAllCourses() {
+  if (!allCoursesRows) return;
+
+  allCoursesRows.innerHTML = "";
+  const term = (allCourseSearchInput?.value || "").trim().toLowerCase();
+  const filteredCourses = term
+    ? allCourses.filter((course) => {
+      const haystack = [course.title, course.description, course.category, course.difficulty, course.grade, course.status, course.price]
+        .filter(Boolean)
+        .join(" ")
+        .toLowerCase();
+      return haystack.includes(term);
+    })
+    : allCourses;
+
+  if (filteredCourses.length === 0) {
+    const empty = document.createElement("div");
+    empty.className = "row row-seven";
+    empty.innerHTML = `<span class="course-title-cell"><strong>No courses found</strong></span><span>-</span><span>-</span><span>-</span><span>-</span><span>-</span><span>-</span>`;
+    allCoursesRows.appendChild(empty);
+    return;
+  }
+
+  filteredCourses.forEach((course) => {
+    const row = document.createElement("div");
+    row.className = "row row-seven";
+    const statusClass = String(course.status || "pending").toLowerCase();
+    row.innerHTML = `
+      <span data-label="Course" class="course-title-cell"><strong>${escapeHtml(course.title)}</strong><small>${escapeHtml(course.description || "No description")}</small></span>
+      <span data-label="Category">${escapeHtml(course.category || "General")}</span>
+      <span data-label="Difficulty">${escapeHtml(course.difficulty || "-")}</span>
+      <span data-label="Grade">${escapeHtml(course.grade || "-")}</span>
+      <span data-label="Status"><span class="status-chip ${statusClass}">${escapeHtml(course.status || "Pending")}</span></span>
+      <span data-label="Price">${escapeHtml(course.price || "Free")}</span>
+      <span class="course-action-wrap">
+        <button class="action-chip delete" data-course-action="delete" data-course-id="${course.id}" type="button">Delete</button>
+      </span>
+    `;
+    allCoursesRows.appendChild(row);
+  });
 }
 
 async function loadExaminationData() {
@@ -2708,6 +2729,22 @@ if (pendingCoursesRows) {
       void handleCourseStatusUpdate(courseId, "rejected");
       return;
     }
+
+    if (action === "delete") {
+      void handleCourseDelete(courseId);
+    }
+  });
+}
+
+if (allCoursesRows) {
+  allCoursesRows.addEventListener("click", (event) => {
+    const target = event.target;
+    const button = target.closest("button[data-course-action]");
+    if (!button) return;
+
+    const courseId = Number(button.dataset.courseId);
+    const action = button.dataset.courseAction;
+    if (Number.isNaN(courseId) || !action) return;
 
     if (action === "delete") {
       void handleCourseDelete(courseId);

@@ -389,13 +389,12 @@
                 <h2>Pending Course Approvals</h2>
                 <div class="bulk-tools">
                   <div class="section-search">
-                    <input id="courseSearchInput" type="search" placeholder="Search courses" />
+                    <input id="courseSearchInput" type="search" placeholder="Search pending courses" />
                   </div>
                   <button id="refreshCoursesBtn" class="pill-btn" type="button">Refresh</button>
                 </div>
               </div>
-              <p class="panel-subtext">Teacher uploaded courses are listed here with fee and details. Approve to publish
-                for students.</p>
+              <p class="panel-subtext">Teacher uploaded courses awaiting institutional review.</p>
               <div class="table-like" id="pendingCoursesTableWrap">
                 <div class="row head row-seven">
                   <span>Course</span>
@@ -407,6 +406,30 @@
                   <span>Action</span>
                 </div>
                 <div id="pendingCoursesRows"></div>
+              </div>
+            </article>
+
+            <article class="panel">
+              <div class="panel-head panel-head-between">
+                <h2>All Uploaded Courses</h2>
+                <div class="bulk-tools">
+                  <div class="section-search">
+                    <input id="allCourseSearchInput" type="search" placeholder="Search all courses" />
+                  </div>
+                </div>
+              </div>
+              <p class="panel-subtext">Complete catalog of courses uploaded by your faculty.</p>
+              <div class="table-like" id="allCoursesTableWrap">
+                <div class="row head row-seven">
+                  <span>Course</span>
+                  <span>Category</span>
+                  <span>Difficulty</span>
+                  <span>Grade</span>
+                  <span>Status</span>
+                  <span>Fee</span>
+                  <span>Action</span>
+                </div>
+                <div id="allCoursesRows"></div>
               </div>
             </article>
           </div>
