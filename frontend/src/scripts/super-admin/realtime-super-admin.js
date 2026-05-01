@@ -963,9 +963,30 @@ function bindEvents() {
   });
 
   toggleSidebar?.addEventListener("click", () => {
-    sidebar?.classList.toggle("collapsed");
-    const expanded = !sidebar?.classList.contains("collapsed");
-    toggleSidebar.setAttribute("aria-expanded", String(expanded));
+    if (window.innerWidth <= 1024) {
+      shell?.classList.toggle("mobile-open");
+    } else {
+      sidebar?.classList.toggle("collapsed");
+      shell?.classList.toggle("collapsed");
+      const expanded = !sidebar?.classList.contains("collapsed");
+      toggleSidebar.setAttribute("aria-expanded", String(expanded));
+    }
+  });
+
+  // Close mobile menu on nav item click
+  navItems.forEach((item) => {
+    item.addEventListener("click", () => {
+      if (window.innerWidth <= 1024) {
+        shell?.classList.remove("mobile-open");
+      }
+    });
+  });
+
+  // Close mobile menu on overlay click
+  shell?.addEventListener("click", (e) => {
+    if (window.innerWidth <= 1024 && e.target === shell && shell.classList.contains("mobile-open")) {
+      shell.classList.remove("mobile-open");
+    }
   });
 
   globalSearch?.addEventListener("input", () => {

@@ -234,19 +234,13 @@ router.get("/metadata", async (req, res) => {
 
 async function uploadFileWithFallback({ dataUri, fileName, folder = "course-uploads" }) {
   try {
-    const mimeType = parseDataUriMime(dataUri);
-    const resourceType = mimeType.startsWith("image/") ? "image" : mimeType.startsWith("video/") ? "video" : "raw";
+    console.log(`[Cloudinary] Starting upload: ${fileName} (Folder: ${folder})`);
     
-    console.log(`[Cloudinary] Starting upload: ${fileName} (Type: ${resourceType}, Folder: ${folder})`);
-    
-    const base64Data = String(dataUri || "").split(",")[1] || dataUri;
-    const buffer = Buffer.from(base64Data, "base64");
-
-    const upload = await uploadBufferToCloudinary({
-      buffer,
+    const upload = await uploadDataUriToCloudinary({
+      dataUri,
       fileName,
       folder,
-      resourceType,
+      resourceType: "auto"
     });
     
     console.log(`[Cloudinary] Success: ${upload.secure_url}`);

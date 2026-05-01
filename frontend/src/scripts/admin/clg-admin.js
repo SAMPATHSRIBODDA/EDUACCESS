@@ -584,13 +584,13 @@ function renderStudentsDirectory() {
     row.className = `row row-students ${isSuspended ? "suspended" : ""}`;
     const safeId = escapeHtml(String(student.id ?? student.regId ?? student.name));
     row.innerHTML = `
-      <span>${student.name}</span>
-      <span>${student.regId}</span>
-      <span>${student.email || "-"}</span>
-      <span>${student.phone}</span>
-      <span>${student.course}</span>
-      <span>${student.year}</span>
-      <span>${student.branch}</span>
+      <span data-label="Name">${student.name}</span>
+      <span data-label="Reg ID">${student.regId}</span>
+      <span data-label="Email">${student.email || "-"}</span>
+      <span data-label="Phone">${student.phone}</span>
+      <span data-label="Course">${student.course}</span>
+      <span data-label="Year">${student.year}</span>
+      <span data-label="Branch">${student.branch}</span>
       <div class="action-stack">
         <button class="action-chip edit" onclick="window.openEditModal('${safeId}', 'student')">Edit</button>
         <button class="action-chip suspend" onclick="window.toggleSuspend('${safeId}')">${isSuspended ? "Active" : "Suspend"}</button>
@@ -622,12 +622,12 @@ function renderTeachersDirectory() {
     row.className = `row row-teachers ${isSuspended ? "suspended" : ""}`;
     const safeId = escapeHtml(String(teacher.id ?? teacher.regId ?? teacher.name));
     row.innerHTML = `
-      <span>${teacher.name}</span>
-      <span>${teacher.regId}</span>
-      <span>${teacher.email || "-"}</span>
-      <span>${teacher.phone}</span>
-      <span>${teacher.branch}</span>
-      <span>${teacher.subject}</span>
+      <span data-label="Name">${teacher.name}</span>
+      <span data-label="Reg ID">${teacher.regId}</span>
+      <span data-label="Email">${teacher.email || "-"}</span>
+      <span data-label="Phone">${teacher.phone}</span>
+      <span data-label="Branch">${teacher.branch}</span>
+      <span data-label="Subject">${teacher.subject}</span>
       <div class="action-stack">
         <button class="action-chip edit" onclick="window.openEditModal('${safeId}', 'teacher')">Edit</button>
         <button class="action-chip suspend" onclick="window.toggleSuspend('${safeId}')">${isSuspended ? "Active" : "Suspend"}</button>
@@ -655,9 +655,9 @@ function renderDepartmentsFromStats() {
     const row = document.createElement("div");
     row.className = "row";
     row.innerHTML = `
-      <span>${escapeHtml(normalizeDepartmentName(item.branch))}</span>
-      <span>${escapeHtml(String(item.students || 0))}</span>
-      <span>${escapeHtml(item.head || "TBD")}</span>
+      <span data-label="Department">${escapeHtml(normalizeDepartmentName(item.branch))}</span>
+      <span data-label="Students">${escapeHtml(String(item.students || 0))}</span>
+      <span data-label="Head">${escapeHtml(item.head || "TBD")}</span>
     `;
     departmentsTableRows.appendChild(row);
   });
@@ -780,12 +780,12 @@ function renderPendingCourses() {
     const row = document.createElement("div");
     row.className = "row row-seven";
     row.innerHTML = `
-      <span class="course-title-cell"><strong>${escapeHtml(course.title)}</strong><small>${escapeHtml(course.description || "No description")}</small></span>
-      <span>${escapeHtml(course.category || "General")}</span>
-      <span>${escapeHtml(course.difficulty || "-")}</span>
-      <span>${escapeHtml(course.grade || "-")}</span>
-      <span>${escapeHtml(course.price || "Free")}</span>
-      <span>${Array.isArray(course.lectures) ? course.lectures.length : 0}</span>
+      <span data-label="Course" class="course-title-cell"><strong>${escapeHtml(course.title)}</strong><small>${escapeHtml(course.description || "No description")}</small></span>
+      <span data-label="Category">${escapeHtml(course.category || "General")}</span>
+      <span data-label="Difficulty">${escapeHtml(course.difficulty || "-")}</span>
+      <span data-label="Grade">${escapeHtml(course.grade || "-")}</span>
+      <span data-label="Price">${escapeHtml(course.price || "Free")}</span>
+      <span data-label="Lectures">${Array.isArray(course.lectures) ? course.lectures.length : 0}</span>
       <span class="course-action-wrap">
         <button class="action-chip approve" data-course-action="approve" data-course-id="${course.id}" type="button">Approve</button>
         <button class="action-chip reject" data-course-action="reject" data-course-id="${course.id}" type="button">Reject</button>
@@ -2140,9 +2140,29 @@ function setActivePage(page) {
 }
 
 sidebarToggle.addEventListener("click", () => {
-  appShell.classList.toggle("sidebar-collapsed");
-  const expanded = !appShell.classList.contains("sidebar-collapsed");
-  sidebarToggle.setAttribute("aria-expanded", String(expanded));
+  if (window.innerWidth <= 1024) {
+    appShell.classList.toggle("mobile-open");
+  } else {
+    appShell.classList.toggle("sidebar-collapsed");
+    const expanded = !appShell.classList.contains("sidebar-collapsed");
+    sidebarToggle.setAttribute("aria-expanded", String(expanded));
+  }
+});
+
+// Close mobile menu on nav item click
+sidebarNavItems.forEach((item) => {
+  item.addEventListener("click", () => {
+    if (window.innerWidth <= 1024) {
+      appShell.classList.remove("mobile-open");
+    }
+  });
+});
+
+// Close mobile menu on overlay click
+appShell.addEventListener("click", (e) => {
+  if (window.innerWidth <= 1024 && e.target === appShell && appShell.classList.contains("mobile-open")) {
+    appShell.classList.remove("mobile-open");
+  }
 });
 
 sidebarNavItems.forEach((item) => {

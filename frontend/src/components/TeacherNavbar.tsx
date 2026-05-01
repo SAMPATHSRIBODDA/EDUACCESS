@@ -2,12 +2,19 @@ import React from 'react';
 import {
   Search,
   Bell,
-  ChevronDown
+  ChevronDown,
+  Menu
 } from 'lucide-react';
 
-export const TeacherNavbar: React.FC = () => {
+export const TeacherNavbar: React.FC<{ onMenuClick: () => void }> = ({ onMenuClick }) => {
   return (
-    <header className="h-20 border-b border-gray-100 bg-white/80 backdrop-blur-md sticky top-0 z-40 px-8 flex items-center justify-between">
+    <header className="h-20 border-b border-gray-100 bg-white/80 backdrop-blur-md sticky top-0 z-40 px-4 lg:px-8 flex items-center justify-between gap-4">
+      <button 
+        onClick={onMenuClick}
+        className="lg:hidden p-2 text-gray-400 hover:bg-gray-50 rounded-xl transition-all"
+      >
+        <Menu className="w-6 h-6" />
+      </button>
       {/* Search Hub */}
       <div className="flex-1 max-w-xl">
         <div className="relative group">

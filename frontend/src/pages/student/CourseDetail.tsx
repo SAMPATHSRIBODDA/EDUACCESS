@@ -24,7 +24,7 @@ type LectureModulePreview = {
   id: string;
   title: string;
   url: string;
-  fileType: 'ppt' | 'pdf' | 'video';
+  fileType: 'ppt' | 'pdf' | 'video' | 'image' | 'audio' | 'text' | 'office' | 'none';
   notes: string;
 };
 
@@ -169,13 +169,25 @@ export const CourseDetail: React.FC = () => {
         const pdfUrl = resolveAssetUrl(moduleItem?.pdfUrl);
         const videoUrl = resolveAssetUrl(moduleItem?.videoUrl);
         const url = pptUrl || pdfUrl || videoUrl || '';
-        if (!url) return null;
+
+        let fileType: LectureModulePreview['fileType'] = 'none';
+        if (url) {
+          const lower = url.toLowerCase();
+          if (lower.includes('.ppt')) fileType = 'ppt';
+          else if (lower.includes('.mp4') || lower.includes('.webm') || lower.includes('.ogg') || lower.includes('.mov')) fileType = 'video';
+          else if (lower.includes('.pdf')) fileType = 'pdf';
+          else if (lower.includes('.png') || lower.includes('.jpg') || lower.includes('.jpeg') || lower.includes('.webp') || lower.includes('.gif') || lower.includes('.svg')) fileType = 'image';
+          else if (lower.includes('.mp3') || lower.includes('.wav') || lower.includes('.m4a')) fileType = 'audio';
+          else if (lower.includes('.txt') || lower.includes('.md') || lower.includes('.csv') || lower.includes('.json')) fileType = 'text';
+          else if (lower.includes('.doc') || lower.includes('.docx') || lower.includes('.xls') || lower.includes('.xlsx')) fileType = 'office';
+          else fileType = 'pdf'; // Fallback for URLs
+        }
 
         return {
           id: String(moduleItem?.id || `${selectedLecture?.id || 'lec'}-mod-${moduleIndex + 1}`),
           title: String(moduleItem?.title || `Module ${moduleIndex + 1}`),
           url,
-          fileType: pptUrl ? 'ppt' : videoUrl ? 'video' : 'pdf',
+          fileType,
           notes: String(moduleItem?.notes || ''),
         } as LectureModulePreview;
       })
@@ -232,6 +244,11 @@ export const CourseDetail: React.FC = () => {
     if (selectedLectureModule?.fileType === 'ppt') return 'pptx';
     if (selectedLectureModule?.fileType === 'video') return 'video';
     if (selectedLectureModule?.fileType === 'pdf') return 'pdf';
+    if (selectedLectureModule?.fileType === 'image') return 'image';
+    if (selectedLectureModule?.fileType === 'audio') return 'audio';
+    if (selectedLectureModule?.fileType === 'text') return 'text';
+    if (selectedLectureModule?.fileType === 'office') return 'office';
+    if (selectedLectureModule?.fileType === 'none') return 'none';
 
     const ext = selectedLectureDocumentExtension;
     if (ext === 'pptx') return 'pptx';
@@ -1018,7 +1035,7 @@ export const CourseDetail: React.FC = () => {
                   </a>
                 </div>
 
-                {selectedLectureModules.length > 1 && (
+                {(selectedLectureModules.length > 1 || (selectedLectureModules.length === 1 && !selectedLectureModules[0].id.endsWith('-default-module'))) && (
                   <div className="rounded-2xl border border-indigo-100 bg-indigo-50/40 p-3">
                     <p className="text-[10px] font-black uppercase tracking-widest text-indigo-700 mb-2">Lecture Modules</p>
                     <div className="flex flex-wrap gap-2">

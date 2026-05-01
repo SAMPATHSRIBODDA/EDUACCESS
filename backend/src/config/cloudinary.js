@@ -53,8 +53,14 @@ export async function uploadDataUriToCloudinary({ dataUri, folder = "eduaccess",
     return response;
   } catch (error) {
     const err = error;
+    console.error("[Cloudinary Error Detail]:", {
+      message: err.message,
+      http_code: err.http_code,
+      name: err.name
+    });
+
     if (err && err.http_code === 403) {
-      throw new Error("Cloudinary upload permission denied. Upload will use local fallback.");
+      throw new Error("Cloudinary Forbidden (403): Check if your account is over the limit, email is verified, or credentials are active.");
     }
     throw error;
   }

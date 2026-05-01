@@ -590,7 +590,7 @@ export const Landing: React.FC = () => {
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.1 }}
-              className="text-5xl lg:text-7xl font-black text-gray-900 font-display leading-[1.1] tracking-tight max-w-4xl mx-auto"
+              className="text-4xl sm:text-5xl lg:text-7xl font-black text-gray-900 font-display leading-[1.1] tracking-tight max-w-4xl mx-auto"
             >
               Accessible Learning for <span className="text-emerald-500">Everyone</span>, Everywhere.
             </motion.h1>
@@ -598,7 +598,7 @@ export const Landing: React.FC = () => {
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.2 }}
-              className="text-gray-400 text-lg lg:text-xl max-w-2xl mx-auto leading-relaxed font-medium"
+              className="text-gray-400 text-base sm:text-lg lg:text-xl max-w-2xl mx-auto leading-relaxed font-medium"
             >
               Revolutionizing the digital education landscape with multi-modal learning tools, inclusive social hubs, and institutional transparency.
             </motion.p>
