@@ -690,14 +690,48 @@ export const AccessibilityPanel: React.FC = () => {
       return;
     }
 
-    if (has('click new course', 'open new course', 'create course', 'new course')) {
-      const target = document.getElementById('newCourseBtn') || document.querySelector('[aria-label*="new course" i]');
+    if (has('click new course', 'open new course', 'create course', 'new course', 'add course')) {
+      const target = document.getElementById('newCourseBtn') || document.querySelector('[aria-label*="new course" i]') || document.querySelector('button:contains("New Course")');
       if (target instanceof HTMLElement) {
         setLastAction('Triggering new course action');
         target.click();
       } else {
-        setLastAction('New course action not found');
-        speak('New course action is not available on this page.');
+        // Fallback: try to find any button with "New Course" text
+        const buttons = Array.from(document.querySelectorAll('button'));
+        const newCourseBtn = buttons.find(b => b.textContent?.toLowerCase().includes('new course'));
+        if (newCourseBtn) {
+          setLastAction('Found and clicking new course button');
+          newCourseBtn.click();
+        } else {
+          setLastAction('New course action not found');
+          speak('New course action is not available on this page.');
+        }
+      }
+      return;
+    }
+
+    if (has('create assignment', 'add assignment', 'new assignment')) {
+      const buttons = Array.from(document.querySelectorAll('button'));
+      const btn = buttons.find(b => b.textContent?.toLowerCase().includes('new assignment') || b.textContent?.toLowerCase().includes('create assignment'));
+      if (btn) {
+        setLastAction('Creating new assignment');
+        btn.click();
+      } else {
+        setLastAction('Assignment creation not found');
+        speak('I could not find the create assignment button on this page.');
+      }
+      return;
+    }
+
+    if (has('create quiz', 'add quiz', 'new quiz')) {
+      const buttons = Array.from(document.querySelectorAll('button'));
+      const btn = buttons.find(b => b.textContent?.toLowerCase().includes('new quiz') || b.textContent?.toLowerCase().includes('create quiz'));
+      if (btn) {
+        setLastAction('Creating new quiz');
+        btn.click();
+      } else {
+        setLastAction('Quiz creation not found');
+        speak('I could not find the create quiz button on this page.');
       }
       return;
     }
@@ -772,7 +806,7 @@ export const AccessibilityPanel: React.FC = () => {
 
     if (has('help', 'what can i say', 'voice commands')) {
       setLastAction('Reading command help');
-      speak('You can say open dashboard, open courses, open assignments, open quizzes, open messages, open resources, read page, scroll down, scroll up, scroll to top, scroll to bottom, increase font, decrease font, enable high contrast, disable high contrast, focus next, focus previous, or click focused.');
+      speak('You can say: open dashboard, open courses, open assignments, open quizzes, open messages, open resources, read page, scroll down, scroll up, increase font, decrease font, enable high contrast, create course, create assignment, or logout.');
       return;
     }
 

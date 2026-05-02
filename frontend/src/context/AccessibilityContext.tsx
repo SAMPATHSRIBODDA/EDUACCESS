@@ -59,9 +59,21 @@ export const AccessibilityProvider: React.FC<{ children: React.ReactNode }> = ({
     if (mainContent) {
       const clone = mainContent.cloneNode(true) as HTMLElement;
       
-      const toRemove = clone.querySelectorAll('nav, footer, [aria-hidden="true"], #accessibility-panel-root, script, style, noscript');
+      const toRemove = clone.querySelectorAll('nav, footer, [aria-hidden="true"], #accessibility-panel-root, script, style, noscript, .sr-only');
       toRemove.forEach(el => el.remove());
       
+      // Process headings specifically to provide structure
+      const headings = clone.querySelectorAll('h1, h2, h3, h4, h5, h6');
+      headings.forEach(h => {
+        h.innerHTML = ` . Section: ${h.textContent} . `;
+      });
+
+      // Process lists to be more readable
+      const listItems = clone.querySelectorAll('li');
+      listItems.forEach((li, idx) => {
+        li.innerHTML = ` . Item ${idx + 1}: ${li.textContent} . `;
+      });
+
       textToRead = clone.innerText || clone.textContent || '';
     }
 
