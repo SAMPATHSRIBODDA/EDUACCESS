@@ -8,9 +8,9 @@ import {
   HelpCircle,
   GraduationCap,
   MessageSquare,
-  FolderSearch,
+  Folder,
   CalendarCheck,
-  BarChart3,
+  BarChart,
   Settings,
   LogOut,
   ChevronLeft,
@@ -37,7 +37,7 @@ const navItems = [
   { icon: HelpCircle, label: 'Quizzes', path: '/teacher/quizzes' },
   { icon: GraduationCap, label: 'Grades', path: '/teacher/grades' },
   { icon: MessageSquare, label: 'Messages', path: '/teacher/messages' },
-  { icon: FolderSearch, label: 'Resources', path: '/teacher/resources' },
+  { icon: Folder, label: 'Resources', path: '/teacher/resources' },
   { icon: Settings, label: 'Settings', path: '/teacher/settings' },
 ];
 

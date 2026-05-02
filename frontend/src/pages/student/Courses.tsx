@@ -99,7 +99,7 @@ function toCourseCard(course: CourseRecord, index: number): CourseCard {
   return {
     id: course.id,
     title: course.title,
-    grade: course.grade || `Grade ${10 + (index % 3)}`,
+    grade: course.grade || 'N/A',
     difficulty: course.difficulty || 'Beginner',
     students: course.students || 0,
     progress: course.progress || 0,
@@ -132,13 +132,21 @@ export const Courses: React.FC = () => {
   const loadApprovedCourses = async () => {
     try {
       setLoading(true);
-      const [response, enrollmentRes] = await Promise.all([
-        api.getCourses('student', user?.collegeEmail),
-        user?.email ? api.getEnrollments(user.email) : Promise.resolve({ data: [], total: 0 }),
-      ]);
-      const courseCards = response.data.map((course, index) => toCourseCard(course, index));
+      const coursesResult = await api.getCourses('student', user?.collegeEmail);
+      let enrollmentsResult = [];
+      
+      try {
+        if (user?.email) {
+          const res = await api.getEnrollments(user.email);
+          enrollmentsResult = res.data || [];
+        }
+      } catch (e) {
+        console.warn('Failed to load enrollments, falling back to empty list:', e);
+      }
+
+      const courseCards = (coursesResult.data || []).map((course, index) => toCourseCard(course, index));
       setCourses(courseCards);
-      setEnrollments(enrollmentRes.data || []);
+      setEnrollments(enrollmentsResult);
     } catch (error) {
       console.error('Failed to load courses:', error);
     } finally {

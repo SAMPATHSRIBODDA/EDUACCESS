@@ -5,11 +5,11 @@ import {
     FileText,
     TrendingUp,
     Plus,
-    CheckCircle2,
+    CheckCircle,
     ArrowUpRight,
     HelpCircle,
-    FolderSearch,
-    BarChart3
+    Folder,
+    BarChart
 } from 'lucide-react';
 import { motion } from 'framer-motion';
 import { useNavigate } from 'react-router-dom';
@@ -43,7 +43,10 @@ export const TeacherDashboard: React.FC = () => {
             if (!user?.email) return;
             try {
                 const overviewRes = await api.getTeacherOverview(user.email);
-                const { stats: statsData, events: eventsData, courses: coursesData, announcements: announcementsData, assignments: assignmentsData = [], quizzes: quizzesData = [] } = overviewRes.data;
+                if (!overviewRes || !overviewRes.data) {
+                    throw new Error('No data received from overview API');
+                }
+                const { stats: statsData = [], events: eventsData = [], courses: coursesData = [], announcements: announcementsData = [], assignments: assignmentsData = [], quizzes: quizzesData = [] } = overviewRes.data;
 
                 if (!isMounted) return;
 
@@ -264,8 +267,8 @@ export const TeacherDashboard: React.FC = () => {
                         {[
                             { label: 'Create Assignment', icon: Plus, path: '/teacher/assignments' },
                             { label: 'Add Quiz', icon: HelpCircle, path: '/teacher/quizzes' },
-                            { label: 'Upload Material', icon: FolderSearch, path: '/teacher/resources' },
-                            { label: 'View Reports', icon: BarChart3, path: '/teacher/reports' }
+                            { label: 'Upload Material', icon: Folder, path: '/teacher/resources' },
+                            { label: 'View Reports', icon: BarChart, path: '/teacher/reports' }
                         ].map((action, i) => (
                             <button
                                 key={i}
@@ -318,7 +321,7 @@ export const TeacherDashboard: React.FC = () => {
                                         "w-5 h-5 rounded-lg border-2 flex items-center justify-center transition-all",
                                         todo.completed ? "bg-emerald-500 border-emerald-500" : "border-white/20 group-hover:border-white/40"
                                     )}>
-                                        {todo.completed && <CheckCircle2 className="w-3 h-3 text-white" />}
+                                        {todo.completed && <CheckCircle className="w-3 h-3 text-white" />}
                                     </div>
                                     <span className={cn("text-xs font-bold", todo.completed && "line-through")}>{todo.task}</span>
                                 </div>

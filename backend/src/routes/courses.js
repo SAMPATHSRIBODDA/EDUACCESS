@@ -3,6 +3,8 @@ import vm from "node:vm";
 import fs from "node:fs";
 import path from "node:path";
 import { Course } from "../models/Course.js";
+import { CourseEnrollment } from "../models/CourseEnrollment.js";
+import { User } from "../models/User.js";
 import { parseDataUriMime, uploadDataUriToCloudinary, uploadBufferToCloudinary } from "../config/cloudinary.js";
 
 const router = Router();
@@ -232,6 +234,44 @@ router.get("/metadata", async (req, res) => {
   }
 });
 
+router.get("/enrollments", async (req, res) => {
+  try {
+    const { studentEmail } = req.query;
+    const query = {};
+    if (studentEmail) {
+      query.studentEmail = String(studentEmail).trim().toLowerCase();
+    }
+
+    const enrollments = await CourseEnrollment.find(query).sort({ enrolledAt: -1 });
+    res.json({ data: enrollments, total: enrollments.length });
+  } catch (error) {
+    res.status(500).json({ message: "Failed to fetch enrollments" });
+  }
+});
+
+router.get("/stats/landing", async (req, res) => {
+  try {
+    const [totalCourses, totalUsers, totalTeachers, totalStudents] = await Promise.all([
+      Course.countDocuments({ status: "approved" }),
+      User.countDocuments({ status: "active" }),
+      User.countDocuments({ role: "teacher", status: "active" }),
+      User.countDocuments({ role: "student", status: "active" }),
+    ]);
+
+    res.json({
+      data: {
+        totalCourses,
+        totalUsers,
+        totalTeachers,
+        totalStudents,
+        satisfiedLearners: totalStudents + 120, // Baseline + dynamic
+      },
+    });
+  } catch (error) {
+    res.status(500).json({ message: "Failed to fetch landing stats" });
+  }
+});
+
 async function uploadFileWithFallback({ dataUri, fileName, folder = "course-uploads" }) {
   try {
     console.log(`[Cloudinary] Starting upload: ${fileName} (Folder: ${folder})`);
@@ -274,8 +314,9 @@ async function uploadFileWithFallback({ dataUri, fileName, folder = "course-uplo
 
 router.get("/", async (req, res) => {
   try {
-    const { panel, category, difficulty, status } = req.query;
+    const { panel, category, difficulty, status, teacherEmail } = req.query;
     const collegeEmail = String(req.query?.collegeEmail || "").trim().toLowerCase();
+    const normalizedTeacherEmail = String(teacherEmail || "").trim().toLowerCase();
     const query = {};
 
     if (panel) {
@@ -304,6 +345,10 @@ router.get("/", async (req, res) => {
 
     if (difficulty) {
       query.difficulty = difficulty;
+    }
+
+    if (normalizedTeacherEmail) {
+      query.createdBy = normalizedTeacherEmail;
     }
 
     const courses = await Course.find(query).sort({ id: 1 }).select("-__v");

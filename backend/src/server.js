@@ -6,7 +6,6 @@ import express from "express";
 import { createServer } from "http";
 import { Server } from "socket.io";
 import { connectToDatabase } from "./config/db.js";
-import { seedDatabase } from "./data/seedDatabase.js";
 import { backfillCollegeScopes } from "./data/backfillCollegeScopes.js";
 import { Message } from "./models/Message.js";
 

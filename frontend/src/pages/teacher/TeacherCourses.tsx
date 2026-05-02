@@ -1,6 +1,6 @@
 // TeacherCourses.tsx
 import React, { useEffect, useState } from 'react';
-import { Plus, X, FlaskConical, CheckCircle2, Trash2, Upload } from 'lucide-react';
+import { Plus, X, FlaskConical, CheckCircle, Trash2, Upload } from 'lucide-react';
 import { motion } from 'framer-motion';
 import { cn } from '../../utils/cn';
 import { api, resolveAssetUrl } from '../../services/api';
@@ -215,7 +215,7 @@ function toCourseCard(course: CourseRecord, index: number): CourseCard {
     return {
         id: course.id,
         title: course.title,
-        grade: course.grade || `Grade ${10 + (index % 3)}`,
+        grade: course.grade || 'N/A',
         students: course.students || 0,
         progress: course.progress || 0,
         plannedMinutes,
@@ -390,9 +390,9 @@ export const TeacherCourses: React.FC = () => {
 
         const loadTeacherCourses = async () => {
             try {
-                const response = await api.getCourses('teacher');
-                if (isMounted && response.data.length > 0) {
-                    const themedCourses = response.data.map((course, index) => toCourseCard(course, index));
+                const response = await api.getCourses('teacher', undefined, user?.email);
+                if (isMounted && response.data) {
+                    const themedCourses = (response.data || []).map((course, index) => toCourseCard(course, index));
                     setCourseList(themedCourses);
                 }
             } catch {
@@ -414,8 +414,8 @@ export const TeacherCourses: React.FC = () => {
 
         const loadCourseForEditing = async () => {
             try {
-                const response = await api.getCourses('teacher');
-                const course = response.data.find(c => c.id === editingCourseId);
+                const response = await api.getCourses('teacher', undefined, user?.email);
+                const course = (response.data || []).find(c => c.id === editingCourseId);
                 
                 if (isMounted && course) {
                     setCourseForm({
@@ -987,7 +987,7 @@ export const TeacherCourses: React.FC = () => {
                                                 </div>
                                                 {courseForm.image && (
                                                     <div className="flex items-center gap-2 text-emerald-500 text-[10px] font-black uppercase tracking-widest">
-                                                        <CheckCircle2 className="w-4 h-4" /> Upload Successful
+                                                        <CheckCircle className="w-4 h-4" /> Upload Successful
                                                     </div>
                                                 )}
                                             </div>

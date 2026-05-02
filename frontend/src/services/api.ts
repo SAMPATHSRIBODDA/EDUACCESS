@@ -98,9 +98,10 @@ async function mutate<T>(path: string, method: "POST" | "PUT" | "PATCH" | "DELET
 export const api = {
   getUsers: () => request<ApiListResponse<UserRecord>>("/users"),
   getGuides: () => request("/guides"),
-  getCourses: (panel?: string, collegeEmail?: string) => {
+  getCourses: (panel?: string, collegeEmail?: string, teacherEmail?: string) => {
     let url = panel ? `/courses?panel=${encodeURIComponent(panel)}` : "/courses";
     if (collegeEmail) url += (url.includes("?") ? "&" : "?") + `collegeEmail=${encodeURIComponent(collegeEmail)}`;
+    if (teacherEmail) url += (url.includes("?") ? "&" : "?") + `teacherEmail=${encodeURIComponent(teacherEmail)}`;
     return request<ApiListResponse<CourseRecord>>(url);
   },
   getCourseDetail: (courseId: number, studentEmail: string) =>
