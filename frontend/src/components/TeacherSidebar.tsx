@@ -121,7 +121,7 @@ export const TeacherSidebar: React.FC<SidebarProps> = ({ isCollapsed, setIsColla
                   ? "bg-emerald-500 text-white shadow-lg shadow-emerald-500/15"
                   : "hover:bg-emerald-50/10"
               )}
-              style={{ color: isActive ? '#ffffff' : 'var(--text-secondary)' }}
+              style={({ isActive }) => ({ color: isActive ? '#ffffff' : 'var(--text-secondary)' })}
             >
               <item.icon className={cn("w-5 h-5 shrink-0 transition-transform group-hover:scale-110", (isCollapsed && !mobileOpen) && "mx-auto")} />
               {(!isCollapsed || mobileOpen) && (
