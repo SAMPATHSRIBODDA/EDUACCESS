@@ -105,7 +105,7 @@ export const Navbar: React.FC = () => {
 
   return (
     <nav className="sticky top-0 z-50 bg-white border-b shadow-sm" style={{ backgroundColor: 'var(--bg-card)', borderColor: 'var(--border-color)' }}>
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div className="w-full px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between items-center h-20">
           {/* Logo */}
           <Link to={isLanding ? "/" : "/dashboard"} className="flex items-center gap-2.5 group shrink-0 mr-8">
@@ -119,7 +119,7 @@ export const Navbar: React.FC = () => {
 
           {/* Navigation Links - Center */}
           {!isLanding && (
-            <div className="hidden lg:flex items-center gap-6">
+            <div className="hidden lg:flex items-center gap-4">
               <NavLink 
                 to="/dashboard" 
                 className={({ isActive }) => 
@@ -191,7 +191,7 @@ export const Navbar: React.FC = () => {
             {!isLanding ? (
               <>
                 <div className="hidden xl:block relative group">
-                  <div className="flex items-center border rounded-full px-4 py-2 w-72 focus-within:ring-2 focus-within:ring-emerald-500/20 transition-all" style={{ backgroundColor: 'var(--bg-primary)', borderColor: 'var(--border-color)' }}>
+                  <div className="flex items-center border rounded-full px-4 py-2 w-56 focus-within:ring-2 focus-within:ring-emerald-500/20 transition-all" style={{ backgroundColor: 'var(--bg-primary)', borderColor: 'var(--border-color)' }}>
                     <Search className="w-4 h-4 text-gray-400 mr-2" />
                     <input 
                       type="text" 
@@ -244,7 +244,7 @@ export const Navbar: React.FC = () => {
                   <button
                     type="button"
                     onClick={() => setShowProfileMenu((current) => !current)}
-                    className="flex items-center gap-3 pl-4 border-l border-gray-100 cursor-pointer group"
+                    className="flex items-center gap-2 pl-4 border-l border-gray-100 cursor-pointer group h-10"
                   >
                     <img 
                       src={profileAvatar}
@@ -254,12 +254,11 @@ export const Navbar: React.FC = () => {
                       }}
                       className="w-10 h-10 rounded-full border-2 border-white shadow-soft group-hover:border-emerald-500/20 transition-all"
                     />
-                    <div className="hidden xl:block text-left">
-                      <p className="text-sm font-bold" style={{ color: 'var(--text-primary)' }}>{user?.name || 'Student'}</p>
-                      <p className="text-[11px] font-semibold leading-tight truncate max-w-[180px]" style={{ color: 'var(--text-secondary)' }}>{user?.email || 'No email'}</p>
-                      <div className="flex items-center text-[10px] text-gray-400 font-bold uppercase tracking-widest">
-                        {user?.role || 'student'} <ChevronDown className={`ml-1 w-3 h-3 transition-transform ${showProfileMenu ? 'rotate-180' : ''}`} />
-                      </div>
+                    <div className="hidden xl:flex flex-col text-left justify-center">
+                      <p className="text-[12px] font-black leading-none" style={{ color: 'var(--text-primary)' }}>{user?.name || 'Student'}</p>
+                      <p className="text-[10px] font-bold text-emerald-600 uppercase tracking-tighter mt-0.5">
+                        {user?.role || 'student'}
+                      </p>
                     </div>
                   </button>
 
