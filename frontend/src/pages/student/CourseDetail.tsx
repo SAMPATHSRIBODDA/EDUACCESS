@@ -862,8 +862,8 @@ export const CourseDetail: React.FC = () => {
   }
 
   return (
-    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 overflow-x-hidden" ref={testRootRef}>
-      <div className="flex items-center justify-between gap-4 mb-6">
+    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 overflow-hidden" ref={testRootRef}>
+      <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-6 mb-8">
         <div>
           <Link to="/courses" className="inline-flex items-center gap-2 text-sm font-bold text-gray-600 hover:text-emerald-600 mb-3">
             <ChevronLeft className="w-4 h-4" /> Back to Courses

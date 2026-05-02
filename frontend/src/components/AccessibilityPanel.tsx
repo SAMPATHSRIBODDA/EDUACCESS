@@ -960,7 +960,7 @@ export const AccessibilityPanel: React.FC = () => {
       stopSpeaking();
     }
   };
-  const openLeft = position.x > PANEL_WIDTH / 2;
+  const openLeft = position.x > window.innerWidth / 2;
   const panelOpenAbove = position.y > window.innerHeight / 2;
 
   if (user?.role !== 'student' && user?.role !== 'teacher') {
@@ -979,8 +979,12 @@ export const AccessibilityPanel: React.FC = () => {
             initial={{ opacity: 0, scale: 0.9, y: 20 }}
             animate={{ opacity: 1, scale: 1, y: 0 }}
             exit={{ opacity: 0, scale: 0.9, y: 20 }}
-            className={`absolute w-72 rounded-3xl shadow-premium border overflow-hidden ${openLeft ? 'right-0' : 'left-0'} ${panelOpenAbove ? 'bottom-20' : 'top-20'}`}
-            style={{ backgroundColor: 'var(--bg-card)', borderColor: 'var(--border-color)' }}
+            className={`absolute w-72 rounded-3xl shadow-premium border overflow-hidden flex flex-col ${openLeft ? 'right-0' : 'left-0'} ${panelOpenAbove ? 'bottom-[calc(100%+12px)]' : 'top-[calc(100%+12px)]'}`}
+            style={{ 
+              backgroundColor: 'var(--bg-card)', 
+              borderColor: 'var(--border-color)',
+              maxHeight: 'min(70vh, 600px)' 
+            }}
           >
             {/* Header */}
             <div
@@ -989,16 +993,12 @@ export const AccessibilityPanel: React.FC = () => {
             >
               <div className="flex items-center gap-2">
                 <Settings className="w-5 h-5 animate-spin-slow" />
-                <span className="font-bold font-display tracking-tight text-sm uppercase">Accessibility Hub</span>
+                <span className="font-bold font-display tracking-tight text-sm uppercase">Accessibility</span>
               </div>
-              <button 
-                onClick={() => setIsOpen(false)}
-                onPointerDown={(event) => event.stopPropagation()}
-                className="p-1 hover:bg-white/20 rounded-lg transition-colors"
-              >
-                <X className="w-5 h-5" />
-              </button>
             </div>
+
+            {/* Scrollable Content Wrapper */}
+            <div className="flex-1 overflow-y-auto custom-scrollbar">
 
             {/* Controls */}
             <div className="p-4 space-y-6">
@@ -1112,6 +1112,7 @@ export const AccessibilityPanel: React.FC = () => {
               </div>
             </div>
 
+            </div>
             {/* Footer */}
             <div className="bg-gray-50 p-4 border-t border-gray-100 text-center">
               <p className="text-[10px] text-gray-400 font-bold uppercase tracking-widest">Designed for All Learners</p>
