@@ -31,7 +31,7 @@ export const Hero: React.FC<HeroProps> = ({ studentName, totalCourses, totalAssi
                 <ArrowRight className="ml-2 w-5 h-5 group-hover:translate-x-1 transition-transform" />
               </Link>
               <Link to="/dashboard" className="px-8 py-4 bg-white border border-gray-100 text-gray-900 rounded-2xl font-black text-xs uppercase tracking-widest hover:border-emerald-200 hover:text-emerald-600 transition-all flex items-center active:scale-95">
-                <LayoutDashboard className="mr-2 w-5 h-5 text-emerald-500" />
+                <Layout className="mr-2 w-5 h-5 text-emerald-500" />
                 Go to Dashboard
               </Link>
             </div>
@@ -65,7 +65,7 @@ export const Hero: React.FC<HeroProps> = ({ studentName, totalCourses, totalAssi
               <div className="absolute inset-0 bg-gradient-to-tr from-emerald-500/10 to-transparent pointer-events-none"></div>
             </div>
             <div className="mt-5 flex items-center justify-center lg:justify-start gap-2 text-xs text-gray-500 font-semibold">
-              <BookOpenCheck className="w-4 h-4 text-emerald-500" />
+              <BookOpen className="w-4 h-4 text-emerald-500" />
               Live updates from courses, assignments, quizzes, and teacher uploads.
             </div>
           </div>
