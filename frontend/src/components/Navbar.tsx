@@ -119,7 +119,7 @@ export const Navbar: React.FC = () => {
 
           {/* Navigation Links - Center */}
           {!isLanding && (
-            <div className="hidden md:flex items-center gap-8">
+            <div className="hidden lg:flex items-center gap-6">
               <NavLink 
                 to="/dashboard" 
                 className={({ isActive }) => 
@@ -190,7 +190,7 @@ export const Navbar: React.FC = () => {
           <div className="flex items-center gap-4">
             {!isLanding ? (
               <>
-                <div className="hidden lg:block relative group">
+                <div className="hidden xl:block relative group">
                   <div className="flex items-center border rounded-full px-4 py-2 w-72 focus-within:ring-2 focus-within:ring-emerald-500/20 transition-all" style={{ backgroundColor: 'var(--bg-primary)', borderColor: 'var(--border-color)' }}>
                     <Search className="w-4 h-4 text-gray-400 mr-2" />
                     <input 
@@ -254,7 +254,7 @@ export const Navbar: React.FC = () => {
                       }}
                       className="w-10 h-10 rounded-full border-2 border-white shadow-soft group-hover:border-emerald-500/20 transition-all"
                     />
-                    <div className="hidden lg:block text-left">
+                    <div className="hidden xl:block text-left">
                       <p className="text-sm font-bold" style={{ color: 'var(--text-primary)' }}>{user?.name || 'Student'}</p>
                       <p className="text-[11px] font-semibold leading-tight truncate max-w-[180px]" style={{ color: 'var(--text-secondary)' }}>{user?.email || 'No email'}</p>
                       <div className="flex items-center text-[10px] text-gray-400 font-bold uppercase tracking-widest">
@@ -324,7 +324,7 @@ export const Navbar: React.FC = () => {
 
             <button 
               onClick={() => setIsMenuOpen(!isMenuOpen)}
-              className="md:hidden p-2 text-gray-500 hover:bg-gray-100 rounded-full transition-colors"
+              className="lg:hidden p-2 text-gray-500 hover:bg-gray-100 rounded-full transition-colors"
             >
               {isMenuOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
             </button>
@@ -339,7 +339,7 @@ export const Navbar: React.FC = () => {
             initial={{ height: 0, opacity: 0 }}
             animate={{ height: 'auto', opacity: 1 }}
             exit={{ height: 0, opacity: 0 }}
-            className="md:hidden bg-white border-b border-gray-100 overflow-hidden"
+            className="lg:hidden bg-white border-b border-gray-100 overflow-hidden"
           >
             <div className="p-4 space-y-2">
               <NavLink to="/" onClick={() => setIsMenuOpen(false)} className="block p-3 rounded-xl font-bold text-gray-700 hover:bg-emerald-50 transition-all">Home</NavLink>
@@ -349,6 +349,7 @@ export const Navbar: React.FC = () => {
               <NavLink to="/dashboard" onClick={() => setIsMenuOpen(false)} className="block p-3 rounded-xl font-bold text-gray-700 hover:bg-emerald-50 transition-all">Dashboard</NavLink>
               <NavLink to="/resources" onClick={() => setIsMenuOpen(false)} className="block p-3 rounded-xl font-bold text-gray-700 hover:bg-emerald-50 transition-all">Resources</NavLink>
               <NavLink to="/community" onClick={() => setIsMenuOpen(false)} className="block p-3 rounded-xl font-bold text-gray-700 hover:bg-emerald-50 transition-all">Community</NavLink>
+              <NavLink to="/messages" onClick={() => setIsMenuOpen(false)} className="block p-3 rounded-xl font-bold text-gray-700 hover:bg-emerald-50 transition-all">Messages</NavLink>
               <NavLink to="/profile" onClick={() => setIsMenuOpen(false)} className="block p-3 rounded-xl font-bold text-gray-700 hover:bg-emerald-50 transition-all">My Profile</NavLink>
               {isAuthenticated && !isLanding && (
                 <button
