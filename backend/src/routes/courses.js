@@ -336,7 +336,11 @@ router.get("/", async (req, res) => {
     }
 
     if (collegeEmail) {
-      query.collegeEmail = collegeEmail;
+      query.$or = [
+        { collegeEmail: collegeEmail },
+        { collegeEmail: "" },
+        { collegeEmail: { $exists: false } }
+      ];
     }
 
     if (category) {

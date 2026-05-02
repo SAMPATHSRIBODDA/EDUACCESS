@@ -43,7 +43,8 @@ export default function App() {
       <SocketProvider>
         <AccessibilityProvider>
         <div className="min-h-screen bg-[var(--bg-primary)]">
-          <Routes>
+          <ErrorBoundary>
+            <Routes>
             <Route path="/" element={<><Navbar /><Landing /></>} />
             <Route path="/dashboard" element={<ProtectedRoute requiredRole="student"><><Navbar /><Dashboard /></></ProtectedRoute>} />
             <Route path="/courses" element={<ProtectedRoute requiredRole="student"><><Navbar /><Courses /></></ProtectedRoute>} />
@@ -61,13 +62,7 @@ export default function App() {
             {/* Teacher Panel Routes */}
             <Route 
               path="/teacher" 
-              element={
-                <ProtectedRoute requiredRole="teacher">
-                  <ErrorBoundary>
-                    <TeacherLayout />
-                  </ErrorBoundary>
-                </ProtectedRoute>
-              }
+              element={<ProtectedRoute requiredRole="teacher"><TeacherLayout /></ProtectedRoute>}
             >
               <Route index element={<TeacherDashboard />} />
               <Route path="dashboard" element={<TeacherDashboard />} />
@@ -84,6 +79,7 @@ export default function App() {
             </Route>
 
           </Routes>
+          </ErrorBoundary>
 
           <footer className="bg-emerald-950 text-emerald-500/50 py-8 mt-12">
             <div className="max-w-7xl mx-auto px-4 text-center">
