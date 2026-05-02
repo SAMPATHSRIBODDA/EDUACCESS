@@ -34,6 +34,7 @@ import { AccessibilityProvider } from './context/AccessibilityContext'
 import { AccessibilityPanel } from './components/AccessibilityPanel'
 import { SocketProvider } from './context/SocketContext'
 import { AuthProvider } from './context/AuthContext'
+import { ErrorBoundary } from './components/ErrorBoundary'
 
 export default function App() {
   return (
@@ -58,7 +59,16 @@ export default function App() {
             <Route path="/guide/:id" element={<><Navbar /><GuideView /></>} />
 
             {/* Teacher Panel Routes */}
-            <Route path="/teacher" element={<ProtectedRoute requiredRole="teacher"><TeacherLayout /></ProtectedRoute>}>
+            <Route 
+              path="/teacher" 
+              element={
+                <ProtectedRoute requiredRole="teacher">
+                  <ErrorBoundary>
+                    <TeacherLayout />
+                  </ErrorBoundary>
+                </ProtectedRoute>
+              }
+            >
               <Route index element={<TeacherDashboard />} />
               <Route path="dashboard" element={<TeacherDashboard />} />
               <Route path="courses" element={<TeacherCourses />} />
