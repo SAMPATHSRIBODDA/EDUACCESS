@@ -857,7 +857,7 @@ export const TeacherAssignments: React.FC = () => {
             </div>
 
             {showForm && (
-                <div className="fixed inset-0 z-50 bg-black/40 backdrop-blur-md overflow-hidden p-4 md:p-6 lg:p-8 flex items-center justify-center">
+                <div className="fixed inset-0 z-[150] bg-black/40 backdrop-blur-md overflow-hidden p-4 md:p-6 lg:p-8 flex items-center justify-center">
                     <motion.div
                         initial={{ opacity: 0, scale: 0.95 }}
                         animate={{ opacity: 1, scale: 1 }}
@@ -1539,7 +1539,7 @@ export const TeacherAssignments: React.FC = () => {
             )}
 
             {resultsOpen && (
-                <div className="fixed inset-0 z-50 bg-black/40 backdrop-blur-sm p-4 overflow-auto">
+                <div className="fixed inset-0 z-[150] bg-black/40 backdrop-blur-sm p-4 overflow-auto">
                     <div className="max-w-6xl mx-auto bg-white rounded-3xl border border-gray-100 shadow-2xl overflow-hidden">
                         <div className="px-6 py-4 border-b border-gray-100 flex items-center justify-between">
                             <div>

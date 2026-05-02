@@ -233,7 +233,7 @@ export const TeacherResources: React.FC = () => {
       </div>
 
       {showUploader && (
-        <div className="fixed inset-0 z-50 bg-black/35 backdrop-blur-sm overflow-y-auto p-4 md:p-8">
+        <div className="fixed inset-0 z-[150] bg-black/35 backdrop-blur-sm overflow-y-auto p-4 md:p-8">
           <div className="max-w-2xl mx-auto bg-white rounded-3xl border border-gray-200 shadow-xl p-5 md:p-8 space-y-6">
             <div className="flex items-start justify-between gap-4">
               <div>

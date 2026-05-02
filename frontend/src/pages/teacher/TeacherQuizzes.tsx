@@ -403,7 +403,7 @@ export const TeacherQuizzes: React.FC = () => {
       )}
 
       {showBuilder && (
-        <div className="fixed inset-0 z-50 bg-black/40 p-4 overflow-auto">
+        <div className="fixed inset-0 z-[150] bg-black/40 p-4 overflow-auto">
           <div className="max-w-5xl mx-auto bg-white rounded-3xl border border-gray-100 shadow-2xl">
             <div className="px-6 py-4 border-b border-gray-100 flex items-center justify-between">
               <h2 className="text-xl font-black text-gray-900">{editingQuizId ? 'Edit Quiz' : 'Create Quiz'}</h2>
@@ -559,7 +559,7 @@ export const TeacherQuizzes: React.FC = () => {
       )}
 
       {(resultData || resultLoading) && (
-        <div className="fixed inset-0 z-50 bg-black/40 p-4 overflow-auto">
+        <div className="fixed inset-0 z-[150] bg-black/40 p-4 overflow-auto">
           <div className="max-w-6xl mx-auto bg-white rounded-3xl border border-gray-100 shadow-2xl">
             <div className="px-6 py-4 border-b border-gray-100 flex items-center justify-between">
               <div>
