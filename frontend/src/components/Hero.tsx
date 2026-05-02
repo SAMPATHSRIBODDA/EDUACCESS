@@ -1,5 +1,5 @@
 import React from 'react';
-import { ArrowRight, BookOpenCheck, LayoutDashboard, UserCircle2 } from 'lucide-react';
+import { ArrowRight, BookOpen, Layout, UserCircle } from 'lucide-react';
 import { Link } from 'react-router-dom';
 
 type HeroProps = {
@@ -50,7 +50,7 @@ export const Hero: React.FC<HeroProps> = ({ studentName, totalCourses, totalAssi
                   <p className="text-[10px] font-black uppercase tracking-widest text-gray-400">My Profile</p>
                   <p className="text-xl font-black text-gray-900 mt-1">{totalCourses}</p>
                 </div>
-                <UserCircle2 className="w-5 h-5 text-emerald-500" />
+                <UserCircle className="w-5 h-5 text-emerald-500" />
               </Link>
             </div>
           </div>

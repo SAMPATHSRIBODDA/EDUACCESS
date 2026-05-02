@@ -1,7 +1,7 @@
 import React from 'react';
 import { NavLink } from 'react-router-dom';
 import {
-  LayoutDashboard,
+  Layout,
   BookOpen,
   Users,
   FileText,
@@ -30,7 +30,7 @@ interface SidebarProps {
 }
 
 const navItems = [
-  { icon: LayoutDashboard, label: 'Dashboard', path: '/teacher/dashboard' },
+  { icon: Layout, label: 'Dashboard', path: '/teacher/dashboard' },
   { icon: BookOpen, label: 'My Courses', path: '/teacher/courses' },
   { icon: Users, label: 'Students', path: '/teacher/students' },
   { icon: FileText, label: 'Assignments', path: '/teacher/assignments' },
