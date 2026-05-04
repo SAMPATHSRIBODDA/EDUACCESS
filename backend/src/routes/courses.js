@@ -274,13 +274,16 @@ router.get("/stats/landing", async (req, res) => {
 
 async function uploadFileWithFallback({ dataUri, fileName, folder = "course-uploads" }) {
   try {
-    console.log(`[Cloudinary] Starting upload: ${fileName} (Folder: ${folder})`);
+    const mimeType = parseDataUriMime(dataUri);
+    const resourceType = mimeType.startsWith("image/") ? "image" : mimeType.startsWith("video/") ? "video" : "raw";
+    
+    console.log(`[Cloudinary] Starting upload: ${fileName} (Type: ${resourceType}, Folder: ${folder})`);
     
     const upload = await uploadDataUriToCloudinary({
       dataUri,
       fileName,
       folder,
-      resourceType: "auto"
+      resourceType
     });
     
     console.log(`[Cloudinary] Success: ${upload.secure_url}`);

@@ -262,15 +262,25 @@ export const CourseDetail: React.FC = () => {
     return 'other';
   }, [selectedLectureDocumentExtension, selectedLectureModule?.fileType]);
 
-  const selectedLectureViewerUrl = useMemo(() => {
-    if (!selectedLectureDocumentUrl) return '';
-    return selectedLectureDocumentUrl;
-  }, [selectedLectureDocumentUrl]);
-
   const isLocalDocumentUrl = useMemo(() => {
     const lower = String(selectedLectureDocumentUrl || '').toLowerCase();
     return lower.includes('localhost') || lower.includes('127.0.0.1') || lower.startsWith('/');
   }, [selectedLectureDocumentUrl]);
+
+  const selectedLectureViewerUrl = useMemo(() => {
+    if (!selectedLectureDocumentUrl) return '';
+    
+    // For office documents (PPTX, DOCX, etc.) on non-local environments, 
+    // use Microsoft Office Viewer for reliable rendering.
+    const ext = selectedLectureDocumentExtension.toLowerCase();
+    const isOffice = ['pptx', 'ppt', 'doc', 'docx', 'xls', 'xlsx'].includes(ext) || selectedLectureDocumentType === 'office';
+    
+    if (isOffice && !isLocalDocumentUrl) {
+      return `https://view.officeapps.live.com/op/embed.aspx?src=${encodeURIComponent(selectedLectureDocumentUrl)}`;
+    }
+    
+    return selectedLectureDocumentUrl;
+  }, [selectedLectureDocumentUrl, selectedLectureDocumentExtension, selectedLectureDocumentType, isLocalDocumentUrl]);
 
   const legacyPptViewerUrl = useMemo(() => {
     if (selectedLectureDocumentType !== 'ppt' || !selectedLectureDocumentUrl) return '';
