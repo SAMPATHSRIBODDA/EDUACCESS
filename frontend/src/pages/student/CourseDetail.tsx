@@ -367,9 +367,10 @@ export const CourseDetail: React.FC = () => {
           setPptSlideCount(count);
           setPptSlideIndex(Number(previewer?.currentIndex || 0) + 1);
         }
-      } catch {
+      } catch (err) {
         if (!cancelled) {
-          setPptRenderError('Unable to render this PPTX inline. Use Download to open it locally.');
+          const message = err instanceof Error ? err.message : 'Unknown error';
+          setPptRenderError(`Unable to render this PPTX inline (${message}). Use Download to open it locally.`);
         }
       }
     };
