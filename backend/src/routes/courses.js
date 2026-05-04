@@ -279,8 +279,11 @@ async function uploadFileWithFallback({ dataUri, fileName, folder = "course-uplo
     
     console.log(`[Cloudinary] Starting upload: ${fileName} (Type: ${resourceType}, Folder: ${folder})`);
     
-    const upload = await uploadDataUriToCloudinary({
-      dataUri,
+    const base64Data = String(dataUri || "").split(",")[1] || dataUri;
+    const buffer = Buffer.from(base64Data, "base64");
+
+    const upload = await uploadBufferToCloudinary({
+      buffer,
       fileName,
       folder,
       resourceType
@@ -290,7 +293,7 @@ async function uploadFileWithFallback({ dataUri, fileName, folder = "course-uplo
     return { success: true, fileUrl: upload.secure_url, source: "cloudinary" };
   } catch (cloudError) {
     console.error("[Cloudinary] Upload Failed. Full Error:", cloudError);
-    console.warn("[Cloudinary] Falling back to local storage due to error:", cloudError?.message);
+    console.warn("[Cloudinary] Falling back to local storage due to error:", cloudError?.message || cloudError);
     try {
       const uploadsDir = path.join(process.cwd(), "uploads");
       if (!fs.existsSync(uploadsDir)) {
@@ -310,6 +313,7 @@ async function uploadFileWithFallback({ dataUri, fileName, folder = "course-uplo
 
       return { success: true, fileUrl: finalUrl, source: "local" };
     } catch (localError) {
+      console.error("[Local Storage] Error:", localError);
       throw new Error(`Upload failed: ${localError?.message || "Unknown error"}`);
     }
   }
