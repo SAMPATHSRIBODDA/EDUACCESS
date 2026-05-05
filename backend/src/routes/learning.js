@@ -10,6 +10,7 @@ import { Course } from "../models/Course.js";
 import { CourseEnrollment } from "../models/CourseEnrollment.js";
 import { CourseProgress } from "../models/CourseProgress.js";
 import { TestSubmission } from "../models/TestSubmission.js";
+import { extractTextFromUrl } from "../utils/textExtractor.js";
 
 const router = Router();
 const RAZORPAY_KEY_ID = String(process.env.RAZORPAY_KEY_ID || "").trim();
@@ -541,6 +542,68 @@ router.get("/lecture/:id", async (req, res) => {
       return res.status(404).json({ message: "Lecture not found" });
     }
 
+    // Ensure modules are available for extraction check
+    if (!located.lecture.modules || located.lecture.modules.length === 0) {
+      located.lecture.modules = deriveModules(located.lecture);
+    }
+
+    // On-demand Text Extraction for accessibility (if missing)
+    let needsSave = false;
+    if (located.lecture.documentUrl && !located.lecture.extractedText) {
+      const ext = located.lecture.documentUrl.split('.').pop().toLowerCase();
+      if (['pdf', 'pptx', 'ppt', 'docx', 'doc'].includes(ext)) {
+        try {
+          console.log(`[LazyExtract] Extracting text for lecture: ${located.lecture.id}`);
+          const text = await extractTextFromUrl(located.lecture.documentUrl);
+          if (text) {
+            located.lecture.extractedText = text;
+            needsSave = true;
+          }
+        } catch (e) {
+          console.error(`[LazyExtract] Failed for ${located.lecture.id}:`, e.message);
+        }
+      }
+    }
+
+    // Also check modules
+    const modules = located.lecture.modules || [];
+    for (const mod of modules) {
+      const modUrl = mod.fileUrl || mod.pdfUrl || mod.pptUrl;
+      if (modUrl && !mod.extractedText) {
+        const ext = modUrl.split('.').pop().toLowerCase();
+        if (['pdf', 'pptx', 'ppt', 'docx', 'doc'].includes(ext)) {
+          try {
+            console.log(`[LazyExtract] Extracting text for module: ${mod.id}`);
+            const text = await extractTextFromUrl(modUrl);
+            if (text) {
+              mod.extractedText = text;
+              needsSave = true;
+            }
+          } catch (e) {
+            console.error(`[LazyExtract] Failed for module ${mod.id}:`, e.message);
+          }
+        }
+      }
+    }
+
+    if (needsSave) {
+      // Find the specific course and lecture in DB to update
+      const dbCourse = await Course.findOne({ id: located.courseId });
+      if (dbCourse) {
+        dbCourse.units.forEach(unit => {
+          unit.lectures.forEach(lec => {
+            if (lec.id === located.lecture.id) {
+              lec.extractedText = located.lecture.extractedText;
+              lec.modules = located.lecture.modules;
+            }
+          });
+        });
+        dbCourse.markModified('units');
+        await dbCourse.save();
+        console.log(`[LazyExtract] Saved extracted text to DB for ${located.lecture.id}`);
+      }
+    }
+
     const progressDoc = studentEmail
       ? await CourseProgress.findOne({ studentEmail, courseId: located.courseId }).select("completedLectureIds completedModuleIds")
       : null;
@@ -553,7 +616,7 @@ router.get("/lecture/:id", async (req, res) => {
         ...located,
         lecture: {
           ...located.lecture,
-          modules: deriveModules(located.lecture),
+          modules: located.lecture.modules,
         },
         completed: {
           lecture: completedLectureIds.includes(lectureId),

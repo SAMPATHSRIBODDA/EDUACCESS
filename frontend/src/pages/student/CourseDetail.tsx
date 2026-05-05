@@ -1022,6 +1022,16 @@ export const CourseDetail: React.FC = () => {
             </div>
 
             <div className="p-4">
+              {/* Accessibility Hidden Content */}
+              <div id="accessibility-lecture-title" className="sr-only">
+                {selectedLecture?.title}
+              </div>
+              {(selectedLecture?.extractedText || selectedLectureModule?.extractedText) && (
+                <div id="accessibility-lecture-text" className="sr-only">
+                  {selectedLectureModule?.extractedText || selectedLecture?.extractedText}
+                </div>
+              )}
+
               {selectedLectureDocumentUrl ? (
                 <div className="space-y-4">
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">

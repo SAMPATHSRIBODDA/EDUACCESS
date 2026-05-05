@@ -15,6 +15,7 @@ const resourceSchema = new mongoose.Schema(
     linkUrl: { type: String, default: "", trim: true },
     fileName: { type: String, default: "", trim: true },
     fileSize: { type: String, default: "", trim: true },
+    extractedText: { type: String, default: "" },
     course: { type: String, required: true, trim: true, index: true }, // Can be "All" or specific course title
     teacherEmail: { type: String, required: true, trim: true, lowercase: true, index: true },
     status: {

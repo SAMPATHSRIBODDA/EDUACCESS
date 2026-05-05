@@ -56,6 +56,7 @@ const lectureSchema = new mongoose.Schema(
     testTimeMinutes: { type: Number, default: 30, min: 1, max: 600 },
     documentUrl: { type: String, default: "", trim: true },
     documentName: { type: String, default: "", trim: true },
+    extractedText: { type: String, default: "", trim: true },
     modules: { type: [lectureModuleSchema], default: [] },
     tests: { type: [lectureTestSchema], default: [] },
   },

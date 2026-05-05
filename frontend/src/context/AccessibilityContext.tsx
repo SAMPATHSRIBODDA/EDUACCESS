@@ -58,54 +58,63 @@ export const AccessibilityProvider: React.FC<{ children: React.ReactNode }> = ({
     
     if (mainContent) {
       const clone = mainContent.cloneNode(true) as HTMLElement;
+      const lectureTitle = document.getElementById('accessibility-lecture-title')?.textContent;
+      const extractedContent = document.getElementById('accessibility-lecture-text')?.textContent;
       
-      const toRemove = clone.querySelectorAll('nav, footer, [aria-hidden="true"], #accessibility-panel-root, script, style, noscript, .sr-only');
+      if (lectureTitle) {
+        textToRead += `Lecture: ${lectureTitle}. `;
+      }
+      
+      if (extractedContent) {
+        textToRead += ` . Document Content: ${extractedContent} . `;
+      }
+      
+      const toRemove = clone.querySelectorAll('nav, footer, [aria-hidden="true"], #accessibility-panel-root, script, style, noscript, .sr-only, #accessibility-lecture-text');
       toRemove.forEach(el => el.remove());
       
       // Process headings specifically to provide structure
       const headings = clone.querySelectorAll('h1, h2, h3, h4, h5, h6');
       headings.forEach(h => {
-        h.innerHTML = ` . Section: ${h.textContent} . `;
+        h.innerHTML = ` . Heading: ${h.textContent} . `;
       });
 
-      // Process lists to be more readable
+      // Process list items
       const listItems = clone.querySelectorAll('li');
       listItems.forEach((li, idx) => {
         li.innerHTML = ` . Item ${idx + 1}: ${li.textContent} . `;
       });
 
-      textToRead = clone.innerText || clone.textContent || '';
+      textToRead += clone.innerText || clone.textContent || '';
     }
 
     const iframes = document.querySelectorAll('iframe');
-    let iframeMessages = 0;
     iframes.forEach(iframe => {
+      const iframeTitle = iframe.getAttribute('title') || iframe.getAttribute('aria-label') || 'unnamed document';
+      
       try {
         const iframeDoc = iframe.contentDocument || iframe.contentWindow?.document;
         if (iframeDoc && iframeDoc.body) {
           const iframeText = iframeDoc.body.innerText || iframeDoc.body.textContent || '';
           if (iframeText.trim()) {
-            textToRead += ' . ' + iframeText;
+            textToRead += ` . Content from ${iframeTitle}: ${iframeText}`;
           }
-        } else {
-          iframeMessages++;
         }
       } catch (e) {
-        iframeMessages++;
+        // CORS blocked
+      }
+      
+      // Fallback: Announce the document's presence briefly if not already read
+      if (!textToRead.includes(iframeTitle)) {
+        textToRead += ` . [Document]: ${iframeTitle}. `;
       }
     });
 
-    if (iframeMessages > 0) {
-      textToRead += ` . Note: There ${iframeMessages > 1 ? 'are ' + iframeMessages + ' documents' : 'is a document'} or presentation visible on screen.`;
+    if (!textToRead.trim()) {
+      textToRead = "Nothing to read on this page.";
     }
 
-    textToRead = textToRead.replace(/\s+/g, ' ').trim();
-    
-    if (textToRead) {
-      speak("Reading page: " + textToRead.substring(0, 5000), true);
-    } else {
-      speak("No readable content found on this section.", true);
-    }
+    setLastSpokenText(textToRead);
+    speak(textToRead, true);
   }, [speak]);
 
   useEffect(() => {
