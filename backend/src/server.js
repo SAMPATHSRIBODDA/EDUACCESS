@@ -1,4 +1,4 @@
-// Deployment Trigger: Reverting to stable version
+// Deployment Trigger: Fixed publish answer logic and voting state - 2026-05-08
 import dotenv from "dotenv";
 import path from "path";
 import fs from "fs";
