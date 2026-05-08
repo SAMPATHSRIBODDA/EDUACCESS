@@ -153,7 +153,7 @@ router.post("/vote", async (req, res) => {
     }
 
     await target.save();
-    res.json({ success: true, upvotes: target.upvotes.length, downvotes: target.downvotes.length });
+    res.json({ success: true, upvotes: target.upvotes, downvotes: target.downvotes });
   } catch (error) {
     res.status(500).json({ success: false, message: error.message });
   }

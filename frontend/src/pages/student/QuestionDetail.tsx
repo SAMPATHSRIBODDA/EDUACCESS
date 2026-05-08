@@ -84,7 +84,7 @@ export const QuestionDetail: React.FC = () => {
                 collegeName: user.course || 'Independent Student',
                 ...newAnswer
             });
-            if (res.data.success) {
+            if (res.success) {
                 setShowPostAnswer(false);
                 setNewAnswer({ 
                     content: '', 
@@ -94,8 +94,8 @@ export const QuestionDetail: React.FC = () => {
                     attachmentUrl: '',
                     attachmentName: ''
                 });
-                if (socket) socket.emit('post_answer', res.data.data);
-                setAnswers(prev => [res.data.data, ...prev]);
+                if (socket) socket.emit('post_answer', res.data);
+                setAnswers(prev => [res.data, ...prev]);
             }
         } catch (err) {
             console.error('Answer post error', err);
@@ -139,9 +139,9 @@ export const QuestionDetail: React.FC = () => {
             });
             if (res.success) {
                 if (type === 'question' && question) {
-                    setQuestion({ ...question, upvotes: new Array(res.upvotes), downvotes: new Array(res.downvotes) });
+                    setQuestion({ ...question, upvotes: res.upvotes, downvotes: res.downvotes });
                 } else {
-                    setAnswers(prev => prev.map(a => a.id === targetId ? { ...a, upvotes: new Array(res.upvotes), downvotes: new Array(res.downvotes) } : a));
+                    setAnswers(prev => prev.map(a => a.id === targetId ? { ...a, upvotes: res.upvotes, downvotes: res.downvotes } : a));
                 }
             }
         } catch (err) {
